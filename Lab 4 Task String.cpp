@@ -1,3 +1,5 @@
+/* Реалізувати перетворення рядка, що складається з {0,1} у код Грея і навпаки */
+
 #include <iostream>
 #include <string.h>
 
@@ -11,7 +13,7 @@ int main()
     cout << "Choose option: [to code Grey] - 1 or [from code Grey] - 2:\n";
     cin >> option;
 
-    // � �������� ���� � ��� ����
+    // ç á³íàðíîãî êîäó â êîä ãðåÿ
     if(option == 1)
     {
         cout << "Input binary code:\n";
@@ -24,7 +26,7 @@ int main()
              //cout <<line[i] << "^" << line[i-1] << "  " << temp << "\n";
         }
     }
-    // � ���� ���� � ������� ���
+    // ç êîäó Ãðåÿ â á³íàðíèé êîä
     else if(option == 2)
     {
         cout << "Input grey code:\n";
