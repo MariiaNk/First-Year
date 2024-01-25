@@ -1,3 +1,4 @@
+/* За допомогю SFML змоделювати рух точки на колі (трохоїда)*/
 #include <SFML/Graphics.hpp>
 #include <windows.h>
 #include <bits/stdc++.h>
