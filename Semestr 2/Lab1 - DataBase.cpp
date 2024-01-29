@@ -17,7 +17,11 @@ struct tDate
     }
     friend std::ostream & operator<<(ostream &os, tDate& p)
     {
-        return os << p.day << "." << p.month << "." << p.year ;
+        if(p.day < 10) os << setw(6) << "0";
+        else os << setw(7);
+        os << p.day << ".";
+        if(p.month < 10) os << "0";
+        return os << p.month << "." << p.year ;
     }
 
     bool isValidDate() const
@@ -42,7 +46,11 @@ struct tTime
     }
     friend std::ostream & operator<<(ostream &os, tTime& p)
     {
-        return os << p.hours << ":" << p.minutes ;
+        if( p.hours < 10) os << setw(4) << "0";
+        else os << setw(5);
+        os << p.hours << ":";
+        if(p.minutes < 10) os << "0";
+        return os << p.minutes ;
     }
     bool isValidTime() const
     {
@@ -63,51 +71,16 @@ struct tGoods
     tTime time; // час виробництва в хвилинах
     tDate expirationDate; //термін придатності
 };
-
-
-tGoods convertInputData (char *buffer)
+void outputGood (tGoods temp)
 {
-    tGoods buffGood;
-    buffGood.id = atoi(strtok(buffer, " "));
-    char *subBuff = strtok(NULL, " ");
-    strcpy(buffGood.name , subBuff);
-    subBuff= strtok(NULL, " ");
-    strcpy(buffGood.measure , subBuff);
-    buffGood.cnt = atoi(strtok(NULL, " "));
-    buffGood.date.day = atoi(strtok(NULL, " "));
-    buffGood.date.month = atoi(strtok(NULL, " "));
-    buffGood.date.year = atoi(strtok(NULL, " "));
-    buffGood.time.hours = atoi(strtok(NULL, " "));
-    buffGood.time.minutes = atoi(strtok(NULL, " "));
-    buffGood.expirationDate.day = atoi(strtok(NULL, " "));
-    buffGood.expirationDate.month = atoi(strtok(NULL, " "));
-    buffGood.expirationDate.year = atoi(strtok(NULL, " "));
-    return buffGood;
+    cout << "|" << setw(5) << temp.id << "|" << setw(10) << temp.name;
+    cout << "|" << setw(10) << temp.measure<<"|" << setw(10) << temp.cnt;
+    cout << "|" << temp.date << "|" << temp.time << "|" << temp.expirationDate << "|\n";
 }
-
-void output (vector <tGoods> shop)
+void outputheader ()
 {
-    cout << "|" << setw(6) << "ID|" << setw(11) << "Name|" << setw(11) << "Measure|" << setw(11) << "Count|" << setw(18) << "Product date|" << setw(14) << "Time|" << setw(19) << "Expiration date|\n";
-    cout << "------------------------------------------------------------------------------------------\n";
-    for(int i = 0; i < shop.size(); i++)
-    {
-        cout << "|" << setw(5);
-        cout << shop[i].id;
-        cout << "|" << setw(10);
-        cout << shop[i].name;
-        cout << "|" << setw(10);
-        cout << shop[i].measure;
-        cout << "|" << setw(10);
-        cout << shop[i].cnt;
-        cout << "|" << setw(10);
-        cout << shop[i].date;
-        cout << "|" << setw(10);
-        cout << shop[i].time;
-        cout << "|" << setw(10);
-        cout << shop[i].expirationDate;
-        cout << "|\n";
-
-    }
+    cout << "|" << setw(6) << "ID|" << setw(11) << "Name|" << setw(11) << "Measure|" << setw(11) << "Count|" << setw(16) << "Product date|" << setw(9) << "Time|" << setw(16) << "Expiration date|\n";
+    cout << "---------------------------------------------------------------------------------\n";
 }
 
 bool isValidMeasure(char *str)
@@ -115,6 +88,19 @@ bool isValidMeasure(char *str)
     return strcmp(str, "kg") == 0 || strcmp(str, "l") == 0 || strcmp(str, "pack") == 0 || strcmp(str, "ind") == 0;
 }
 
+vector <int> findEndFragment(vector <tGoods> const shop, const char * endFrag)
+{
+    vector <int> findId;
+    int sizeFrag = strlen(endFrag);
+    for(int i = 0; i < shop.size(); i++)
+    {
+        int j = 1, sizeName = strlen(shop[i].name);
+        while(j <= sizeFrag && shop[i].name[sizeName - j] == endFrag[sizeFrag - j])
+            j++;
+        if(j == sizeFrag + 1) findId.push_back(i);
+    }
+    return findId;
+}
 int main()
 {
     vector <tGoods> shop;
@@ -203,32 +189,34 @@ int main()
             }
 
             shop.clear();
-            /*int n;
+            int n;
             tGoods temp;
-            fscanf(f, "%d", n);
+            fscanf(f, "%d", &n);
             for(int i = 0; i < n; i++)
             {
-                fscanf(f, "%d %s %s %d", temp.id, temp.name, temp.measure,temp.cnt );
-                fscanf(f, "%d %d %d %d %d",  temp.date.day, temp.date.month, temp.date.year, temp.time.hours, temp.time.minutes);
-                fscanf(f, "%d %d %d",  temp.expirationDate.day, temp.expirationDate.month, temp.expirationDate.year);
-                shop.push_back(temp);
-            }*/
-
-            char buffer[10000];
-            fgets(buffer, sizeof(buffer),f);
-            int n = atoi(buffer);
-            for(int i = 0; i < n; i++)
-            {
-                fgets(buffer, sizeof(buffer),f);
-                tGoods temp = convertInputData(buffer);
+                fscanf(f, "%d %s %s %d", &temp.id, &temp.name, &temp.measure, &temp.cnt );
+                //cout << temp.id << " ";
+                fscanf(f, "%d %d %d %d %d",  &temp.date.day, &temp.date.month, &temp.date.year, &temp.time.hours, &temp.time.minutes);
+                fscanf(f, "%d %d %d",  &temp.expirationDate.day, &temp.expirationDate.month, &temp.expirationDate.year);
                 shop.push_back(temp);
             }
+            fscanf(f, "%d", &n);
+            availableId.clear();
+            int notUsedId = 0;
+            for(int i = 0; i < n; i++)
+            {
+                fscanf(f, "%d", &notUsedId);
+                availableId.push_back(notUsedId);
+            }
+            fscanf(f, "%d", &maxID);
             cout << "---   Complete!!! ---\n";
             fclose(f);
         }
         else if(request == "output")
         {
-            output(shop);
+            outputheader();
+            for(int i = 0; i < shop.size(); i++)
+                outputGood(shop[i]);
         }
         else if(request == "search")
         {
@@ -243,44 +231,39 @@ int main()
             if(typeRequest == 1)
             {
                 cout << "Write a text fragment:\n";
+                char endReq[10000];
+                cin >> endReq;
+                cout << endReq << "\n";
+                vector <int> res = findEndFragment(shop, endReq);
+                if(res.size() == 0) cout << "Ohhhh! No matching!";
+                else
+                {
+                    outputheader();
+                    for(auto ids: res)
+                        outputGood(shop[ids]);
+                }
             }
             else if(typeRequest == 2)
             {
-                cout << "Write a text fragment:\n";
+                cout << "Write a unit of measurement and a expiration date of at least the given one:\n";
             }
-            else if(typeRequest == 2)
+            else if(typeRequest == 3)
             {
-                cout << "Write a date range:\n";
+                cout << "Write a unit of measurement and a expiration date of at least the given one:\n";
             }
-            else
-            {
-                cout << "Error!\nWrong request!";
-                return 1;
-            }
+            else  cout << "Error!\nWrong request!\nTry again!!!\n";
 
         }
-        else
-        {
-            cout << "Error!\nWrong request!";
-            return 1;
-        }
+        else cout << "Error!\nWrong request!\nTry again!!!\n";
         cout << "\n";
     }
 
-    /*
-    char* inputMessage;
-
-    if (f == NULL) {
-        perror("Error opening file");
-        return 1;
-    }
-
-    while(fread(inputMessage, sizeof(char*),1,f))
-    {
-        cout << inputMessage;
-    }*/
-
-
-
     return 0;
 }
+/*
+restore
+output
+search
+1
+oko
+*/
