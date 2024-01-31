@@ -4,9 +4,11 @@
 #include <iomanip>
 #include <stdlib.h>
 #include <time.h>
+#include <chrono>
 #define STRMAX 100000
 
 using namespace std;
+using namespace std::chrono;
 struct tDate
 {
     int day;
@@ -175,6 +177,27 @@ int findWithId(vector <tGoods> const shop,  const int&idReq)
     }
     return -1;
 }
+tDate ConvertToExpirationDate(tDate product, int cntDay)
+{
+    int daysInMonth[] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    if (product.year % 4 == 0 && (product.year % 100 != 0 || product.year % 400 == 0))
+        daysInMonth[2] = 29;
+    product.day += cntDay;
+    if(product.day <= daysInMonth[product.month]) return product;
+    while (product.day > daysInMonth[product.month])
+    {
+        product.day -= daysInMonth[product.month];
+        product.month++;
+        if(product.month == 13)
+        {
+            product.year++;
+            product.month = 1;
+            if (product.year % 4 == 0 && (product.year % 100 != 0 || product.year % 400 == 0))
+                daysInMonth[2] = 29;
+        }
+    }
+    return product;
+}
 tGoods addElement(vector <int> &availableId, int &maxID)
 {
     tGoods temp;
@@ -204,13 +227,10 @@ tGoods addElement(vector <int> &availableId, int &maxID)
         cout << "Issue! Time isn't correct. Please input correct time\n";
         cin >> temp.time;
     }
-    cout << "- expiration date[day month year]\n";
-    cin >> temp.expirationDate;
-    while(!temp.expirationDate.isValidDate())
-    {
-        cout << "Issue! Date isn't correct. Please input correct date\n";
-        cin >> temp.expirationDate;
-    }
+    cout << "- expiration range[days]\n";
+    int cntDay;
+    cin >> cntDay;
+    temp.expirationDate = ConvertToExpirationDate(temp.date, cntDay);
     if(!availableId.empty())
     {
         temp.id = availableId.back();
@@ -557,12 +577,12 @@ char* GenerateString()
     str[n] = '\0';
     return str;
 }
-tDate GenerateTypeDate(tDate start)
+tDate GenerateTypeDate()
 {
     tDate temp;
-    temp.day = rand() % (27 - start.day) + 1 + start.day;
-    temp.month = rand() % (12 - start.month) + 1 + start.month;
-    temp.year = rand() % 100 +  start.year;
+    temp.day = rand() % 27 + 1;
+    temp.month = rand() % 12  + 1;
+    temp.year = rand() % 20 +  2000;
     return temp;
 }
 vector <tGoods> GenerateData(int shopSize)
@@ -577,11 +597,11 @@ vector <tGoods> GenerateData(int shopSize)
         strcpy(temp.name , GenerateString());
         randDig = rand() % 4;
         strcpy(temp.measure , availableMeasure[randDig]);
-        temp.date = GenerateTypeDate({1,1,1900});
-        temp.cnt = rand() % 1000;
+        temp.date = GenerateTypeDate();
+        temp.cnt = rand() % 10000;
         temp.time = {rand()%24, rand()%60};
-        temp.expirationDate = GenerateTypeDate(temp.date);
-        outputGood(temp);
+        int exDay = rand()%50;
+        temp.expirationDate = ConvertToExpirationDate(temp.date, exDay);
         shop.push_back(temp);
     }
     return shop;
@@ -594,23 +614,31 @@ int benchmarkMode()
     int maxID = 0;
     cout << "Write count of element: \n";
     cin >> shopSize;
-    //auto start = high_resolution_clock::now();
+
+    auto start = high_resolution_clock::now();
+
     vector <tGoods> shop = GenerateData(shopSize);
-    outputData(shop);
-    saveDataToFile(shop, availableId, maxID, "bin");
-    /*restoreDataFromFile(shop, availableId, maxID, "bin");
+    //outputData(shop);
+    saveDataToFile(shop, availableId, maxID, "txt");
+    restoreDataFromFile(shop, availableId, maxID, "txt");
     vector <int> res1 = findEndFragment(shop, GenerateString());
-    outputFindData(res1, shop);
-    /*int randDig = rand() % 4;
+    //outputFindData(res1, shop);
+    int randDig = rand() % 4;
     vector<char*> availableMeasure = {"kg", "l", "ind", "kg"};
     char *meaTemp = availableMeasure[randDig];
-    tDate datTemp = GenerateTypeDate({1,1,1900});
+    tDate datTemp = GenerateTypeDate();
     vector <int> res2 = findMeasureDate(shop, meaTemp, datTemp) ;
-    outputFindData(res2, shop);
-    tDate first = GenerateTypeDate({1,1,1900});
-    vector <int> res3 = findDateInRange(shop, first, GenerateTypeDate(first));
-    outputFindData(res3, shop);*/
-    outputData(shop);
+    //outputFindData(res2, shop);
+    int exDay = rand()%10000;
+    tDate first = GenerateTypeDate(), second = ConvertToExpirationDate(first, exDay);
+    vector <int> res3 = findDateInRange(shop, first, second);
+    //outputFindData(res3, shop);
+
+    auto stop = high_resolution_clock::now();
+    auto duration = duration_cast<microseconds>(stop - start);
+
+    cout << "Time taken by program: " << duration.count() << " microseconds" << endl;
+
     return 0;
 
 }
