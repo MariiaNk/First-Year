@@ -90,10 +90,10 @@ struct tGoods
     int id;
     char name[STRMAX];
     char measure[STRMAX];
-    int cnt; //кількість товару
-    tDate date; // дата виробництва
-    tTime time; // час виробництва в хвилинах
-    tDate expirationDate; //термін придатності
+    int cnt; //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+    tDate date; // пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+    tTime time; // пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+    tDate expirationDate; //пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 };
 void outputGood (tGoods temp)
 {
@@ -466,7 +466,7 @@ int InteractiveMode()
     vector <tGoods> shop;
     vector <int> availableId;
     int maxID = 0;
-    cout << "What do you want to do? [key word]\n- Add data: add\n- Save data to file: save\n- Restore data: restore\n- Output saved data: output\n- Search by specified criteria: search\n- Delete an element by ID: delete\n- Modify element by id: modify\nPlease, write the key word of your request\n";
+    cout << "What do you want to do? [key word]\n- Add data: add\n- Save data to file: save\n- Restore data: restore\n- Output saved data: output\n- Search by specified criteria: search\n- Delete an element by ID: delete\n- Modify element by id: modify\n- End program: end\nPlease, write the key word of your request\n";
     string request;
     while(cin >> request)
     {
@@ -514,6 +514,7 @@ int InteractiveMode()
             cin >> idReq;
             modifyElementByID(shop, idReq);
         }
+        else if(request == "end") return 0;
         else cout << "Error!\nWrong request!\nTry again!!!\n";
         cout << "\n";
     }

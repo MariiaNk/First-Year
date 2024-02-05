@@ -1,5 +1,7 @@
 #include <iostream>
-#include <ostream>
+#include <string>
+
+using namespace std;
 
 struct tDate
 {
@@ -21,92 +23,160 @@ struct tDate
         return true;
     }
 
-    friend std::ostream & operator<<(std::ostream &os, tDate& p)
+    friend istream &operator>>(istream &is, tDate &p)
     {
-        if(p.day < 10)
+        return is >> p.day >> p.month >> p.year;
+    }
+
+    friend ostream &operator<<(ostream &os, tDate p)
+    {
+        if (p.day < 10)
             os << "0";
         os << p.day << ".";
-        if(p.month < 10)
+        if (p.month < 10)
             os << "0";
-        return os << p.month << "." << p.year ;
+        return os << p.month << "." << p.year;
     }
 };
 
 struct tNode
 {
     tDate value;
-    tNode* prev;
-    //1)create_empty – створення пустого стеку;
+    tNode *prev;
+    // 1)create_empty – створення пустого стеку;
     void create_empty()
     {
         prev = nullptr;
         value = {0, 0, 0};
     }
-    //2) push –  додавання елементу до стеку
+    // 2) push –  додавання елементу до стеку
     void push(tDate valueEL)
     {
-        tNode* top = new tNode;
+        tNode *top = new tNode;
         top->value = valueEL;
         top->prev = this;
         *this = *top;
     }
-    //3) pop –  вилучення елементу зі стеку;
+    // 3) pop –  вилучення елементу зі стеку;
     void pop()
     {
-        if(this == NULL) std::cout << "Stack already empty!!!";
+        if(this->is_empty()) 
+            cout << "Stack already empty!!!";
         else
         {
-            tNode* temp = prev;
+            tNode *temp = prev;
             delete this;
             *this = *temp;
         }
     }
-    //4) peek – значення верхнього елементу стеку (без видалення)
+    // 4) peek – значення верхнього елементу стеку (без видалення)
     tDate peek() const
     {
         return value;
     }
-    //5) is_empty – перевірка на пустоту
+    // 5) is_empty – перевірка на пустоту
     bool is_empty() const
     {
-        return (this == NULL);
+        return (prev == nullptr && (value.day == 0 && value.month == 0 && value.year == 0));
     }
 };
-
-void writeStack(tNode* stack)
+void writeStack(tNode *stack)
 {
-    tNode* current = stack;
+    tNode *current = stack;
     while (current != nullptr)
     {
-        std::cout << (current->peek()) << std::endl;
+        cout << (current->peek()) << endl;
         current = current->prev;
     }
 }
+tDate addElem()
+{
+    tDate temp;
+    cout << "Enter date[day month year]\n";
+    cin >> temp;
+    while (!temp.isValidDate())
+    {
+        cout << "Issue! Date isn't correct. Please input correct date\n";
+        cin >> temp;
+    }
+    return temp;
+}
+int InteractiveMode()
+{
+    tNode *Calendar = new tNode;
+    Calendar->create_empty();
+    cout << "What do you want to do? [key word]\n- Create empty stack: create empty\n- Add new item from stack: add\n- Delete item to stack: pop\n- : peek\n- Output all stack: output\n- Delete an element by ID: delete\n- End program: end\nPlease, write the key word of your request\n";
+    string request;
+    do
+    {
+        cin.ignore();
+        getline(std::cin, request);
+        if (request == "add")
+        {
+            Calendar->push(addElem());
+        }
+        else if (request == "pop")
+        {
+            Calendar->pop();
+        }
+        else if (request == "peek")
+        {
+        }
+        else if (request == "top")
+        {
+        }
+        else if (request == "is empty")
+        {
+        }
+        else if (request == "create empty")
+        {
+        }
+        else if(request == "output")
+        {
+            
+        }
+        else cout << "Error!\nWrong request!\nTry again!!!\n";
+    } while (request != "end");
 
+    delete Calendar;
+    return 0;
+}
 
 int main()
 {
-    tNode* Calendar = new tNode;
-    Calendar->create_empty();
+    cout << "Input mode of work\ni - interactive\nd - demonstration\nb - benchmark\n";
+    char mode;
+    cin >> mode;
+    if (mode == 'i')
+        return InteractiveMode();
+    /*else if(mode == 'd')
+        //return DemonstrationMode();
+    else if(mode == 'b')
+        //return benchmarkMode();
+    else
+    {
+        cout << "Error. Program isn't started\n";
+        return 1;
+    }*/
+    return 0;
 
-    // Додавання елементу до стеку
-    tDate date1 = {1, 2, 2024};
+    /*tDate date1 = {1, 2, 2024};
     Calendar->push(date1);
 
     // Перевірка верхнього елементу (без видалення)
     tDate topDate = Calendar->peek();
-    std::cout << "Top date: " << topDate.day << "/" << topDate.month << "/" << topDate.year << std::endl;
+    cout << "Top date: " << topDate.day << "/" << topDate.month << "/" << topDate.year << endl;
 
     // Вилучення елементу зі стеку
     Calendar->pop();
 
     // Перевірка на пустоту
     if (Calendar->is_empty())
-        std::cout << "Stack is empty" << std::endl;
+        cout << "Stack is empty" << endl;
     else
-        std::cout << "Stack is not empty" << std::endl;
+        cout << "Stack is not empty" << endl;
 
-    delete Calendar;
+    */
 
     return 0;
 }
