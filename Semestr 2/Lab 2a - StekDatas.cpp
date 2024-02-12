@@ -126,7 +126,7 @@ void outputMenu()
 {
     cout << "==== Stack MENU ====\n";
     cout << "1 - Create empty stack\n";
-    cout << "2 - Add new item from stack\n";
+    cout << "2 - Add new item to stack\n";
     cout << "3 - Delete top item from stack\n";
     cout << "4 - Check for empty stack\n";
     cout << "5 - Get the value of the top element of the stack (without removing)\n";
