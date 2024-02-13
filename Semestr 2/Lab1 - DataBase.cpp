@@ -90,10 +90,10 @@ struct tGoods
     int id;
     char name[STRMAX];
     char measure[STRMAX];
-    int cnt; //������� ������
-    tDate date; // ���� �����������
-    tTime time; // ��� ����������� � ��������
-    tDate expirationDate; //����� ����������
+    int cnt;
+    tDate date;
+    tTime time;
+    tDate expirationDate;
 };
 void outputGood (tGoods temp)
 {
@@ -265,7 +265,6 @@ void saveDataToFile(vector <tGoods> const &shop, vector <int> const &availableId
     if(availableId.size() > 0) fprintf(f, "\n");
     fprintf(f, "%d\n", maxID);
     fclose(f);
-    cout << "---   Complete!!! ---\n";
 }
 int restoreDataFromFile(vector <tGoods> &shop, vector <int> &availableId, int &maxID, char* format)
 {
@@ -301,7 +300,6 @@ int restoreDataFromFile(vector <tGoods> &shop, vector <int> &availableId, int &m
     }
     fscanf(f, "%d", &maxID);
     fclose(f);
-    cout << "---   Complete!!! ---\n";
 }
 void searchDataReq (vector <tGoods>const &shop)
 {
@@ -367,7 +365,6 @@ void searchDataReq (vector <tGoods>const &shop)
         outputFindData(res, shop);
     }
     else  cout << "Error!\nWrong request!\nTry again!!!\n";
-    cout << "---   Complete!!! ---\n";
 }
 void deleteElemByID(vector <tGoods> &shop, vector<int> &availableId, int idReq)
 {
@@ -377,7 +374,6 @@ void deleteElemByID(vector <tGoods> &shop, vector<int> &availableId, int idReq)
     {
         shop.erase(shop.begin() + res);
         availableId.push_back(idReq);
-        cout << "---   Complete!!! ---\n";
     }
 }
 void modifyElementByID(vector <tGoods> &shop, int idReq)
@@ -618,27 +614,53 @@ int benchmarkMode()
 
     auto start = high_resolution_clock::now();
 
+    auto startran = high_resolution_clock::now();
     vector <tGoods> shop = GenerateData(shopSize);
-    //outputData(shop);
+    auto stopran = high_resolution_clock::now();
+    auto durationran = duration_cast<milliseconds>(stopran - startran);
+    cout << "GENERETE DATA:  Time: " << durationran.count() << " milliseconds" << endl;
+
+    auto startfile = high_resolution_clock::now();
     saveDataToFile(shop, availableId, maxID, "txt");
+    auto stopfile = high_resolution_clock::now();
+    auto durationfile = duration_cast<milliseconds>(stopfile - startfile);
+    cout << "FILE TXT WRITE:  Time: " << durationfile.count() << " milliseconds" << endl;
+
+    startfile = high_resolution_clock::now();
     restoreDataFromFile(shop, availableId, maxID, "txt");
+    stopfile = high_resolution_clock::now();
+    durationfile = duration_cast<milliseconds>(stopfile - startfile);
+    cout << "FILE TXT READ:  Time: " << durationfile.count() << " milliseconds" << endl;
+
+    auto startsearch = high_resolution_clock::now();
     vector <int> res1 = findEndFragment(shop, GenerateString());
-    //outputFindData(res1, shop);
+    auto stopsearch = high_resolution_clock::now();
+    auto durationsearch = duration_cast<milliseconds>(stopsearch - startsearch);
+    cout << "END FRAG SEARCH:  Time: " << durationsearch.count() << " milliseconds" << endl;
+
+    startsearch = high_resolution_clock::now();
     int randDig = rand() % 4;
     vector<char*> availableMeasure = {"kg", "l", "ind", "kg"};
     char *meaTemp = availableMeasure[randDig];
     tDate datTemp = GenerateTypeDate();
     vector <int> res2 = findMeasureDate(shop, meaTemp, datTemp) ;
-    //outputFindData(res2, shop);
+    stopsearch = high_resolution_clock::now();
+    durationsearch = duration_cast<milliseconds>(stopsearch - startsearch);
+    cout << "MEASURE SEARCH:  Time: " << durationsearch.count() << " milliseconds" << endl;
+
+
+
+    startsearch = high_resolution_clock::now();
     int exDay = rand()%10000;
     tDate first = GenerateTypeDate(), second = ConvertToExpirationDate(first, exDay);
     vector <int> res3 = findDateInRange(shop, first, second);
-    //outputFindData(res3, shop);
+    stopsearch = high_resolution_clock::now();
+    durationsearch = duration_cast<milliseconds>(stopsearch - startsearch);
+    cout << "PERIOD SEARCH:  Time: " << durationsearch.count() << " milliseconds" << endl;
 
     auto stop = high_resolution_clock::now();
-    auto duration = duration_cast<microseconds>(stop - start);
-
-    cout << "Time taken by program: " << duration.count() << " microseconds" << endl;
+    auto duration = duration_cast<milliseconds>(stop - start);
+    cout << "TOTAL:  Time taken by program: " << duration.count() << " milliseconds" << endl;
 
     return 0;
 
