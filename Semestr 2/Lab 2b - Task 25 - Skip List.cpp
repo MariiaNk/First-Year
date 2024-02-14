@@ -20,6 +20,7 @@ struct tNode
     }; 
 };
 
+
 class tSkipList
 {
     private:
@@ -41,7 +42,7 @@ class tSkipList
             tNode *n = new tNode(newValue, level); 
             return n; 
         }
-
+        
         int randomLevel() 
         { 
             float r = (float)rand()/RAND_MAX; 
@@ -65,12 +66,12 @@ class tSkipList
             }
             for(int i = level; i >= 0; i--) 
             { 
-                while(current->forward[i] != NULL && current->forward[i]->value < newValue) 
+                while(current->forward[i] != nullptr && current->forward[i]->value < newValue) 
                     current = current->forward[i]; 
                 update[i] = current; 
             } 
             current = current->forward[0]; 
-            if (current == NULL || current->value != newValue) 
+            if (current == nullptr || current->value != newValue) 
             {      // Generate a random level for node 
                     int rlevel = randomLevel();
                     if(rlevel > level) 
@@ -105,15 +106,44 @@ class tSkipList
                 cout<<"Found item: "<< itemValue <<endl; 
             else cout << "Item " << itemValue <<  " isn't found" << endl;
         }
+        void deleteElement(int key)  
+        { 
+            tNode *current = top; 
+            tNode *update[MAXLVL+1]; 
+            for (int i = 0; i < MAXLVL + 1; ++i) 
+                update[i] = nullptr;
+            for(int i = level; i >= 0; i--) 
+            { 
+                while(current->forward[i] != nullptr &&current->forward[i]->value < key) 
+                    current = current->forward[i]; 
+                update[i] = current; 
+            } 
+            current = current->forward[0];
+            if(current != nullptr and current->value == key) 
+            { 
+                for(int i=0;i<=level;i++) 
+                {    
+                    if(update[i]->forward[i] != current) 
+                        break; 
+                    update[i]->forward[i] = current->forward[i]; 
+                } 
+                while(level>0 && top->forward[level] == nullptr) 
+                    level--; 
+                cout<<"Successfully deleted item "<<key<<endl; 
+                delete current; 
+            } 
+            else cout << "Item " << key << " isn't deleted :(" << endl;
+        }
+
 
         void displayList() 
         {         
-            cout<<"\n=====Skip List=====\n"; 
+            cout<<"\n===== Skip List =====\n"; 
             for(int i=0;i<=level;i++) 
             {
                 tNode *node = top->forward[i]; 
                 cout<<"Level "<<i<<": "; 
-                while(node != NULL) 
+                while(node != nullptr) 
                 {
                     cout<<node->value<<" "; 
                     node = node->forward[i]; 
@@ -150,8 +180,12 @@ void DemonstrationMode()
     lst.insertElement(21); 
     lst.insertElement(25); 
     lst.displayList(); 
+
+    lst.insertElement(28); 
+    lst.displayList(); 
     //Search for node 19 
     lst.searchElement(19); 
+    lst.deleteElement(19);
     lst.displayList(); 
 
     /*tSkipList l(3, 0.5);
