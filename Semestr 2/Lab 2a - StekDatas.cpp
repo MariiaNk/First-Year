@@ -8,7 +8,7 @@ using std::cin;
 using std::endl;
 using namespace std::chrono;
 
-const int ARR_MAX = 1e5;
+const int ARR_MAX = 1e9;
 struct tDate
 {
     int day;
@@ -53,6 +53,7 @@ public:
     virtual tDate peek() = 0;
     virtual bool isEmpty() const = 0;
     virtual void writeStack() = 0;
+    virtual size_t sizeOfStruct() = 0;
     virtual ~tStack() {}
 };
 
@@ -61,6 +62,11 @@ private:
     struct tNode {
         tDate value;
         tNode *prev;
+        tNode(tDate valueEL, tNode *prevEL)
+        {
+            value = valueEL;
+            prev = prevEL;
+        }
     };
     tNode *top;
 public:
@@ -72,9 +78,9 @@ public:
     // 2) push –  додавання елементу до стеку
     void push(tDate value) override
     {
-        tNode *newNode = new tNode;
-        newNode->value = value;
-        newNode->prev = top;
+        tNode *newNode = new tNode(value, top);
+        /*newNode->value = value;
+        newNode->prev = top;*/
         top = newNode;
     }
     // 3) pop –  вилучення елементу зі стеку;
@@ -108,6 +114,18 @@ public:
             current = current->prev;
         }
         cout << endl;
+    }
+    size_t sizeOfStruct() override
+    {
+        size_t totalSize = 0;
+        tNode *current = top;
+        while (current != nullptr)
+        {
+            totalSize += sizeof(tNode); 
+            totalSize += sizeof(tDate); 
+            current = current->prev;
+        }
+        return totalSize;
     }
     ~tStackNode()
     {
@@ -163,10 +181,14 @@ public:
             cout << arr[i] << endl;
         cout << endl;
     }
-    ~tStackArr()
+    size_t sizeOfStruct() override
+    {
+        return sizeOfArr * sizeof(tDate);
+    }
+    /*~tStackArr()
     {
         delete[] arr;
-    }
+    }*/
 };
 
 class tStackVector : public tStack
@@ -210,6 +232,12 @@ public:
         for (int i = dynArr.size() - 1; i >= 0; --i)
             cout << dynArr[i] << endl;
         cout << endl;
+    }
+    size_t sizeOfStruct() override
+    {
+        size_t totalSize = dynArr.size() * sizeof(tDate);
+        totalSize += sizeof(dynArr);
+        return totalSize;
     }
     ~tStackVector()
     {
@@ -330,10 +358,10 @@ void DemonstrationMode(int typeSave)
     cout << " Get the value of the top element of the stack (without removing): " << Calendar->peek() << "\n";
     Calendar->writeStack();
 
-    delete Calendar;
+
 }
 
-int benchmarkMode(int typeSave)
+void benchmarkMode(int typeSave, int sizeOfStore)
 {
     srand(time(NULL));
 
@@ -341,7 +369,6 @@ int benchmarkMode(int typeSave)
 
     switch (typeSave) {
         case 3:
-            cout << "Yeeehhh!\n";
             Calendar = new tStackNode();
             break;
         case 2:
@@ -351,10 +378,6 @@ int benchmarkMode(int typeSave)
             Calendar = new tStackArr();
             break;
     }
-
-    int sizeOfStore = 0;
-    cout << "Write count of element: \n";
-    cin >> sizeOfStore;
 
     cout << "=== Output TIME results ===\n  Realization ";
     if(typeSave == 3) cout << "Struct\n";
@@ -396,35 +419,59 @@ int benchmarkMode(int typeSave)
 
     auto totalStop = high_resolution_clock::now();
     duration = duration_cast<milliseconds>(totalStop - totalStart);
-    cout << "Time taken by TOTAL: " << duration.count() << " milliseconds" << endl;
+    cout << "Time taken by TOTAL: " << duration.count() << " milliseconds" << endl << endl;
 
-    return 0;
-/*
-1
-b
-100
-*/
+    size_t objectSize = Calendar -> sizeOfStruct();
+    cout << "==== SIZE OF";
+    if(typeSave == 3) 
+        cout << " STRUCT ==== \n";
+    else if(typeSave == 2) 
+        cout << " VECTOR ==== \n";
+    else 
+        cout << " ARRAY ==== \n";
+    cout << "Size of Calendar: " << objectSize << " bytes" << endl << endl;
+
+    delete Calendar;
 }
 int main()
 {
-    cout << "Type of saving:\n1 - array\n2 - vector\n3 - struct\nEnter type of saving: ";
-    int save;
-    cin >> save;
-    if(save > 3 || save < 1)
-    {
-        cout << "Error. Program isn't started\n";
-        return 1;
-    }
+    
 
     cout << "Input mode of work\ni - interactive\nd - demonstration\nb - benchmark\nEnter mode: ";
     char mode;
     cin >> mode;
     if (mode == 'i')
+    {
+        cout << "Type of saving:\n1 - array\n2 - vector\n3 - struct\nEnter type of saving: ";
+        int save;
+        cin >> save;
+        if(save > 3 || save < 1)
+        {
+            cout << "Error. Program isn't started\n";
+            return 1;
+        }
         InteractiveMode(save);
+    }
     else if(mode == 'd')
+    {
+        cout << "Type of saving:\n1 - array\n2 - vector\n3 - struct\nEnter type of saving: ";
+        int save;
+        cin >> save;
+        if(save > 3 || save < 1)
+        {
+            cout << "Error. Program isn't started\n";
+            return 1;
+        }
         DemonstrationMode(save);
+    }
     else if(mode == 'b')
-        return benchmarkMode(save);
+    {
+        int sizeOfStore = 0;
+        cout << "Write count of element: \n";
+        cin >> sizeOfStore;
+        for(int i = 1; i <=3; ++i)
+            benchmarkMode(i, sizeOfStore);
+    }
     else
     {
         cout << "Error. Program isn't started\n";
