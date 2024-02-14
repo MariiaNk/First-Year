@@ -3,12 +3,16 @@
 #include <cstring>
 #include <iomanip>
 #include <stdlib.h>
+#include <stdio.h>
 #include <time.h>
 #include <chrono>
+#include <filesystem>
 #define STRMAX 100000
 
 using namespace std;
 using namespace std::chrono;
+namespace fs = filesystem;
+
 struct tDate
 {
     int day;
@@ -273,6 +277,7 @@ int restoreDataFromFile(vector <tGoods> &shop, vector <int> &availableId, int &m
         f = fopen("BinData.bin", "rb");
     else if (strcmp(format, "txt") == 0)
         f = fopen("Data.txt", "r");
+    
     if (f == NULL)
     {
         perror("Error opening file");
@@ -300,6 +305,8 @@ int restoreDataFromFile(vector <tGoods> &shop, vector <int> &availableId, int &m
     }
     fscanf(f, "%d", &maxID);
     fclose(f);
+
+    return 0;
 }
 void searchDataReq (vector <tGoods>const &shop)
 {
@@ -521,9 +528,11 @@ int DemonstrationMode()
     vector <tGoods> shop;
     vector <int> availableId;
     int maxID = 0;
+    char * format;
+    strcpy(format, "txt");
     //restore
     cout << "Req1 [restore]\n";
-    if(restoreDataFromFile(shop, availableId,maxID, "txt") == 1) return 1;
+    if(restoreDataFromFile(shop, availableId,maxID, format) == 1) return 1;
     //output
     cout << "Req2 [output]\n";
     outputData(shop);
@@ -561,7 +570,8 @@ int DemonstrationMode()
 }
 char* GenerateString()
 {
-    char *availableSymb = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    char availableSymb[63];
+    strcpy(availableSymb, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
     int sizeSymb = strlen(availableSymb);
     char* str = new char[STRMAX];
     int n = rand()%7 + 2;
@@ -586,7 +596,13 @@ vector <tGoods> GenerateData(int shopSize)
 {
     int randDig;
     vector <tGoods> shop;
-    vector<char*> availableMeasure = {"kg", "l", "ind", "kg"};
+    char* availableMeasure[4];
+    for (int i = 0; i < 4; ++i) 
+        availableMeasure[i] = new char[5]; 
+    strcpy(availableMeasure[0], "kg");
+    strcpy(availableMeasure[1], "l");
+    strcpy(availableMeasure[2], "ind");
+    strcpy(availableMeasure[3], "pack");
     tGoods temp;
     for(int i = 0; i <shopSize; i++)
     {
@@ -602,6 +618,9 @@ vector <tGoods> GenerateData(int shopSize)
         shop.push_back(temp);
     }
     return shop;
+
+    for (int i = 0; i < 4; ++i) 
+        delete[] availableMeasure[i];
 }
 int benchmarkMode()
 {
@@ -612,25 +631,44 @@ int benchmarkMode()
     cout << "Write count of element: \n";
     cin >> shopSize;
 
+    char format[4];
+    strcpy(format,"txt");
+    cout << " ===== == BENCHMARK == ===== " << endl;
     auto start = high_resolution_clock::now();
 
     auto startran = high_resolution_clock::now();
     vector <tGoods> shop = GenerateData(shopSize);
     auto stopran = high_resolution_clock::now();
     auto durationran = duration_cast<milliseconds>(stopran - startran);
-    cout << "GENERETE DATA:  Time: " << durationran.count() << " milliseconds" << endl;
+    cout << "GENERETE DATA:  Time: " << durationran.count() << " milliseconds" << endl << endl;
 
+    cout << " ===== == FILE TIME ===== == \n";
     auto startfile = high_resolution_clock::now();
-    saveDataToFile(shop, availableId, maxID, "txt");
+    saveDataToFile(shop, availableId, maxID, format);
     auto stopfile = high_resolution_clock::now();
     auto durationfile = duration_cast<milliseconds>(stopfile - startfile);
     cout << "FILE TXT WRITE:  Time: " << durationfile.count() << " milliseconds" << endl;
 
     startfile = high_resolution_clock::now();
-    restoreDataFromFile(shop, availableId, maxID, "txt");
+    restoreDataFromFile(shop, availableId, maxID, format);
     stopfile = high_resolution_clock::now();
     durationfile = duration_cast<milliseconds>(stopfile - startfile);
-    cout << "FILE TXT READ:  Time: " << durationfile.count() << " milliseconds" << endl;
+    cout << "FILE TXT READ:  Time: " << durationfile.count() << " milliseconds" << endl << endl; 
+
+    strcpy(format,"bin");
+    startfile = high_resolution_clock::now();
+    saveDataToFile(shop, availableId, maxID, format);
+    stopfile = high_resolution_clock::now();
+    durationfile = duration_cast<milliseconds>(stopfile - startfile);
+    cout << "FILE BIN WRITE:  Time: " << durationfile.count() << " milliseconds" << endl;
+
+    startfile = high_resolution_clock::now();
+    restoreDataFromFile(shop, availableId, maxID, format);
+    stopfile = high_resolution_clock::now();
+    durationfile = duration_cast<milliseconds>(stopfile - startfile);
+    cout << "FILE BIN READ:  Time: " << durationfile.count() << " milliseconds" << endl << endl;
+
+    cout << " ===== == SEARCH TIME == ===== "<< endl;
 
     auto startsearch = high_resolution_clock::now();
     vector <int> res1 = findEndFragment(shop, GenerateString());
@@ -640,15 +678,19 @@ int benchmarkMode()
 
     startsearch = high_resolution_clock::now();
     int randDig = rand() % 4;
-    vector<char*> availableMeasure = {"kg", "l", "ind", "kg"};
-    char *meaTemp = availableMeasure[randDig];
+    char* availableMeasure[4];
+    for (int i = 0; i < 4; ++i) 
+        availableMeasure[i] = new char[5]; 
+    strcpy(availableMeasure[0], "kg");
+    strcpy(availableMeasure[1], "l");
+    strcpy(availableMeasure[2], "ind");
+    strcpy(availableMeasure[3], "pack");
+    const char *meaTemp = availableMeasure[randDig];
     tDate datTemp = GenerateTypeDate();
     vector <int> res2 = findMeasureDate(shop, meaTemp, datTemp) ;
     stopsearch = high_resolution_clock::now();
     durationsearch = duration_cast<milliseconds>(stopsearch - startsearch);
     cout << "MEASURE SEARCH:  Time: " << durationsearch.count() << " milliseconds" << endl;
-
-
 
     startsearch = high_resolution_clock::now();
     int exDay = rand()%10000;
@@ -660,7 +702,42 @@ int benchmarkMode()
 
     auto stop = high_resolution_clock::now();
     auto duration = duration_cast<milliseconds>(stop - start);
-    cout << "TOTAL:  Time taken by program: " << duration.count() << " milliseconds" << endl;
+    cout << " ===== == TOTAL ===== ==\n Time taken by program: " << duration.count() << " milliseconds" << endl <<  endl;
+
+    cout << " ===== == FILE SIZE == ===== \n";
+    string filename = "Data.txt"; 
+    if (!fs::exists(filename)) 
+    {
+        std::cerr << "Error: File does not exist." << std::endl;
+        return 1;
+    }
+
+    try {
+        uintmax_t filesize = fs::file_size(filename);
+        cout << "Size of TXT file '" << filename << "': " << filesize << " bytes" << endl;
+    } 
+    catch (const filesystem::filesystem_error& e) {
+        cerr << "Error: " << e.what() << endl;
+        return 1;
+    }
+    
+    filename = "BinData.bin"; 
+    if (!fs::exists(filename)) 
+    {
+        std::cerr << "Error: File does not exist." << std::endl;
+        return 1;
+    }
+
+    try {
+        uintmax_t filesize = fs::file_size(filename);
+        cout << "Size of BIN file '" << filename << "': " << filesize << " bytes" << endl;
+    } 
+    catch (const filesystem::filesystem_error& e) {
+        cerr << "Error: " << e.what() << endl;
+        return 1;
+    }
+    for (int i = 0; i < 4; ++i) 
+        delete[] availableMeasure[i];
 
     return 0;
 
