@@ -68,14 +68,13 @@ class BinaryRelationList
         }
         void writeList() 
         {
-            cout << "***************\nBinary Relation:\n";
             tNode *current = top;
             while (current != nullptr)
             {
                 cout << current->data;
                 current = current->prev;
             }
-            cout << "***************" << endl;
+            cout << "================" << endl;
         }
         bool isElementPresent(tRelation findElem)
         {
@@ -122,11 +121,10 @@ class BinaryRelationList
         {
             create_empty();
         }
-        ~BinaryRelationList()
+        void clearList()
         {
-            while (!isEmpty()) {
+            while (!isEmpty()) 
                 pop();
-            }
         }
     
 };
@@ -178,55 +176,83 @@ void outputMenu()
     cout << "4 - Check if relation is in the list[Yes\\No]\n";
     cout << "5 - Check if list is empty\n";
     cout << "6 - Output all binary relation list\n";
-    cout << "7 - End program\n";
-    cout << "Please, write the number of your request:  ";
-
+    cout << "7 - Switch to another list\n";
+    cout << "8 - Output name of list with which we work\n";
+    cout << "9 - Union lists\n";
+    cout << "10 - Intersection lists\n";
+    cout << "11 - End program\n";
+    cout << "===============================================\n";
 }
+
+
 void InteractiveMode()
 {
-    BinaryRelationList BRList;
-    BRList.create_empty();
+    BinaryRelationList BRListA, BRListB, resultOperation;
+    BinaryRelationList * BRList = &BRListA;
     int request;
     tRelation input;
+    outputMenu();
     do {
-        outputMenu();
+        cout << "Please, write the number of your request:  ";
         cin >> request;
         switch (request) {
             case 1:
-                cout << "Enter x-element and y-element:";
+                cout << "Enter x-element and y-element: ";
                 cin >> input;
-                BRList.push(input);
+                BRList->push(input);
                 cout << " ==== Complete =====";
                 break;
             case 2:
-                BRList.pop();
+                BRList->pop();
                 cout << " ==== Complete =====";
                 break;
             case 3:
-                cout << " The value of the top item: " << BRList.peek();
+                cout << " The value of the top item: " << BRList->peek();
                 break;
             case 4:
-                cout << "Enter x-element and y-element:";
+                cout << "Enter x-element and y-element: ";
                 cin >> input;
-                if (BRList.isElementPresent(input))
+                if (BRList->isElementPresent(input))
                     cout << "The (" << input.x << ',' << input.y << ") is presented\n";
                 else
                     cout << "The (" << input.x << ',' << input.y << ") isn't presented :(\n";
                 break;
             case 5:
-                if (BRList.isEmpty())
+                if (BRList->isEmpty())
                     cout << "The list is empty :(\n";
                 else
                     cout << "The list isn't empty!!!\n";
                 break;
             case 6:
-                BRList.writeList();
+                if(BRList == &BRListA) cout << "== LIST A ==\n";
+                else cout << "== LIST B ==\n";
+                BRList->writeList();
+                break;
+            case 7:
+                if(BRList == &BRListA) BRList = &BRListB;
+                else BRList = &BRListA;
+                break;
+            case 8:
+                if(BRList == &BRListA) cout << "We work with list A\n";
+                else cout << "We work with list B\n";
+                break;
+            case 9:
+                cout << "== UNION ==\n";
+                resultOperation.clearList();
+                resultOperation = unionList(BRListA, BRListB);
+                resultOperation.writeList();
+                break;
+            case 10:
+                cout << "== INTERSECTION ==\n";
+                resultOperation.clearList();
+                resultOperation = intersection(BRListA, BRListB);
+                resultOperation.writeList();
                 break;
             default:
                 cout << "----- Error! Wrong request! Try again!!! -----";
         }
         cout << endl;
-    } while (request != 7);
+    } while (request != 11);
 
 } 
 
@@ -259,11 +285,11 @@ void DemonstrationMode()
     brB.writeList();
 
     cout << "Union:\n";
-    BinaryRelationList result = unionList(brA, brB);
-    result.writeList();
-    /*cout << "intersection:\n";
-    result = intersection(brA, brB);
-    result.writeList();*/
+    BinaryRelationList resultUn = unionList(brA, brB);
+    resultUn.writeList();
+    cout << "intersection:\n";
+    BinaryRelationList resultIn = intersection(brA, brB);
+    resultIn.writeList();
     
     
 }
@@ -301,3 +327,22 @@ int main()
         return 1;
     }
 }
+
+/*
+i
+1 5 6
+1 8 9
+1 1 2
+1 10 15
+7
+1 3 5
+1 7 6
+1 8 9
+1 3 7
+1 1 2
+6
+7
+6
+9
+10
+*/
