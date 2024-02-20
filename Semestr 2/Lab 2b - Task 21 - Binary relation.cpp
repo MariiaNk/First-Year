@@ -8,6 +8,7 @@ struct tRelation
 {
     int x;
     int y;
+    tRelation(int x=0, int y=0) : x(x), y(y) {}
     friend bool operator!=(const tRelation& lp, const tRelation& rp) 
     {
         return lp.x != rp.x || lp.y != rp.y;
@@ -34,9 +35,8 @@ struct tNode
 
 class BinaryRelationList
 {
-    private:
-        tNode *top;
     public:
+        tNode *top;
         void create_empty() 
         {
             top = nullptr;
@@ -44,7 +44,8 @@ class BinaryRelationList
         void push(tRelation data) 
         {
             tNode *newNode = new tNode(data, top);
-            top = newNode;
+            if(!isElementPresent(data))
+                top = newNode;
         }
         void pop() 
         {
@@ -59,25 +60,23 @@ class BinaryRelationList
         {
             if (top != nullptr)
                 return top->data;
-            throw std::runtime_error("Stack is empty");
+            throw runtime_error("List is empty");
         }
         bool isEmpty() const 
         {
             return top == nullptr;
         }
-
         void writeList() 
         {
-            cout << "Binary Relation:\n";
+            cout << "***************\nBinary Relation:\n";
             tNode *current = top;
             while (current != nullptr)
             {
                 cout << current->data;
                 current = current->prev;
             }
-            cout << endl;
+            cout << "***************" << endl;
         }
-
         bool isElementPresent(tRelation findElem)
         {
             tNode *current = top;
@@ -85,22 +84,19 @@ class BinaryRelationList
                 current = current->prev;
             return current != nullptr;
         }
-
         void removeElement(tRelation findElem)
-    {
-        tNode *current = top;
-        while (current->prev != nullptr && current->prev->data != findElem) 
-            current = current->prev;
-        
-        if (current->prev != nullptr) 
         {
-            tNode *temp = current -> prev;
-            current -> prev = current -> prev -> prev;
-            delete temp;
+            tNode *current = top;
+            while (current->prev != nullptr && current->prev->data != findElem) 
+                current = current->prev;
+            
+            if (current->prev != nullptr) 
+            {
+                tNode *temp = current -> prev;
+                current -> prev = current -> prev -> prev;
+                delete temp;
+            }
         }
-    }
-
-
         size_t sizeOfStruct() 
         {
             size_t totalSize = 0;
@@ -113,13 +109,65 @@ class BinaryRelationList
             }
             return totalSize;
         }
+        tRelation composition(tRelation relA, tRelation relB)
+        {
+            if(isElementPresent(relA) && isElementPresent(relB))
+            {
+                tRelation result(relA.x, relB.y);
+                return tRelation(relA.x, relB.y);
+            }
+            throw "Relation 1 or Relation 2 isn't presented!!!";
+        }
+        BinaryRelationList()
+        {
+            create_empty();
+        }
         ~BinaryRelationList()
         {
             while (!isEmpty()) {
                 pop();
             }
         }
+    
 };
+
+BinaryRelationList intersection(BinaryRelationList& ListA, BinaryRelationList& ListB)
+{
+    BinaryRelationList result;
+    tNode* current = ListA.top;
+
+    while (current != nullptr) 
+    {
+        if (ListB.isElementPresent(current->data)) 
+            result.push(current->data);
+        current = current->prev;
+    }
+    return result;
+}
+
+BinaryRelationList unionList( const BinaryRelationList& ListA, const BinaryRelationList& ListB)
+{
+    BinaryRelationList result;
+    tNode* currentA = ListA.top;
+    while (currentA != nullptr) 
+    {
+        result.push(currentA->data);
+        currentA = currentA->prev;
+    }
+
+    tNode* currentB = ListB.top;
+    while (currentB != nullptr) 
+    {
+        if (!result.isElementPresent(currentB->data))
+            result.push(currentB->data);
+        currentB = currentB->prev;
+    }
+    return result;
+}
+
+
+
+
 
 void outputMenu()
 {
@@ -131,41 +179,48 @@ void outputMenu()
     cout << "5 - Check if list is empty\n";
     cout << "6 - Output all binary relation list\n";
     cout << "7 - End program\n";
-    cout << "Please, write the number of your request: ";
+    cout << "Please, write the number of your request:  ";
 
 }
 void InteractiveMode()
 {
     BinaryRelationList BRList;
-    BRList -> create_empty();
+    BRList.create_empty();
     int request;
+    tRelation input;
     do {
         outputMenu();
         cin >> request;
         switch (request) {
             case 1:
-                tRelation input;
                 cout << "Enter x-element and y-element:";
-                BRList->push(addElem());
+                cin >> input;
+                BRList.push(input);
                 cout << " ==== Complete =====";
                 break;
             case 2:
-                BRList->pop();
+                BRList.pop();
                 cout << " ==== Complete =====";
                 break;
             case 3:
                 cout << " The value of the top item: " << BRList.peek();
                 break;
             case 4:
-                
-            case 5:
-                if (BRList->isEmpty())
-                    cout << "The stack is empty :(\n";
+                cout << "Enter x-element and y-element:";
+                cin >> input;
+                if (BRList.isElementPresent(input))
+                    cout << "The (" << input.x << ',' << input.y << ") is presented\n";
                 else
-                    cout << "The stack isn't empty!!!\n";
+                    cout << "The (" << input.x << ',' << input.y << ") isn't presented :(\n";
+                break;
+            case 5:
+                if (BRList.isEmpty())
+                    cout << "The list is empty :(\n";
+                else
+                    cout << "The list isn't empty!!!\n";
                 break;
             case 6:
-                BRList->writeStack();
+                BRList.writeList();
                 break;
             default:
                 cout << "----- Error! Wrong request! Try again!!! -----";
@@ -173,44 +228,73 @@ void InteractiveMode()
         cout << endl;
     } while (request != 7);
 
-    delete BRList;
 } 
+
 void DemonstrationMode()
 {
-    BinaryRelationList br;
-    br.create_empty();
-    br.push({1, 2});
-    br.push({3, 4});
-    br.push({5, 6});
+    BinaryRelationList brA;
+    brA.create_empty();
+    brA.push({1, 2});
+    brA.push({3, 4});
+    brA.push({5, 6});
+    brA.writeList();
+    cout << "Is (1, 2) present? " << (brA.isElementPresent({1, 2}) ? "Yes" : "No") << endl;
+    cout << "Is (2, 3) present? " << (brA.isElementPresent({2, 3}) ? "Yes" : "No") << endl;
+    brA.pop();
+    cout << "Top element in List: " << brA.peek();
+    brA.push({10, 15});
+    brA.removeElement({1, 2});
+    brA.writeList();
+    cout << brA.composition({10, 15}, {3, 4});
 
+    BinaryRelationList brB;
+    brB.create_empty();
+    brB.push({1, 8});
+    brB.push({1, 2});
+    brB.push({3, 8});
+    brB.push({1, 10});
+    brB.push({11, 8});
+    brB.push({13, 22});
+    brB.push({3, 4});
+    brB.writeList();
+
+    cout << "Union:\n";
+    BinaryRelationList result = unionList(brA, brB);
+    result.writeList();
+    /*cout << "intersection:\n";
+    result = intersection(brA, brB);
+    result.writeList();*/
     
-    br.writeList();
-
-    cout << "Is (1, 2) present? " << (br.isElementPresent({1, 2}) ? "Yes" : "No") << endl;
-    cout << "Is (2, 3) present? " << (br.isElementPresent({2, 3}) ? "Yes" : "No") << endl;
-    br.pop();
-    cout << "Top element in List: " << br.peek();
-
-    br.push({10, 15});
-    br.removeElement({1, 2});
-
-    br.writeList();
-
-
+    
 }
 
+void BenchmarkMode()
+{
+    BinaryRelationList BRList;
+    BRList.create_empty();
+    cout << "Enter count of relation: ";
+    int cnt;
+    cin >> cnt;
+
+    tRelation item;
+    for(int i = 0; i < cnt; i++)
+    {
+        item.x = rand()%100;
+        item.y = rand()%100;
+    }
+}
 int main()
 {
     srand((unsigned)time(0)); 
     cout << "Input mode of work\ni - interactive\nd - demonstration\nb - benchmark\n";
     char mode;
     cin >> mode;
-    /*if (mode == 'i')
+    if (mode == 'i')
         InteractiveMode();
-    else*/ if(mode == 'd')
+    else if(mode == 'd')
         DemonstrationMode();
-    /*else if(mode == 'b')
-        //return benchmarkMode();*/
+    else if(mode == 'b')
+        BenchmarkMode();
     else
     {
         cout << "Error. Program isn't started\n";
