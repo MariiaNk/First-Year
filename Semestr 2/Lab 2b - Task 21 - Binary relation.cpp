@@ -1,8 +1,10 @@
 /* 21(**) Реалізувати роботу з бінарними відношеннями, 
 представленими у вигляді списку.*/
 #include <iostream>
+#include <chrono>
 
 using namespace std;
+using namespace std::chrono;
 
 struct tRelation
 {
@@ -96,7 +98,7 @@ class BinaryRelationList
                 delete temp;
             }
         }
-        size_t sizeOfStruct() 
+        size_t sizeOfList() 
         {
             size_t totalSize = 0;
             tNode *current = top;
@@ -175,12 +177,13 @@ void outputMenu()
     cout << "3 - The value of the top item\n";
     cout << "4 - Check if relation is in the list[Yes\\No]\n";
     cout << "5 - Check if list is empty\n";
-    cout << "6 - Output all binary relation list\n";
-    cout << "7 - Switch to another list\n";
-    cout << "8 - Output name of list with which we work\n";
-    cout << "9 - Union lists\n";
-    cout << "10 - Intersection lists\n";
-    cout << "11 - End program\n";
+    cout << "6 - Composition two binary relation\n";
+    cout << "7 - Output all binary relation list\n";
+    cout << "8 - Switch to another list\n";
+    cout << "9 - Output name of list with which we work\n";
+    cout << "10 - Union lists\n";
+    cout << "11 - Intersection lists\n";
+    cout << "12 - End program\n";
     cout << "===============================================\n";
 }
 
@@ -190,7 +193,7 @@ void InteractiveMode()
     BinaryRelationList BRListA, BRListB, resultOperation;
     BinaryRelationList * BRList = &BRListA;
     int request;
-    tRelation input;
+    tRelation input, input2;
     outputMenu();
     do {
         cout << "Please, write the number of your request:  ";
@@ -224,25 +227,33 @@ void InteractiveMode()
                     cout << "The list isn't empty!!!\n";
                 break;
             case 6:
+                cout << "Enter coord of first relation: x-element and y-element: ";
+                cin >> input;
+                cout << "Enter coord of second relation: x-element and y-element: ";
+                cin >> input2;
+                input2 = BRList->composition(input, input2);
+                cout << "Result relation: " << input2;
+                break;
+            case 7:
                 if(BRList == &BRListA) cout << "== LIST A ==\n";
                 else cout << "== LIST B ==\n";
                 BRList->writeList();
                 break;
-            case 7:
+            case 8:
                 if(BRList == &BRListA) BRList = &BRListB;
                 else BRList = &BRListA;
                 break;
-            case 8:
+            case 9:
                 if(BRList == &BRListA) cout << "We work with list A\n";
                 else cout << "We work with list B\n";
                 break;
-            case 9:
+            case 10:
                 cout << "== UNION ==\n";
                 resultOperation.clearList();
                 resultOperation = unionList(BRListA, BRListB);
                 resultOperation.writeList();
                 break;
-            case 10:
+            case 11:
                 cout << "== INTERSECTION ==\n";
                 resultOperation.clearList();
                 resultOperation = intersection(BRListA, BRListB);
@@ -296,18 +307,53 @@ void DemonstrationMode()
 
 void BenchmarkMode()
 {
-    BinaryRelationList BRList;
-    BRList.create_empty();
+    BinaryRelationList BRListA, BRListB;
     cout << "Enter count of relation: ";
     int cnt;
     cin >> cnt;
-
+    cnt /= 2;
     tRelation item;
+    auto totalStart = high_resolution_clock::now();
+
+    auto start = high_resolution_clock::now();
     for(int i = 0; i < cnt; i++)
     {
         item.x = rand()%100;
         item.y = rand()%100;
+        BRListA.push(item);
     }
+    auto stop = high_resolution_clock::now();
+    auto duration = duration_cast<milliseconds>(stop - start);
+    cout << "Time taken by List A GENERATE AND PUSH*" << cnt <<":  " << duration.count() << " milliseconds" << endl;
+    
+    start = high_resolution_clock::now();
+    for(int i = 0; i < cnt; i++)
+    {
+        item.x = rand()%100;
+        item.y = rand()%100;
+        BRListB.push(item);
+    }
+    stop = high_resolution_clock::now();
+    duration = duration_cast<milliseconds>(stop - start);
+    cout << "Time taken by List B GENERATE AND PUSH*" << cnt <<":  " << duration.count() << " milliseconds" << endl;
+    
+    start = high_resolution_clock::now();
+    BinaryRelationList resUn = unionList(BRListA, BRListB);
+    stop = high_resolution_clock::now();
+    duration = duration_cast<milliseconds>(stop - start);
+    cout << "Time taken by UNION*" << cnt <<":  " << duration.count() << " milliseconds" << endl;
+    
+    start = high_resolution_clock::now();
+    BinaryRelationList resIn = intersection(BRListA, BRListB);
+    stop = high_resolution_clock::now();
+    duration = duration_cast<milliseconds>(stop - start);
+    cout << "Time taken by INTERSECTION*" << cnt <<":  " << duration.count() << " milliseconds" << endl;
+
+    auto totalStop = high_resolution_clock::now();
+    duration = duration_cast<milliseconds>(totalStop - totalStart);
+    cout << "Time taken by TOTAL: " << duration.count() << " milliseconds" << endl << endl;
+
+    cout << "MEMORY USED BY LIST: " << BRListA.sizeOfList() << " bytes" << endl << endl;
 }
 int main()
 {
@@ -334,15 +380,16 @@ i
 1 8 9
 1 1 2
 1 10 15
-7
+8
 1 3 5
 1 7 6
 1 8 9
 1 3 7
 1 1 2
-6
 7
-6
-9
+8
+7
+6 5 6 8 9
 10
+11
 */
