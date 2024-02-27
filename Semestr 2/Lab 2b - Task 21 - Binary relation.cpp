@@ -261,6 +261,7 @@ void InteractiveMode()
                 break;
             default:
                 cout << "----- Error! Wrong request! Try again!!! -----";
+                break;
         }
         cout << endl;
     } while (request != 11);

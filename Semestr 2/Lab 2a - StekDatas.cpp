@@ -318,6 +318,7 @@ void InteractiveMode(int typeSave)
                 break;
             default:
                 cout << "----- Error! Wrong request! Try again!!! -----";
+                break;
         }
         cout << endl;
     } while (request != 7);
@@ -436,7 +437,6 @@ void benchmarkMode(int typeSave, int sizeOfStore)
 int main()
 {
     
-
     cout << "Input mode of work\ni - interactive\nd - demonstration\nb - benchmark\nEnter mode: ";
     char mode;
     cin >> mode;
