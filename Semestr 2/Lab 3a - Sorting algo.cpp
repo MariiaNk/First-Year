@@ -1,28 +1,44 @@
 #include <iostream>
-#define NMAX 1000
+#include <chrono>
+const int NMAX = 1e3;
+
 using namespace std;
+using namespace std::chrono;
 
-struct tSort
+bool operator>(const string& str1, const string& str2) 
 {
-    string value;
-
-    bool operator > (const tSort& other) const
+    if(str1.size() == str2.size()) 
     {
-        if(value.size() == other.value.size()) 
-        {
-            for(int i = 0; i < value.size(); i++)
-                if(value[i] != other.value[i])
-                    return value[i] > other.value[i];
-            return true;
-        }
-        return value.size() > other.value.size();
+        for(int i = 0; i < str1.size(); i++)
+            if(str1[i] != str2[i])
+                return str1[i] > str2[i];
+        return false;
     }
-};
+    return str1.size() > str2.size();
+}
 
-void insertionSort(tSort *arr, int n)
+bool operator>=(const string& str1, const string& str2) 
+{
+    if(str1.size() == str2.size()) 
+    {
+        for(int i = 0; i < str1.size(); i++)
+            if(str1[i] != str2[i])
+                return str1[i] > str2[i];
+        return true;
+    }
+    return str1.size() > str2.size();
+}
+
+void copyArray(string *str1, const string *str2, int n)
+{
+    for (int i = 0; i < n; ++i) 
+        str1[i] = str2[i];
+}
+
+void insertionSort(string *arr, int n)
 {
     int j;
-    tSort current; 
+    string current; 
     //move element and pointer
     for(int i = 0; i < n; i++)
     {
@@ -35,13 +51,39 @@ void insertionSort(tSort *arr, int n)
         }
         arr[j + 1] = current;
     }
+}
+int partQuickSort(string *arr, int st, int fn)
+{
+    int idRandom = st + rand() % (fn - st);
+    swap(arr[idRandom], arr[fn]);
+    string pivot = arr[fn];
+    int i = st - 1;
+    for(int j = st; j < fn; j++)
+    {
+        if(pivot >= arr[j])
+        {
+            i++;
+            swap(arr[j], arr[i]);
+        }
+    }
+    swap(arr[i+1], arr[fn]);
+    return i+1;
 
 }
-void outputArr(const tSort *arr, int n)
+void quickSort(string *arr, int st, int fn)
+{
+    if(st < fn)
+    {
+        int middle = partQuickSort(arr, st, fn);
+        quickSort(arr, st, middle - 1);
+        quickSort(arr, middle + 1, fn);
+    }
+}
+void outputArr(const string *arr, int n)
 {
     cout << "==== ARRAY ====" << endl;
     for(int i = 0; i < n; i++)
-        cout << arr[i].value << " ";
+        cout << arr[i] << " ";
     cout << endl;
 }
 string GenerateString()
@@ -57,34 +99,57 @@ string GenerateString()
     }
     return str;
 }
+
+
 void DemonstrationMode()
 {
-    tSort arr[10] = {"abbc", "cbba", "b", "hsaj", "lala", "ab",  "zy", "xyz", "ababagalamaga", "uhuuu"};
+    string arr[10] = {"abbc", "cbba", "b", "hsaj", "lala", "ab",  "zy", "xyz", "ababagalamaga", "uhuuu"};
+    string copy[10];
     int n = 10;
 
-    outputArr(arr, n);
+    copyArray(copy, arr, n);
+    outputArr(copy, n);
     cout << "***  INSERTION SORT  ***\n [Process is going...]\n";
-    insertionSort(arr, n);
-    outputArr(arr, n);
+    insertionSort(copy, n);
+    outputArr(copy, n);
 
-    arr[10] = {"abbc", "cbba", "b", "hsaj", "lala", "ab",  "zy", "xyz", "ababagalamaga", "uhuuu"};
+    copyArray(copy, arr, n);
+    outputArr(copy, n);
+    cout << "***  QUICK SORT  ***\n [Process is going...]\n";
+    quickSort(copy, 0, n - 1);
+    outputArr(copy, n);
 }
 void BenchmarkMode()
 {
-    tSort arr[NMAX];
+    string arr[NMAX], copy[NMAX];
     int n;
     cout << "Enter count of element: ";
     cin >> n;
 
     for(int i = 0; i < n; i++)
-        arr[i].value = GenerateString();
+        arr[i] = GenerateString();
 
+    copyArray(copy, arr, n);
+    auto start = high_resolution_clock::now();
+    insertionSort(copy, n);
+    auto stop = high_resolution_clock::now();
+    auto duration = duration_cast<milliseconds>(stop - start);
+    cout << "Time taken by INSERTION SORT:  " << duration.count() << " milliseconds" << endl;
+
+    copyArray(copy, arr, n);
+    start = high_resolution_clock::now();
+    quickSort(copy, 0, n - 1);
+    stop = high_resolution_clock::now();
+    duration = duration_cast<milliseconds>(stop - start);
+    cout << "Time taken by QUICK SORT:  " << duration.count() << " milliseconds" << endl;
     
 
 }
 int main()
 {
+    srand(0);
     cout << "Input mode of work\nd - demonstration\nb - benchmark\n";
+    cout << "Enter request:";
     char mode;
     cin >> mode;
     if(mode == 'd')
