@@ -208,7 +208,7 @@ void DemonstrationMode()
 
     copyArray(copy, arr, n);
     outputArr(copy, n);
-    cout << "***  STANDART SORT  ***\n";
+    cout << "***  STANDARD SORT  ***\n";
     sort(copy,  copy + n, cmp);
     outputArr(copy, n);
     cout << endl;
@@ -257,7 +257,7 @@ void BenchmarkMode()
     sort(arr, arr+n, cmp);
     stop = high_resolution_clock::now();
     duration = duration_cast<microseconds>(stop - start);
-    cout << "Time taken by STANDART SORT:  " << duration.count() << " microseconds" << endl;
+    cout << "Time taken by STANDARD SORT:  " << duration.count() << " microseconds" << endl;
     
 
 }
