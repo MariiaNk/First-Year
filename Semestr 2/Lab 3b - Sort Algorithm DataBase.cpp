@@ -104,12 +104,12 @@ void outputGood (tGoods temp)
 {
     cout << "|" << setw(5) << temp.id << "|" << setw(10) << temp.name;
     cout << "|" << setw(10) << temp.measure<<"|" << setw(10) << temp.cnt;
-    cout << "|" << temp.date << "|" << temp.time << "|" << temp.expirationDate << "|\n";
+    cout << "|" << temp.date << "|" << temp.time << "|" << setw(8) << temp.expirationRange << "|" << temp.expirationDate << "|\n";
 }
 void outputheader ()
 {
-    cout << "|" << setw(6) << "ID|" << setw(11) << "Name|" << setw(11) << "Measure|" << setw(11) << "Count|" << setw(16) << "Product date|" << setw(9) << "Time|" << setw(16) << "Expiration date|\n";
-    cout << "---------------------------------------------------------------------------------\n";
+    cout << "|" << setw(6) << "ID|" << setw(11) << "Name|" << setw(11) << "Measure|" << setw(11) << "Count|" << setw(16) << "Product date|" << setw(9) << "Time|"<< setw(8)<< "Range|" << setw(16) << "Expiration date|\n";
+    cout << "---------------------------------------------------------------------------------------------\n";
 }
 void outputData(vector <tGoods> const &shop)
 {
@@ -497,15 +497,15 @@ void quickSort(vector <tGoods> &arr, int st, int fn)
     }
 }
 
-void countingSort(vector <tGoods> &arr)
+void countingSortString(vector <tGoods> &arr)
 {
-    int cntArr[4] = {0,0,0,0}; //[ind/kg/l/pack]
+    int cntArr[5] = {0,0,0,0}; //[ind/kg/l/pack]
     int n = arr.size();
     for(int i = 0; i <n; i++)
     {
         if(strcmp(arr[i].measure, "kg") == 0)
             cntArr[1]++;
-        if(strcmp(arr[i].measure, "l") == 0)
+        else if(strcmp(arr[i].measure, "l") == 0)
             cntArr[2]++;
         else if(strcmp(arr[i].measure, "ind") == 0)
             cntArr[0]++;
@@ -517,9 +517,10 @@ void countingSort(vector <tGoods> &arr)
 
     vector<tGoods> output(n);
 
+    int measureIndex;
     for (int i = 0; i < n; i++) 
     {
-        int measureIndex;
+        
         if (strcmp(arr[i].measure, "kg") == 0)
             measureIndex = 1;
         else if (strcmp(arr[i].measure, "l") == 0)
@@ -527,7 +528,6 @@ void countingSort(vector <tGoods> &arr)
         else if (strcmp(arr[i].measure, "ind") == 0) 
             measureIndex = 0;
         else measureIndex = 3;
-        cout << arr[i].name << " ";
         output[cntArr[measureIndex] - 1] = arr[i];
         cntArr[measureIndex]--;
     }
@@ -536,6 +536,41 @@ void countingSort(vector <tGoods> &arr)
     {
         arr[i] = output[i];
     }
+}
+void countingSortDigit(vector <tGoods> &arr, int n, int place) 
+{
+    vector<tGoods> output(n);
+    int count[10];
+
+    for (int i = 0; i < 10; ++i)
+        count[i] = 0;
+
+    for (int i = 0; i < n; i++)
+        count[(arr[i].expirationRange / place) % 10]++;
+    for (int i = 1; i < 10; i++)
+        count[i] += count[i - 1];
+    for (int i = n - 1; i >= 0; i--) 
+    {
+        output[count[(arr[i].expirationRange / place) % 10] - 1] = arr[i];
+        count[(arr[i].expirationRange / place) % 10]--;
+    }
+    for (int i = 0; i < n; i++)
+        arr[i] = output[i];
+}
+int getMax(vector<tGoods> &arr, int n) 
+{
+    int max = arr[0].expirationRange;
+    for (int i = 1; i < n; i++)
+        if (arr[i].expirationRange > max)
+        max = arr[i].expirationRange;
+    return max;
+}
+void radixSort(vector<tGoods> &arr) 
+{
+    int n = arr.size();
+    int max = getMax(arr, n);
+    for (int place = 1; max / place > 0; place *= 10)
+        countingSortDigit(arr, n, place);
 }
 void outpuMenu()
 {
@@ -616,7 +651,10 @@ int InteractiveMode()
                     quickSort(shop, 0, shop.size()-1);
                     break;
                 case 2:
-                    countingSort(shop);
+                    countingSortString(shop);
+                    break;
+                case 3:
+                    radixSort(shop);
                     break;
             default:
                 cout << "wrong type\n";
@@ -728,124 +766,36 @@ vector <tGoods> GenerateData(int shopSize)
     for (int i = 0; i < 4; ++i) 
         delete[] availableMeasure[i];
 }
-int benchmarkMode()
+void benchmarkMode()
 {
-    srand(time(NULL));
-    int shopSize = 0;
-    vector <int> availableId;
+    /*vector <int> availableId;
     int maxID = 0;
-    cout << "Write count of element: \n";
-    cin >> shopSize;
-
     char format[4];
-    strcpy(format,"txt");
+    strcpy(format,"bin");*/
+    int shopsize;
+    cout << "Enter size of shop: ";
+    cin >> shopsize;
+    vector <tGoods> shop = GenerateData(shopsize);
+    //restoreDataFromFile(shop, availableId, maxID, format);
     cout << " ===== == BENCHMARK == ===== " << endl;
+    
     auto start = high_resolution_clock::now();
-
-    auto startran = high_resolution_clock::now();
-    vector <tGoods> shop = GenerateData(shopSize);
-    auto stopran = high_resolution_clock::now();
-    auto durationran = duration_cast<milliseconds>(stopran - startran);
-    cout << "GENERETE DATA:  Time: " << durationran.count() << " milliseconds" << endl << endl;
-
-    cout << " ===== == FILE TIME ===== == \n";
-    auto startfile = high_resolution_clock::now();
-    saveDataToFile(shop, availableId, maxID, format);
-    auto stopfile = high_resolution_clock::now();
-    auto durationfile = duration_cast<milliseconds>(stopfile - startfile);
-    cout << "FILE TXT WRITE:  Time: " << durationfile.count() << " milliseconds" << endl;
-
-    startfile = high_resolution_clock::now();
-    restoreDataFromFile(shop, availableId, maxID, format);
-    stopfile = high_resolution_clock::now();
-    durationfile = duration_cast<milliseconds>(stopfile - startfile);
-    cout << "FILE TXT READ:  Time: " << durationfile.count() << " milliseconds" << endl << endl; 
-
-    strcpy(format,"bin");
-    startfile = high_resolution_clock::now();
-    saveDataToFile(shop, availableId, maxID, format);
-    stopfile = high_resolution_clock::now();
-    durationfile = duration_cast<milliseconds>(stopfile - startfile);
-    cout << "FILE BIN WRITE:  Time: " << durationfile.count() << " milliseconds" << endl;
-
-    startfile = high_resolution_clock::now();
-    restoreDataFromFile(shop, availableId, maxID, format);
-    stopfile = high_resolution_clock::now();
-    durationfile = duration_cast<milliseconds>(stopfile - startfile);
-    cout << "FILE BIN READ:  Time: " << durationfile.count() << " milliseconds" << endl << endl;
-
-    cout << " ===== == SEARCH TIME == ===== "<< endl;
-
-    auto startsearch = high_resolution_clock::now();
-    vector <int> res1 = findEndFragment(shop, GenerateString());
-    auto stopsearch = high_resolution_clock::now();
-    auto durationsearch = duration_cast<milliseconds>(stopsearch - startsearch);
-    cout << "END FRAG SEARCH:  Time: " << durationsearch.count() << " milliseconds" << endl;
-
-    startsearch = high_resolution_clock::now();
-    int randDig = rand() % 4;
-    char* availableMeasure[4];
-    for (int i = 0; i < 4; ++i) 
-        availableMeasure[i] = new char[5]; 
-    strcpy(availableMeasure[0], "kg");
-    strcpy(availableMeasure[1], "l");
-    strcpy(availableMeasure[2], "ind");
-    strcpy(availableMeasure[3], "pack");
-    const char *meaTemp = availableMeasure[randDig];
-    tDate datTemp = GenerateTypeDate();
-    vector <int> res2 = findMeasureDate(shop, meaTemp, datTemp) ;
-    stopsearch = high_resolution_clock::now();
-    durationsearch = duration_cast<milliseconds>(stopsearch - startsearch);
-    cout << "MEASURE SEARCH:  Time: " << durationsearch.count() << " milliseconds" << endl;
-
-    startsearch = high_resolution_clock::now();
-    int exDay = rand()%10000;
-    tDate first = GenerateTypeDate(), second = ConvertToExpirationDate(first, exDay);
-    vector <int> res3 = findDateInRange(shop, first, second);
-    stopsearch = high_resolution_clock::now();
-    durationsearch = duration_cast<milliseconds>(stopsearch - startsearch);
-    cout << "PERIOD SEARCH:  Time: " << durationsearch.count() << " milliseconds" << endl;
-
+    quickSort(shop, 0, shop.size()-1);
     auto stop = high_resolution_clock::now();
     auto duration = duration_cast<milliseconds>(stop - start);
-    cout << " ===== == TOTAL ===== ==\n Time taken by program: " << duration.count() << " milliseconds" << endl <<  endl;
+    cout << "QUICK SORT:  Time: " << duration.count() << " milliseconds" << endl << endl;
 
-    cout << " ===== == FILE SIZE == ===== \n";
-    string filename = "Data.txt"; 
-    if (!fs::exists(filename)) 
-    {
-        std::cerr << "Error: File does not exist." << std::endl;
-        return 1;
-    }
+    start = high_resolution_clock::now();
+    countingSortString(shop);
+    stop = high_resolution_clock::now();
+    duration = duration_cast<milliseconds>(stop - start);
+    cout << "COUNTING SORT:  Time: " << duration.count() << " milliseconds" << endl << endl;
 
-    try {
-        uintmax_t filesize = fs::file_size(filename);
-        cout << "Size of TXT file '" << filename << "': " << filesize << " bytes" << endl;
-    } 
-    catch (const filesystem::filesystem_error& e) {
-        cerr << "Error: " << e.what() << endl;
-        return 1;
-    }
-    
-    filename = "BinData.bin"; 
-    if (!fs::exists(filename)) 
-    {
-        std::cerr << "Error: File does not exist." << std::endl;
-        return 1;
-    }
-
-    try {
-        uintmax_t filesize = fs::file_size(filename);
-        cout << "Size of BIN file '" << filename << "': " << filesize << " bytes" << endl;
-    } 
-    catch (const filesystem::filesystem_error& e) {
-        cerr << "Error: " << e.what() << endl;
-        return 1;
-    }
-    for (int i = 0; i < 4; ++i) 
-        delete[] availableMeasure[i];
-
-    return 0;
+    start = high_resolution_clock::now();
+    radixSort(shop);
+    stop = high_resolution_clock::now();
+    duration = duration_cast<milliseconds>(stop - start);
+    cout << "RADIX SORT:  Time: " << duration.count() << " milliseconds" << endl << endl;
 
 }
 int main()
@@ -858,7 +808,7 @@ int main()
     else if(mode == 'd')
         return DemonstrationMode();
     else if(mode == 'b')
-        return benchmarkMode();
+        benchmarkMode();
     else
     {
         cout << "Error. Program isn't started\n";
@@ -894,3 +844,17 @@ end
 output
 */
 
+/*
+restore
+bin
+output
+sort
+1
+sort
+2
+output
+sort
+3
+output
+
+*/
