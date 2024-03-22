@@ -72,7 +72,7 @@ void BenchmarkMode()
     cin >> n;
 
     for(int i = 0; i < n; i++)
-        arr[i] = rand() % 1000;
+        arr[i] = rand() %1000 / 1000;
 
     auto start = high_resolution_clock::now();
     bucketSort(arr, n);
