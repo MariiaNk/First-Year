@@ -11,6 +11,7 @@ using namespace std::chrono;
 struct TreeNode
 {
     int data;
+    TreeNode* parent;
     vector < TreeNode*> children;
     TreeNode(int value = 0) : data(value), children() {}
 };
@@ -30,6 +31,7 @@ struct Tree
     void addNode (int, int, int);
     void printBranchMethod();
     void printSpaceMethod(TreeNode* , int);
+    void deleteNode(int);
     
 };
 
@@ -101,11 +103,48 @@ void Tree::addNode (int valueNode, int minCountChildren, int maxCountChildren)
     {
         TreeNode* targetNode = findTargetNode(root, minCountChildren, maxCountChildren);
         TreeNode* newNode = new TreeNode(valueNode);
+        newNode->parent = targetNode;
         targetNode->children.push_back(newNode);
     }   
 }
-
-
+void deleteSubTree(TreeNode* root)
+{
+    if (root == nullptr)
+        return;
+    for (TreeNode* child : root->children)
+        deleteSubTree(child);
+    delete root;
+}
+void Tree::deleteNode(int valueNode)
+{
+    queue <TreeNode*> nodes;
+    nodes.push(root);
+    while(!nodes.empty())
+    {
+        if(nodes.front()->data == valueNode)
+        {
+            TreeNode* currentNodeParent = nodes.front()->parent;
+            for(int i = 0;i < currentNodeParent->children.size(); i++)
+            {
+                if(currentNodeParent->children[i] == nodes.front())
+                {
+                    currentNodeParent->children.erase(currentNodeParent->children.begin()+i);
+                    break;
+                }
+            }
+            deleteSubTree(nodes.front());
+            
+        }
+        else
+        {
+            for(TreeNode* child: nodes.front()->children)
+            {
+                nodes.push(child);
+            }
+        }
+        nodes.pop();
+    }
+}
 void Tree::printSpaceMethod(TreeNode* parent, int depth = 0) 
 {
     
@@ -113,8 +152,8 @@ void Tree::printSpaceMethod(TreeNode* parent, int depth = 0)
         return;
 
     for (int i = 0; i < depth; ++i)
-        cout << "  "; 
-    cout << parent->data << endl;
+        cout << "   "; 
+    cout << setw(3) << parent->data << endl;
 
     for (auto child : parent->children)
         printSpaceMethod(child, depth + 1);
@@ -256,10 +295,19 @@ void DemonstrationMode()
         myTree.addNode(26, 2, 4);
         myTree.addNode(4, 2, 4);
         myTree.addNode(3, 2, 4);
+        myTree.addNode(513, 1, 3);
         break;
     }   
     
     }
+
+    cout << " ==== SPACE METHOD === " << endl;
+    myTree.printSpaceMethod(myTree.root);
+
+    cout << " ==== BRANCH METHOD === " << endl;
+    myTree.printBranchMethod();
+
+    myTree.deleteNode(513);
 
     cout << " ==== SPACE METHOD === " << endl;
     myTree.printSpaceMethod(myTree.root);
@@ -289,8 +337,6 @@ void BenchmarkMode()
     }
 
     cout << "Time taken by ADD NODE:  " << durationProcess.count() << " microseconds" << endl;
-    cout << " ==== BRANCH METHOD === " << endl;
-    myTree.printBranchMethod();
     cout << " ==== SPACE METHOD === " << endl;
     myTree.printSpaceMethod(myTree.root);
 }
