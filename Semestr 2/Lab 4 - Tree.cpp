@@ -1,7 +1,12 @@
 #include <iostream>
 #include <vector>
+#include <queue>
+#include <iomanip>
+#include <cmath>
+#include <chrono>
 
 using namespace std;
+using namespace std::chrono;
 
 struct TreeNode
 {
@@ -23,6 +28,8 @@ struct Tree
         root->data = value;
     }
     void addNode (int, int, int);
+    void printBranchMethod();
+    void printSpaceMethod(TreeNode* , int);
     
 };
 
@@ -46,10 +53,10 @@ int subTreeSize(TreeNode* node)
     if (node == nullptr)
         return 0;
 
-    int size = 1;
+    int sizeSubTree = 1;
     for (TreeNode* child : node->children) 
-        size += subtreeSize(child);
-    return size;
+        sizeSubTree += subTreeSize(child);
+    return sizeSubTree;
 }
 
 TreeNode* findMinChildrenSubTree(TreeNode* parent)
@@ -74,11 +81,11 @@ TreeNode* findTargetNode (TreeNode *current, int minCountChildren, int maxCountC
     else
     {
         TreeNode* currentChildren = findMinChildren(current);
-        if(currentChildren->children.size() < maxCountChildren)
+        if(currentChildren->children.size() <= maxCountChildren)
             return findTargetNode(currentChildren, minCountChildren, maxCountChildren);
         else
         {
-            if(current->children.size() < maxCountChildren) 
+            if(current->children.size() <= maxCountChildren) 
                 return current;
             else
                 return findTargetNode(findMinChildrenSubTree(current), minCountChildren, maxCountChildren);
@@ -89,12 +96,19 @@ TreeNode* findTargetNode (TreeNode *current, int minCountChildren, int maxCountC
 
 void Tree::addNode (int valueNode, int minCountChildren, int maxCountChildren)
 {
-    TreeNode* targetNode = findTargetNode(root, minCountChildren, maxCountChildren);
-    TreeNode* newNode = new TreeNode(valueNode);
-    targetNode->children.push_back(newNode);
+    if(root == nullptr) root = new TreeNode(valueNode);
+    else
+    {
+        TreeNode* targetNode = findTargetNode(root, minCountChildren, maxCountChildren);
+        TreeNode* newNode = new TreeNode(valueNode);
+        targetNode->children.push_back(newNode);
+    }   
 }
-void printTree(TreeNode* parent, int depth) 
+
+
+void Tree::printSpaceMethod(TreeNode* parent, int depth = 0) 
 {
+    
     if (parent == nullptr) 
         return;
 
@@ -103,20 +117,200 @@ void printTree(TreeNode* parent, int depth)
     cout << parent->data << endl;
 
     for (auto child : parent->children)
-        printTree(child, depth + 1);
+        printSpaceMethod(child, depth + 1);
+
+}
+int countLeaves(TreeNode* node)
+{
+    if (node == nullptr)
+        return 0;
+    if (node->children.empty())
+        return 1;
+    int leaves = 0;
+    for (auto child : node->children)
+        leaves += countLeaves(child);
+    return leaves;
+}
+
+string printLine(int n, string elem, string out = "")
+{
+    if (n <= 0) return out;
+    for(int i = 0; i < n; i++)
+        out+= elem;
+    return out;
+}
+void printLayer (vector <TreeNode*> levelNodes, int cntLeaves, int &minSpace)
+{
+    int spaceByNode = int(((cntLeaves*2 - 1)*5) / levelNodes.size());
+    if(spaceByNode > minSpace)  spaceByNode = minSpace;
+    else minSpace = spaceByNode;
+    spaceByNode -= (levelNodes.size() - 1)*5;
+    string spaceStr = "     ", nodeStr = "  |  ",  brunches;
+    for(int i = 0; i < levelNodes.size(); i++)
+    {
+        TreeNode* node = levelNodes[i];
+        int cntChildren = node->children.size();
+        if(cntChildren <= 1) 
+        {
+            cout << "(" << setw(3) << node->data << ")";
+            if(cntChildren == 1) brunches +=  nodeStr;
+            else brunches += spaceStr;
+        }
+        else
+        {
+            int side1, side2;
+            if(cntChildren%2 == 1) side1 = side2 =  round(cntChildren/2);
+            else 
+            {
+                side2 = cntChildren/2;
+                side1 = side2 - 1;
+            }
+            if(i < levelNodes.size()/2) swap(side1, side2);
+            int space = (spaceByNode - 10*(side1 + side2) - 5 )/2;
+            if (space < 0) space = 0; 
+
+            //cout << spaceByNode << " " << space << endl;
+            //cout << cntChildren << " = 1 + " <<  side1 << " + " << side2 << " [" << space << "]"<< endl;
+            cout << printLine(space, " ");
+            cout << printLine(side1, " _________");
+            cout << "(" << setw(3) << node->data << ")";
+            cout << printLine(side2, "_________ ");
+            cout << printLine(space, " ");
+
+            brunches = printLine(space, " ", brunches);
+            brunches = printLine(side1, nodeStr + spaceStr, brunches);
+            brunches += nodeStr;
+            brunches = printLine(side2, spaceStr + nodeStr, brunches);
+            brunches = printLine(space, " ", brunches);
+        }
+        cout << spaceStr;
+        brunches += spaceStr;
+    }
+    cout << endl << brunches << endl;
+}
+void Tree::printBranchMethod() 
+{
+    
+    if (root == nullptr) 
+        return;
+
+    int cntLeaves = countLeaves(root);
+    queue <TreeNode*> nodes;
+    vector <TreeNode*> levelNodes;
+    TreeNode* newLevelElem = root;
+    nodes.push(root);
+    levelNodes.push_back(root);
+    int minSpace = (cntLeaves*2 - 1) * 5;
+    while(!nodes.empty())
+    {
+        TreeNode* top = nodes.front();
+        nodes.pop();
+        if(top == newLevelElem)
+        {
+            if(levelNodes.size() != 0)
+                printLayer(levelNodes, cntLeaves, minSpace);
+            //cout << "End Level" << levelNodes.size() << "\n";
+            levelNodes.clear();
+            if(top->children.size() != 0)
+                newLevelElem = top->children[0];
+            else 
+                newLevelElem = nullptr;
+        }
+
+        for(int i = 0; i < top->children.size(); i++)
+        {
+            nodes.push(top->children[i]);
+            levelNodes.push_back(top->children[i]);
+        }
+    }
+    
 
 }
 
-int main()
+void DemonstrationMode()
 {
+    int num = rand() % 3;
+
     Tree myTree;
-    myTree.addNode(10, 5, 10);
-    myTree.addNode(16, 5, 10);
-    myTree.addNode(24, 5, 10);
-    myTree.addNode(13, 5, 10);
-    myTree.addNode(513, 5, 10);
-    myTree.addNode(26, 5, 10);
-    myTree.addNode(4, 5, 10);
-    myTree.addNode(3, 5, 10);
-    printTree(myTree.root, 0);
+    switch (num)
+    {
+    case 1:
+    {
+        myTree.addNode(10, 5, 10);
+        myTree.addNode(16, 5, 10);
+        myTree.addNode(24, 5, 10);
+        myTree.addNode(13, 5, 10);
+        myTree.addNode(513, 5, 10);
+        myTree.addNode(26, 5, 10);
+        myTree.addNode(4, 5, 10);
+        myTree.addNode(3, 5, 10);
+        break;
+    }
+    case 2:
+    {
+        myTree.addNode(10, 2, 4);
+        myTree.addNode(16, 2, 4);
+        myTree.addNode(24, 2, 4);
+        myTree.addNode(13, 2, 4);
+        myTree.addNode(513, 2, 4);
+        myTree.addNode(26, 2, 4);
+        myTree.addNode(4, 2, 4);
+        myTree.addNode(3, 2, 4);
+        break;
+    }   
+    
+    }
+
+    cout << " ==== SPACE METHOD === " << endl;
+    myTree.printSpaceMethod(myTree.root);
+
+    cout << " ==== BRANCH METHOD === " << endl;
+    myTree.printBranchMethod();
+    
+}
+
+void BenchmarkMode()
+{
+    int n;
+    cout << "Enter count of element (<100): ";
+    cin >> n;
+    int minCnt, maxCnt, data;
+    Tree myTree;
+    duration<double> durationProcess;
+    for(int i = 0; i < n; i++)
+    {
+        minCnt = 1 + rand()%5;
+        maxCnt = minCnt+rand()%5;
+        data = rand()%1000;
+        auto start = high_resolution_clock::now();
+        myTree.addNode(data, minCnt, maxCnt);
+        auto stop = high_resolution_clock::now();
+        durationProcess += duration_cast<microseconds>(stop - start);
+    }
+
+    cout << "Time taken by ADD NODE:  " << durationProcess.count() << " microseconds" << endl;
+    cout << " ==== BRANCH METHOD === " << endl;
+    myTree.printBranchMethod();
+    cout << " ==== SPACE METHOD === " << endl;
+    myTree.printSpaceMethod(myTree.root);
+}
+
+
+int main() 
+{
+    srand(0);
+    cout << "Input mode of work\nd - demonstration\nb - benchmark\n";
+    cout << "Enter request:";
+    char mode;
+    cin >> mode;
+    if(mode == 'd')
+        DemonstrationMode();
+    else if(mode == 'b')
+        BenchmarkMode();
+    else
+    {
+        cout << "Error. Program isn't started\n";
+        return 1;
+    }
+    return 0;
 }
