@@ -29,10 +29,25 @@ struct Tree
         root->data = value;
     }
     void addNode (int, int, int);
-    void printBranchMethod();
     void printSpaceMethod(TreeNode* , int);
     void deleteNode(int);
     
+};
+
+struct BinaryTreeNode
+{
+    int data;
+    BinaryTreeNode* leftSon;
+    BinaryTreeNode* rightSon;
+    BinaryTreeNode(int data = 0): data(data), leftSon(nullptr), rightSon(nullptr) {};
+};
+
+struct BinaryTree
+{
+    BinaryTreeNode* root;
+    BinaryTree(): root(nullptr){};
+    BinaryTreeNode* addNode(int, BinaryTreeNode*);
+    void print(BinaryTreeNode*);
 };
 
 TreeNode* findMinChildren (TreeNode *parent)
@@ -159,112 +174,31 @@ void Tree::printSpaceMethod(TreeNode* parent, int depth = 0)
         printSpaceMethod(child, depth + 1);
 
 }
-int countLeaves(TreeNode* node)
+void BinaryTree::print(BinaryTreeNode* parent)
 {
-    if (node == nullptr)
-        return 0;
-    if (node->children.empty())
-        return 1;
-    int leaves = 0;
-    for (auto child : node->children)
-        leaves += countLeaves(child);
-    return leaves;
-}
-
-string printLine(int n, string elem, string out = "")
-{
-    if (n <= 0) return out;
-    for(int i = 0; i < n; i++)
-        out+= elem;
-    return out;
-}
-void printLayer (vector <TreeNode*> levelNodes, int cntLeaves, int &minSpace)
-{
-    int spaceByNode = int(((cntLeaves*2 - 1)*5) / levelNodes.size());
-    if(spaceByNode > minSpace)  spaceByNode = minSpace;
-    else minSpace = spaceByNode;
-    spaceByNode -= (levelNodes.size() - 1)*5;
-    string spaceStr = "     ", nodeStr = "  |  ",  brunches;
-    for(int i = 0; i < levelNodes.size(); i++)
+    if (parent) 
     {
-        TreeNode* node = levelNodes[i];
-        int cntChildren = node->children.size();
-        if(cntChildren <= 1) 
-        {
-            cout << "(" << setw(3) << node->data << ")";
-            if(cntChildren == 1) brunches +=  nodeStr;
-            else brunches += spaceStr;
-        }
-        else
-        {
-            int side1, side2;
-            if(cntChildren%2 == 1) side1 = side2 =  round(cntChildren/2);
-            else 
-            {
-                side2 = cntChildren/2;
-                side1 = side2 - 1;
-            }
-            if(i < levelNodes.size()/2) swap(side1, side2);
-            int space = (spaceByNode - 10*(side1 + side2) - 5 )/2;
-            if (space < 0) space = 0; 
-
-            //cout << spaceByNode << " " << space << endl;
-            //cout << cntChildren << " = 1 + " <<  side1 << " + " << side2 << " [" << space << "]"<< endl;
-            cout << printLine(space, " ");
-            cout << printLine(side1, " _________");
-            cout << "(" << setw(3) << node->data << ")";
-            cout << printLine(side2, "_________ ");
-            cout << printLine(space, " ");
-
-            brunches = printLine(space, " ", brunches);
-            brunches = printLine(side1, nodeStr + spaceStr, brunches);
-            brunches += nodeStr;
-            brunches = printLine(side2, spaceStr + nodeStr, brunches);
-            brunches = printLine(space, " ", brunches);
-        }
-        cout << spaceStr;
-        brunches += spaceStr;
+        cout << parent->data << ", ";
+        print(parent->leftSon);
+        print(parent->rightSon);
     }
-    cout << endl << brunches << endl;
 }
-void Tree::printBranchMethod() 
+
+BinaryTreeNode* BinaryTree::addNode(int valueNode , BinaryTreeNode* parent)
 {
+    if (parent == nullptr) 
+        return new BinaryTreeNode(valueNode);
+
+
+    if (valueNode < parent->data) 
+        parent->leftSon = addNode( valueNode, parent->leftSon);
+    else 
+        parent->rightSon = addNode(valueNode, parent->rightSon);
     
-    if (root == nullptr) 
-        return;
-
-    int cntLeaves = countLeaves(root);
-    queue <TreeNode*> nodes;
-    vector <TreeNode*> levelNodes;
-    TreeNode* newLevelElem = root;
-    nodes.push(root);
-    levelNodes.push_back(root);
-    int minSpace = (cntLeaves*2 - 1) * 5;
-    while(!nodes.empty())
-    {
-        TreeNode* top = nodes.front();
-        nodes.pop();
-        if(top == newLevelElem)
-        {
-            if(levelNodes.size() != 0)
-                printLayer(levelNodes, cntLeaves, minSpace);
-            //cout << "End Level" << levelNodes.size() << "\n";
-            levelNodes.clear();
-            if(top->children.size() != 0)
-                newLevelElem = top->children[0];
-            else 
-                newLevelElem = nullptr;
-        }
-
-        for(int i = 0; i < top->children.size(); i++)
-        {
-            nodes.push(top->children[i]);
-            levelNodes.push_back(top->children[i]);
-        }
-    }
-    
-
+    return parent;
 }
+
+
 
 void DemonstrationMode()
 {
@@ -304,16 +238,25 @@ void DemonstrationMode()
     cout << " ==== SPACE METHOD === " << endl;
     myTree.printSpaceMethod(myTree.root);
 
-    cout << " ==== BRANCH METHOD === " << endl;
-    myTree.printBranchMethod();
-
     myTree.deleteNode(513);
 
     cout << " ==== SPACE METHOD === " << endl;
     myTree.printSpaceMethod(myTree.root);
 
-    cout << " ==== BRANCH METHOD === " << endl;
-    myTree.printBranchMethod();
+    BinaryTree myBinTree;
+    myBinTree.addNode(6, myBinTree.root);
+    myBinTree.addNode(15, myBinTree.root);
+    myBinTree.addNode(3, myBinTree.root);
+    myBinTree.addNode(513,  myBinTree.root);
+    myBinTree.addNode(21,  myBinTree.root);
+    myBinTree.addNode(658,  myBinTree.root);
+    myBinTree.addNode(41,  myBinTree.root);
+
+    cout << " ==== Sequential presentation === " << endl;
+    myBinTree.print(myBinTree.root);
+
+
+
     
 }
 
@@ -337,8 +280,14 @@ void BenchmarkMode()
     }
 
     cout << "Time taken by ADD NODE:  " << durationProcess.count() << " microseconds" << endl;
-    cout << " ==== SPACE METHOD === " << endl;
-    myTree.printSpaceMethod(myTree.root);
+    
+    auto start = high_resolution_clock::now();
+    myTree.deleteNode(rand()%1000);
+    auto stop = high_resolution_clock::now();
+    auto durationDelete = duration_cast<microseconds>(stop - start);
+    cout << "Time taken by DELETE NODE: " << durationDelete.count() << " microseconds" << endl;
+    
+
 }
 
 
