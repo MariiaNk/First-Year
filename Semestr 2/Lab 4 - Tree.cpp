@@ -46,8 +46,46 @@ struct BinaryTree
 {
     BinaryTreeNode* root;
     BinaryTree(): root(nullptr){};
-    BinaryTreeNode* addNode(int, BinaryTreeNode*);
-    void print(BinaryTreeNode*);
+    BinaryTreeNode* addNode(int valueNode , BinaryTreeNode* &parent)
+    {
+        if (parent == nullptr) 
+        {
+            parent = new BinaryTreeNode(valueNode);
+            //cout << "First node added: " << parent->data << endl;
+        }
+        else
+        {
+            if (valueNode < parent->data) 
+                parent->leftSon = addNode( valueNode, parent->leftSon);
+            else 
+                parent->rightSon = addNode(valueNode, parent->rightSon);
+        }    
+        return parent;
+    }
+    void printDirectOrder(BinaryTreeNode* parent)
+    {
+        if (parent) 
+        {
+            cout << parent->data << ", ";
+            printDirectOrder(parent->leftSon);
+            printDirectOrder(parent->rightSon);
+        }
+    }
+    void printSpaceMethod(BinaryTreeNode* parent, int depth = 0) 
+    {
+        if (parent == nullptr) 
+            return;
+
+        for (int i = 0; i < depth; ++i)
+            cout << "   "; 
+        cout << setw(3) << parent->data << endl;
+
+        if(parent->leftSon != nullptr)
+            printSpaceMethod(parent->leftSon , depth + 1);
+        
+        if(parent->rightSon != nullptr)
+            printSpaceMethod(parent->rightSon , depth + 1);
+    }
 };
 
 TreeNode* findMinChildren (TreeNode *parent)
@@ -174,30 +212,6 @@ void Tree::printSpaceMethod(TreeNode* parent, int depth = 0)
         printSpaceMethod(child, depth + 1);
 
 }
-void BinaryTree::print(BinaryTreeNode* parent)
-{
-    if (parent) 
-    {
-        cout << parent->data << ", ";
-        print(parent->leftSon);
-        print(parent->rightSon);
-    }
-}
-
-BinaryTreeNode* BinaryTree::addNode(int valueNode , BinaryTreeNode* parent)
-{
-    if (parent == nullptr) 
-        return new BinaryTreeNode(valueNode);
-
-
-    if (valueNode < parent->data) 
-        parent->leftSon = addNode( valueNode, parent->leftSon);
-    else 
-        parent->rightSon = addNode(valueNode, parent->rightSon);
-    
-    return parent;
-}
-
 
 
 void DemonstrationMode()
@@ -245,6 +259,7 @@ void DemonstrationMode()
 
     BinaryTree myBinTree;
     myBinTree.addNode(6, myBinTree.root);
+    cout << "Root: " << myBinTree.root->data << "\n";
     myBinTree.addNode(15, myBinTree.root);
     myBinTree.addNode(3, myBinTree.root);
     myBinTree.addNode(513,  myBinTree.root);
@@ -252,9 +267,10 @@ void DemonstrationMode()
     myBinTree.addNode(658,  myBinTree.root);
     myBinTree.addNode(41,  myBinTree.root);
 
-    cout << " ==== Sequential presentation === " << endl;
-    myBinTree.print(myBinTree.root);
-
+    cout << " ==== Sequential presentation Binary Tree === " << endl;
+    myBinTree.printDirectOrder(myBinTree.root);
+    cout << "\n ==== SPACE METHOD  Binary Tree === " << endl;
+    myBinTree.printSpaceMethod(myBinTree.root);
 
 
     
