@@ -2,6 +2,7 @@
 #include <vector>
 #include <queue>
 #include <stack>
+#include <map>
 #include <iomanip>
 #include <cmath>
 #include <chrono>
@@ -9,43 +10,157 @@
 using namespace std;
 using namespace std::chrono;
 
-struct TreeNode
+class Tree
 {
-    int data;
-    TreeNode* parent;
-    vector < TreeNode*> children;
-    TreeNode(int value = 0) : data(value), children() {}
-};
+    private:
+        struct TreeNode
+        {
+            int data;
+            TreeNode* parent;
+            vector < TreeNode*> children;
+            TreeNode(int value = 0) : data(value), children() {}
+        };
+        TreeNode* findMinChildren (TreeNode *parent)
+        {
+            int etalon = parent -> children[0] -> children.size();
+            TreeNode* targetNode = parent->children[0];
+            for(int i = 1; i < parent->children.size(); i++)
+            {
+                if (parent->children[i]->children.size() < etalon)
+                {
+                    etalon = parent->children[i]->children.size();
+                    targetNode = parent->children[i];
+                }
+            }
+            return targetNode;
+        }
+        int subTreeSize(TreeNode* node) 
+        {
+            if (node == nullptr)
+                return 0;
 
-struct Tree
-{
-    TreeNode* root;
-    Tree() 
+            int sizeSubTree = 1;
+            for (TreeNode* child : node->children) 
+                sizeSubTree += subTreeSize(child);
+            return sizeSubTree;
+        }
+        TreeNode* findMinChildrenSubTree(TreeNode* parent)
+        {
+            int etalon = subTreeSize(parent -> children[0]);
+            TreeNode* targetNode = parent->children[0];
+            for(int i = 1; i < parent->children.size(); i++)
+            {
+                int currentSize = subTreeSize(parent -> children[i]);
+                if (currentSize < etalon)
+                {
+                    etalon = currentSize;
+                    targetNode = parent->children[i];
+                }
+            }
+            return targetNode;
+        }
+        TreeNode* findTargetNode (TreeNode *current, int minCountChildren, int maxCountChildren)
+        {
+            if(current->children.size() < minCountChildren)
+                return current;
+            else
+            {
+                TreeNode* currentChildren = findMinChildren(current);
+                if(currentChildren->children.size() <= maxCountChildren)
+                    return findTargetNode(currentChildren, minCountChildren, maxCountChildren);
+                else
+                {
+                    if(current->children.size() <= maxCountChildren) 
+                        return current;
+                    else
+                        return findTargetNode(findMinChildrenSubTree(current), minCountChildren, maxCountChildren);
+                }
+            }
+
+        }
+        void deleteSubTree(TreeNode* root)
+        {
+            if (root == nullptr)
+                return;
+            for (TreeNode* child : root->children)
+                deleteSubTree(child);
+            delete root;
+        }
+        void outputSpaceMethod(TreeNode* parent, int depth ) 
+        {
+            if (parent == nullptr) 
+                return;
+            for (int i = 0; i < depth; ++i)
+                cout << "   "; 
+            cout << setw(3) << parent->data << endl;
+            for (auto child : parent->children)
+                outputSpaceMethod(child, depth + 1);
+        }
+    public:
+        TreeNode* root;
+        Tree(): root(nullptr) {}
+        Tree(int value) 
+        {
+            root = new TreeNode();
+            root->data = value;
+        }
+        void addNode (int valueNode, int minCountChildren, int maxCountChildren)
+        {
+            if(root == nullptr) root = new TreeNode(valueNode);
+            else
+            {
+                TreeNode* targetNode = findTargetNode(root, minCountChildren, maxCountChildren);
+                TreeNode* newNode = new TreeNode(valueNode);
+                newNode->parent = targetNode;
+                targetNode->children.push_back(newNode);
+            }   
+        }
+        void printSpaceMethod() 
+        {
+            outputSpaceMethod(root, 0);
+        }
+        void deleteNode(int valueNode)
     {
-        root = nullptr;
+        queue <TreeNode*> nodes;
+        nodes.push(root);
+        while(!nodes.empty())
+        {
+            if(nodes.front()->data == valueNode)
+            {
+                TreeNode* currentNodeParent = nodes.front()->parent;
+                for(int i = 0;i < currentNodeParent->children.size(); i++)
+                {
+                    if(currentNodeParent->children[i] == nodes.front())
+                    {
+                        currentNodeParent->children.erase(currentNodeParent->children.begin()+i);
+                        break;
+                    }
+                }
+                deleteSubTree(nodes.front());
+                
+            }
+            else
+            {
+                for(TreeNode* child: nodes.front()->children)
+                {
+                    nodes.push(child);
+                }
+            }
+            nodes.pop();
+        }
     }
-    Tree(int value) 
-    {
-        root = new TreeNode();
-        root->data = value;
-    }
-    void addNode (int, int, int);
-    void printSpaceMethod(TreeNode* , int);
-    void deleteNode(int);
     
 };
-
-struct BinaryTreeNode
-{
-    int data;
-    BinaryTreeNode* leftSon;
-    BinaryTreeNode* rightSon;
-    BinaryTreeNode(int data = 0): data(data), leftSon(nullptr), rightSon(nullptr) {};
-};
-
 class BinaryTree
 {
     private:
+        struct BinaryTreeNode
+        {
+            int data;
+            BinaryTreeNode* leftSon;
+            BinaryTreeNode* rightSon;
+            BinaryTreeNode(int data = 0): data(data), leftSon(nullptr), rightSon(nullptr) {};
+        };
         BinaryTreeNode* insertBinaryNode(int valueNode , BinaryTreeNode* &parent)
         {
             if (parent == nullptr) 
@@ -103,90 +218,126 @@ class BinaryTree
             outputSpaceMethod(root, 0);
         }
 };
-struct BinaryBooleanTreeNode
-{
-    string data;
-    BinaryBooleanTreeNode* leftSon;
-    BinaryBooleanTreeNode* rightSon;
-    BinaryBooleanTreeNode(string data = ""): data(data), leftSon(nullptr), rightSon(nullptr) {};
-};
 class BooleanTree
 {
     private:
+        struct BinaryBooleanTreeNode
+        {
+            char data;
+            BinaryBooleanTreeNode* leftSon;
+            BinaryBooleanTreeNode* rightSon;
+            BinaryBooleanTreeNode(char data = ' '): data(data), leftSon(nullptr), rightSon(nullptr) {};
+        };
         bool isOperator(char c) 
         {
             return (c == '&' || c == '|' || c == '!' || c == '^' || c == '-' || c == '=');
         }
-        BinaryBooleanTreeNode* buildExpressionTreeHelper(string &expression) 
+        string convertToPolish (string str)
         {
-            stack<BinaryBooleanTreeNode*> nodeStack;
-            BinaryBooleanTreeNode* root = nullptr;
+            map <char, int> priority;
+            priority['!'] = 5;
+            priority['&'] = 4;
+            priority['|'] = 3;
+            priority['-'] = 2;
+            priority['='] = 1;
 
-            for (int i = 0; i < expression.length(); ++i) 
+            string input;
+            stack <char> signs;
+            input.clear();
+            char ch;
+
+            for(int i = 0; i < str.size(); i++)
             {
-                char symb = expression[i];
-
-                if (symb == ' ') 
-                    continue;
-                else if (isOperator(symb)) 
+                ch = str[i];
+                if((ch == '0' || ch == '1') || isalpha(ch))
                 {
-                    string booleanOperator(1, symb);
-                    BinaryBooleanTreeNode* newNode = new BinaryBooleanTreeNode(booleanOperator);
-
-                    if (symb == '!') 
-                    {
-                        if (!nodeStack.empty()) 
-                        {
-                            newNode->leftSon = nodeStack.top();
-                            nodeStack.pop();
-                        }
-                    } 
-                    else 
-                    {
-                        if (!nodeStack.empty()) 
-                        {
-                            newNode->rightSon = nodeStack.top();
-                            nodeStack.pop();
-                        }
-                        if (!nodeStack.empty()) 
-                        {
-                            newNode->leftSon = nodeStack.top();
-                            nodeStack.pop();
-                        }
-                    }
-
-                    nodeStack.push(newNode);
-                } 
-                else 
-                {
-                    string operand;
-                    while (i < expression.length() && !isOperator(expression[i]) && expression[i] != ' ') 
-                    {
-                        operand += expression[i];
-                        i++;
-                    }
-                    i--;
-
-                    BinaryBooleanTreeNode* newNode = new BinaryBooleanTreeNode(operand);
-                    nodeStack.push(newNode);
+                    input += ch;
                 }
+                else if(ch == '(')
+                {
+                    signs.push(ch);
+                }
+                else if(ch == ')')
+                {
+                    while(signs.top() != '(' )
+                    {
+                        input += signs.top();
+                        signs.pop();
+                        if(signs.empty()) return "error";
+                    }
+                    signs.pop();
+
+                }
+                else if(isOperator(ch))
+                {
+                    while(!signs.empty()&& signs.top() != '(' && priority[ch] >= priority[signs.top()])
+                    {
+                        input += signs.top();
+                        signs.pop();
+                    }
+                    signs.push(ch);
+                }
+                else if(ch != ' ') return "error";
             }
 
-            if (!nodeStack.empty()) {
-                root = nodeStack.top();
-                nodeStack.pop();
+            while(!signs.empty())
+            {
+                input += signs.top();
+                signs.pop();
             }
+            return input;
+        }
+        BinaryBooleanTreeNode* buildExpressionTreeHelper(string expression) 
+        {
+            stack <BinaryBooleanTreeNode*> nodes;
+            expression = convertToPolish(expression);
+            for(int i = 0; i < expression.size(); i++)
+            {
+                BinaryBooleanTreeNode* newNode = new BinaryBooleanTreeNode(expression[i]);
+                if(isOperator(expression[i]))   
+                {
+                    if(!nodes.empty())
+                    {
+                        newNode->rightSon = nodes.top();
+                        nodes.pop();
+                    }
 
-            return root;
+                    if(!nodes.empty())
+                    {
+                        newNode->leftSon = nodes.top();
+                        nodes.pop();
+                    }
+                    nodes.push(newNode);
+                }                 
+                else
+                    nodes.push(newNode);
+                
+            }
+            return nodes.top();
         }
         void outputDirectOrder(BinaryBooleanTreeNode* parent)
         {
             if (parent) 
             {
-                cout << parent->data << ", ";
+                cout << parent->data << "";
                 outputDirectOrder(parent->leftSon);
                 outputDirectOrder(parent->rightSon);
             }
+        }
+        void outputSpaceMethod(BinaryBooleanTreeNode* parent, int depth) 
+        {
+            if (parent == nullptr) 
+                return;
+
+            for (int i = 0; i < depth; ++i)
+                cout << "   "; 
+            cout << setw(3) << parent->data << endl;
+
+            if(parent->leftSon != nullptr)
+                outputSpaceMethod(parent->leftSon , depth + 1);
+            
+            if(parent->rightSon != nullptr)
+                outputSpaceMethod(parent->rightSon , depth + 1);
         }
     public:
         BinaryBooleanTreeNode* root;
@@ -194,140 +345,15 @@ class BooleanTree
         {
             root = buildExpressionTreeHelper(expression);
         }
-        void printDirectOrder()
+        void printDirectOrder(string& expression)
         {
             outputDirectOrder(root);
+        }
+        void printSpaceMethod()
+        {
+            outputSpaceMethod(root, 0);
         } 
 };
-
-
-
-
-TreeNode* findMinChildren (TreeNode *parent)
-{
-    int etalon = parent -> children[0] -> children.size();
-    TreeNode* targetNode = parent->children[0];
-    for(int i = 1; i < parent->children.size(); i++)
-    {
-        if (parent->children[i]->children.size() < etalon)
-        {
-            etalon = parent->children[i]->children.size();
-            targetNode = parent->children[i];
-        }
-    }
-    return targetNode;
-}
-
-int subTreeSize(TreeNode* node) 
-{
-    if (node == nullptr)
-        return 0;
-
-    int sizeSubTree = 1;
-    for (TreeNode* child : node->children) 
-        sizeSubTree += subTreeSize(child);
-    return sizeSubTree;
-}
-
-TreeNode* findMinChildrenSubTree(TreeNode* parent)
-{
-    int etalon = subTreeSize(parent -> children[0]);
-    TreeNode* targetNode = parent->children[0];
-    for(int i = 1; i < parent->children.size(); i++)
-    {
-        int currentSize = subTreeSize(parent -> children[i]);
-        if (currentSize < etalon)
-        {
-            etalon = currentSize;
-            targetNode = parent->children[i];
-        }
-    }
-    return targetNode;
-}
-TreeNode* findTargetNode (TreeNode *current, int minCountChildren, int maxCountChildren)
-{
-    if(current->children.size() < minCountChildren)
-        return current;
-    else
-    {
-        TreeNode* currentChildren = findMinChildren(current);
-        if(currentChildren->children.size() <= maxCountChildren)
-            return findTargetNode(currentChildren, minCountChildren, maxCountChildren);
-        else
-        {
-            if(current->children.size() <= maxCountChildren) 
-                return current;
-            else
-                return findTargetNode(findMinChildrenSubTree(current), minCountChildren, maxCountChildren);
-        }
-    }
-
-}
-
-void Tree::addNode (int valueNode, int minCountChildren, int maxCountChildren)
-{
-    if(root == nullptr) root = new TreeNode(valueNode);
-    else
-    {
-        TreeNode* targetNode = findTargetNode(root, minCountChildren, maxCountChildren);
-        TreeNode* newNode = new TreeNode(valueNode);
-        newNode->parent = targetNode;
-        targetNode->children.push_back(newNode);
-    }   
-}
-void deleteSubTree(TreeNode* root)
-{
-    if (root == nullptr)
-        return;
-    for (TreeNode* child : root->children)
-        deleteSubTree(child);
-    delete root;
-}
-void Tree::deleteNode(int valueNode)
-{
-    queue <TreeNode*> nodes;
-    nodes.push(root);
-    while(!nodes.empty())
-    {
-        if(nodes.front()->data == valueNode)
-        {
-            TreeNode* currentNodeParent = nodes.front()->parent;
-            for(int i = 0;i < currentNodeParent->children.size(); i++)
-            {
-                if(currentNodeParent->children[i] == nodes.front())
-                {
-                    currentNodeParent->children.erase(currentNodeParent->children.begin()+i);
-                    break;
-                }
-            }
-            deleteSubTree(nodes.front());
-            
-        }
-        else
-        {
-            for(TreeNode* child: nodes.front()->children)
-            {
-                nodes.push(child);
-            }
-        }
-        nodes.pop();
-    }
-}
-void Tree::printSpaceMethod(TreeNode* parent, int depth = 0) 
-{
-    
-    if (parent == nullptr) 
-        return;
-
-    for (int i = 0; i < depth; ++i)
-        cout << "   "; 
-    cout << setw(3) << parent->data << endl;
-
-    for (auto child : parent->children)
-        printSpaceMethod(child, depth + 1);
-
-}
-
 
 void DemonstrationMode()
 {
@@ -337,46 +363,44 @@ void DemonstrationMode()
     Tree myTree;
     switch (num)
     {
-    case 1:
-    {
-        myTree.addNode(10, 5, 10);
-        myTree.addNode(16, 5, 10);
-        myTree.addNode(24, 5, 10);
-        myTree.addNode(13, 5, 10);
-        myTree.addNode(513, 5, 10);
-        myTree.addNode(26, 5, 10);
-        myTree.addNode(4, 5, 10);
-        myTree.addNode(3, 5, 10);
-        break;
-    }
-    case 2:
-    {
-        myTree.addNode(10, 2, 4);
-        myTree.addNode(16, 2, 4);
-        myTree.addNode(24, 2, 4);
-        myTree.addNode(13, 2, 4);
-        myTree.addNode(513, 2, 4);
-        myTree.addNode(26, 2, 4);
-        myTree.addNode(4, 2, 4);
-        myTree.addNode(3, 2, 4);
-        myTree.addNode(513, 1, 3);
-        break;
-    }   
-    
+        case 1:
+        {
+            myTree.addNode(10, 5, 10);
+            myTree.addNode(16, 5, 10);
+            myTree.addNode(24, 5, 10);
+            myTree.addNode(13, 5, 10);
+            myTree.addNode(513, 5, 10);
+            myTree.addNode(26, 5, 10);
+            myTree.addNode(4, 5, 10);
+            myTree.addNode(3, 5, 10);
+            break;
+        }
+        case 2:
+        {
+            myTree.addNode(10, 2, 4);
+            myTree.addNode(16, 2, 4);
+            myTree.addNode(24, 2, 4);
+            myTree.addNode(13, 2, 4);
+            myTree.addNode(513, 2, 4);
+            myTree.addNode(26, 2, 4);
+            myTree.addNode(4, 2, 4);
+            myTree.addNode(3, 2, 4);
+            myTree.addNode(513, 1, 3);
+            break;
+        }  
     }
 
     cout << " ==== SPACE METHOD === " << endl;
-    myTree.printSpaceMethod(myTree.root);
+    myTree.printSpaceMethod();
 
     myTree.deleteNode(513);
 
     cout << " ==== SPACE METHOD === " << endl;
-    myTree.printSpaceMethod(myTree.root);
+    myTree.printSpaceMethod();
 
     cout << "**************** BINARY TREE *****************" << endl;
     BinaryTree myBinTree;
     myBinTree.addNode(6);
-    cout << "Root: " << myBinTree.root->data << "\n";
     myBinTree.addNode(15);
     myBinTree.addNode(3);
     myBinTree.addNode(513);
@@ -393,7 +417,9 @@ void DemonstrationMode()
     cout << "**************** BOOLEAN TREE *****************" << endl;
     string expression = "! ( ( x | y ) & z )";
     BooleanTree boolTree(expression);
-    boolTree.printDirectOrder();
+    boolTree.printDirectOrder(expression);
+    cout << "\n ==== SPACE METHOD === " << endl;
+    boolTree.printSpaceMethod();
 }
 
 void BenchmarkMode()
