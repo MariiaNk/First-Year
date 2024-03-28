@@ -339,6 +339,34 @@ class BooleanTree
             if(parent->rightSon != nullptr)
                 outputSpaceMethod(parent->rightSon , depth + 1);
         }
+        bool calculatePostorder(BinaryBooleanTreeNode* node)
+        {
+            if(node == nullptr)
+                return true;
+            if(!isOperator(node->data))
+                return node->data;
+
+            char left = calculatePostorder(node->leftSon);
+            bool leftValue = left - '0';
+            char right = calculatePostorder(node->rightSon);
+            bool rightValue = right - '0';
+            
+            switch (node->data) 
+            {
+                case '!':
+                    return !rightValue;
+                case '&':
+                    return leftValue && rightValue;
+                case '|':
+                    return leftValue || rightValue;
+                case '^':
+                    return leftValue != rightValue;
+                case '-':
+                    return !leftValue || rightValue;
+                case '=':
+                    return leftValue == rightValue;
+            }
+        }
     public:
         BinaryBooleanTreeNode* root;
         BooleanTree(string& expression)
@@ -353,6 +381,10 @@ class BooleanTree
         {
             outputSpaceMethod(root, 0);
         } 
+        void calculateBooleanTree()
+        {
+            cout << calculatePostorder(root) << endl;
+        }
 };
 
 void DemonstrationMode()
@@ -415,11 +447,15 @@ void DemonstrationMode()
 
 
     cout << "**************** BOOLEAN TREE *****************" << endl;
-    string expression = "! ( ( x | y ) & z )";
+    string expression = "( ! (1 | 0)) - (1 - 0)"; // output 1
     BooleanTree boolTree(expression);
     boolTree.printDirectOrder(expression);
     cout << "\n ==== SPACE METHOD === " << endl;
     boolTree.printSpaceMethod();
+    cout << "\nCalculate 0/1 Tree: ";
+    boolTree.calculateBooleanTree();
+    /*if(boolTree.calculateBooleanTree()) cout << 1;
+    else cout << 0; */
 }
 
 void BenchmarkMode()
