@@ -382,6 +382,20 @@ class BooleanTree
             }
             return false;
         }
+        void simplify(BinaryBooleanTreeNode* node)
+        {
+            if(node == nullptr)
+                return;
+            
+            char left = calculatePostorder(node->leftSon, input);
+            bool leftValue = left - '0';
+            char right = calculatePostorder(node->rightSon, input);
+            bool rightValue = right - '0';
+
+            if (node->data == leftValue && node->data == rightValue) 
+                return node->data;
+            
+            }
     public:
         BinaryBooleanTreeNode* root;
         BooleanTree(string& expression)
