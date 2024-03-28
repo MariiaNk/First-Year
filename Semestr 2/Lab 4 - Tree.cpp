@@ -339,16 +339,30 @@ class BooleanTree
             if(parent->rightSon != nullptr)
                 outputSpaceMethod(parent->rightSon , depth + 1);
         }
-        bool calculatePostorder(BinaryBooleanTreeNode* node)
+        bool calculatePostorder(BinaryBooleanTreeNode* node, map <char, int> &input)
         {
             if(node == nullptr)
-                return true;
+                return false;
             if(!isOperator(node->data))
-                return node->data;
+            {
+                if(node->data == '0' || node->data == '1')
+                    return node->data - '0';
+                else
+                {
+                    if(input.find(node->data) == input.end())
+                    {
+                        bool newValue;
+                        cout << "Enter \"" << node->data << "\" value: ";
+                        cin >> newValue;
+                        input[node->data] = newValue;
+                    }
+                    return input[node->data];
+                }
+            }
 
-            char left = calculatePostorder(node->leftSon);
+            char left = calculatePostorder(node->leftSon, input);
             bool leftValue = left - '0';
-            char right = calculatePostorder(node->rightSon);
+            char right = calculatePostorder(node->rightSon, input);
             bool rightValue = right - '0';
             
             switch (node->data) 
@@ -366,6 +380,7 @@ class BooleanTree
                 case '=':
                     return leftValue == rightValue;
             }
+            return false;
         }
     public:
         BinaryBooleanTreeNode* root;
@@ -383,7 +398,9 @@ class BooleanTree
         } 
         void calculateBooleanTree()
         {
-            cout << calculatePostorder(root) << endl;
+            map <char, int> input;
+            bool answer = calculatePostorder(root, input) ;
+            cout << "Result:" << answer << endl;
         }
 };
 
@@ -447,7 +464,7 @@ void DemonstrationMode()
 
 
     cout << "**************** BOOLEAN TREE *****************" << endl;
-    string expression = "( ! (1 | 0)) - (1 - 0)"; // output 1
+    string expression = "( ! (1 | 0)) - (1 - a)"; // output 1
     BooleanTree boolTree(expression);
     boolTree.printDirectOrder(expression);
     cout << "\n ==== SPACE METHOD === " << endl;
