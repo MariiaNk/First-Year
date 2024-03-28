@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <queue>
+#include <stack>
 #include <iomanip>
 #include <cmath>
 #include <chrono>
@@ -42,51 +43,165 @@ struct BinaryTreeNode
     BinaryTreeNode(int data = 0): data(data), leftSon(nullptr), rightSon(nullptr) {};
 };
 
-struct BinaryTree
+class BinaryTree
 {
-    BinaryTreeNode* root;
-    BinaryTree(): root(nullptr){};
-    BinaryTreeNode* addNode(int valueNode , BinaryTreeNode* &parent)
-    {
-        if (parent == nullptr) 
+    private:
+        BinaryTreeNode* insertBinaryNode(int valueNode , BinaryTreeNode* &parent)
         {
-            parent = new BinaryTreeNode(valueNode);
-            //cout << "First node added: " << parent->data << endl;
+            if (parent == nullptr) 
+            {
+                return new BinaryTreeNode(valueNode);
+                //parent = new BinaryTreeNode(valueNode);
+                //cout << "First node added: " << parent->data << endl;
+            }
+            else
+            {
+                if (valueNode < parent->data) 
+                    parent->leftSon = insertBinaryNode( valueNode, parent->leftSon);
+                else 
+                    parent->rightSon = insertBinaryNode(valueNode, parent->rightSon);
+            }   
+            return parent; 
         }
-        else
+        void outputDirectOrder(BinaryTreeNode* parent)
         {
-            if (valueNode < parent->data) 
-                parent->leftSon = addNode( valueNode, parent->leftSon);
-            else 
-                parent->rightSon = addNode(valueNode, parent->rightSon);
-        }    
-        return parent;
-    }
-    void printDirectOrder(BinaryTreeNode* parent)
-    {
-        if (parent) 
-        {
-            cout << parent->data << ", ";
-            printDirectOrder(parent->leftSon);
-            printDirectOrder(parent->rightSon);
+            if (parent) 
+            {
+                cout << parent->data << ", ";
+                outputDirectOrder(parent->leftSon);
+                outputDirectOrder(parent->rightSon);
+            }
         }
-    }
-    void printSpaceMethod(BinaryTreeNode* parent, int depth = 0) 
-    {
-        if (parent == nullptr) 
-            return;
+        void outputSpaceMethod(BinaryTreeNode* parent, int depth) 
+        {
+            if (parent == nullptr) 
+                return;
 
-        for (int i = 0; i < depth; ++i)
-            cout << "   "; 
-        cout << setw(3) << parent->data << endl;
+            for (int i = 0; i < depth; ++i)
+                cout << "   "; 
+            cout << setw(3) << parent->data << endl;
 
-        if(parent->leftSon != nullptr)
-            printSpaceMethod(parent->leftSon , depth + 1);
-        
-        if(parent->rightSon != nullptr)
-            printSpaceMethod(parent->rightSon , depth + 1);
-    }
+            if(parent->leftSon != nullptr)
+                outputSpaceMethod(parent->leftSon , depth + 1);
+            
+            if(parent->rightSon != nullptr)
+                outputSpaceMethod(parent->rightSon , depth + 1);
+        }
+    public:
+        BinaryTreeNode* root;
+        BinaryTree(): root(nullptr){};
+        void addNode(int valueNode)
+        {
+            root = insertBinaryNode(valueNode, root);
+        }
+        void printDirectOrder()
+        {
+            outputDirectOrder(root);
+        }
+        void printSpaceMethod()
+        {
+            outputSpaceMethod(root, 0);
+        }
 };
+struct BinaryBooleanTreeNode
+{
+    string data;
+    BinaryBooleanTreeNode* leftSon;
+    BinaryBooleanTreeNode* rightSon;
+    BinaryBooleanTreeNode(string data = ""): data(data), leftSon(nullptr), rightSon(nullptr) {};
+};
+class BooleanTree
+{
+    private:
+        bool isOperator(char c) 
+        {
+            return (c == '&' || c == '|' || c == '!' || c == '^' || c == '-' || c == '=');
+        }
+        BinaryBooleanTreeNode* buildExpressionTreeHelper(string &expression) 
+        {
+            stack<BinaryBooleanTreeNode*> nodeStack;
+            BinaryBooleanTreeNode* root = nullptr;
+
+            for (int i = 0; i < expression.length(); ++i) 
+            {
+                char symb = expression[i];
+
+                if (symb == ' ') 
+                    continue;
+                else if (isOperator(symb)) 
+                {
+                    string booleanOperator(1, symb);
+                    BinaryBooleanTreeNode* newNode = new BinaryBooleanTreeNode(booleanOperator);
+
+                    if (symb == '!') 
+                    {
+                        if (!nodeStack.empty()) 
+                        {
+                            newNode->leftSon = nodeStack.top();
+                            nodeStack.pop();
+                        }
+                    } 
+                    else 
+                    {
+                        if (!nodeStack.empty()) 
+                        {
+                            newNode->rightSon = nodeStack.top();
+                            nodeStack.pop();
+                        }
+                        if (!nodeStack.empty()) 
+                        {
+                            newNode->leftSon = nodeStack.top();
+                            nodeStack.pop();
+                        }
+                    }
+
+                    nodeStack.push(newNode);
+                } 
+                else 
+                {
+                    string operand;
+                    while (i < expression.length() && !isOperator(expression[i]) && expression[i] != ' ') 
+                    {
+                        operand += expression[i];
+                        i++;
+                    }
+                    i--;
+
+                    BinaryBooleanTreeNode* newNode = new BinaryBooleanTreeNode(operand);
+                    nodeStack.push(newNode);
+                }
+            }
+
+            if (!nodeStack.empty()) {
+                root = nodeStack.top();
+                nodeStack.pop();
+            }
+
+            return root;
+        }
+        void outputDirectOrder(BinaryBooleanTreeNode* parent)
+        {
+            if (parent) 
+            {
+                cout << parent->data << ", ";
+                outputDirectOrder(parent->leftSon);
+                outputDirectOrder(parent->rightSon);
+            }
+        }
+    public:
+        BinaryBooleanTreeNode* root;
+        BooleanTree(string& expression)
+        {
+            root = buildExpressionTreeHelper(expression);
+        }
+        void printDirectOrder()
+        {
+            outputDirectOrder(root);
+        } 
+};
+
+
+
 
 TreeNode* findMinChildren (TreeNode *parent)
 {
@@ -216,6 +331,7 @@ void Tree::printSpaceMethod(TreeNode* parent, int depth = 0)
 
 void DemonstrationMode()
 {
+    cout << "******************** TREE ********************" << endl;
     int num = rand() % 3;
 
     Tree myTree;
@@ -257,23 +373,27 @@ void DemonstrationMode()
     cout << " ==== SPACE METHOD === " << endl;
     myTree.printSpaceMethod(myTree.root);
 
+    cout << "**************** BINARY TREE *****************" << endl;
     BinaryTree myBinTree;
-    myBinTree.addNode(6, myBinTree.root);
+    myBinTree.addNode(6);
     cout << "Root: " << myBinTree.root->data << "\n";
-    myBinTree.addNode(15, myBinTree.root);
-    myBinTree.addNode(3, myBinTree.root);
-    myBinTree.addNode(513,  myBinTree.root);
-    myBinTree.addNode(21,  myBinTree.root);
-    myBinTree.addNode(658,  myBinTree.root);
-    myBinTree.addNode(41,  myBinTree.root);
+    myBinTree.addNode(15);
+    myBinTree.addNode(3);
+    myBinTree.addNode(513);
+    myBinTree.addNode(21);
+    myBinTree.addNode(658);
+    myBinTree.addNode(41);
 
     cout << " ==== Sequential presentation Binary Tree === " << endl;
-    myBinTree.printDirectOrder(myBinTree.root);
+    myBinTree.printDirectOrder();
     cout << "\n ==== SPACE METHOD  Binary Tree === " << endl;
-    myBinTree.printSpaceMethod(myBinTree.root);
+    myBinTree.printSpaceMethod();
 
 
-    
+    cout << "**************** BOOLEAN TREE *****************" << endl;
+    string expression = "! ( ( x | y ) & z )";
+    BooleanTree boolTree(expression);
+    boolTree.printDirectOrder();
 }
 
 void BenchmarkMode()
