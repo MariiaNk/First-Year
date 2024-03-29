@@ -339,6 +339,26 @@ class BooleanTree
             if(parent->rightSon != nullptr)
                 outputSpaceMethod(parent->rightSon , depth + 1);
         }
+
+        bool calculateBoolean(BinaryBooleanTreeNode* node, bool leftValue, bool rightValue)
+        {
+            switch (node->data) 
+            {
+                case '!':
+                    return !rightValue;
+                case '&':
+                    return leftValue && rightValue;
+                case '|':
+                    return leftValue || rightValue;
+                case '^':
+                    return leftValue != rightValue;
+                case '-':
+                    return !leftValue || rightValue;
+                case '=':
+                    return leftValue == rightValue;
+            }
+            return false;
+        }
         bool calculatePostorder(BinaryBooleanTreeNode* node, map <char, int> &input)
         {
             if(node == nullptr)
@@ -365,37 +385,93 @@ class BooleanTree
             char right = calculatePostorder(node->rightSon, input);
             bool rightValue = right - '0';
             
-            switch (node->data) 
-            {
-                case '!':
-                    return !rightValue;
-                case '&':
-                    return leftValue && rightValue;
-                case '|':
-                    return leftValue || rightValue;
-                case '^':
-                    return leftValue != rightValue;
-                case '-':
-                    return !leftValue || rightValue;
-                case '=':
-                    return leftValue == rightValue;
-            }
-            return false;
+            return calculateBoolean(node, leftValue, rightValue);
         }
-        void simplify(BinaryBooleanTreeNode* node)
+        void simplifyBooleanTree(BinaryBooleanTreeNode* &node)
         {
             if(node == nullptr)
                 return;
-            
-            char left = calculatePostorder(node->leftSon, input);
-            bool leftValue = left - '0';
-            char right = calculatePostorder(node->rightSon, input);
-            bool rightValue = right - '0';
 
-            if (node->data == leftValue && node->data == rightValue) 
-                return node->data;
-            
+            if(isOperator(node->data) )
+            {
+                if(node->data == '!' && (node->leftSon->data == '1' || node->leftSon->data == '0' || node->leftSon == nullptr) && (node->rightSon->data == '1' || node->rightSon->data == '0' || node->rightSon == nullptr)) 
+                {
+                    bool binaryData;
+                    if(node->leftSon != nullptr)
+                        binaryData = node->leftSon - '0';
+                    else
+                        binaryData = node->rightSon - '0';
+                    binaryData += 1;
+                    
+                    delete node->rightSon;
+                    delete node->leftSon;
+                    delete node;
+                    node = new BinaryBooleanTreeNode(binaryData + '0');
+                }
+                else if((node->leftSon != nullptr && node->rightSon != nullptr) && !isOperator(node->leftSon->data) && !isOperator(node->rightSon->data))
+                {
+                    if(node->leftSon->data == node->rightSon->data)
+                    {
+                        switch (node->data)
+                        {
+                            case '&': case '|':
+                            {
+                                BinaryBooleanTreeNode* newData = new BinaryBooleanTreeNode(node->rightSon->data);
+                                delete node->rightSon;
+                                delete node->leftSon;
+                                node = newData;
+                                break;
+                            }
+                            case '^':
+                            {
+                                delete node->rightSon;
+                                delete node->leftSon;
+                                delete node;
+                                node = new BinaryBooleanTreeNode('0'); 
+                                break;
+                            }
+                            case '-': case '=':
+                            {
+                                delete node->rightSon;
+                                delete node->leftSon;
+                                delete node;
+                                node = new BinaryBooleanTreeNode('1'); 
+                                break;
+                            }                   
+                        }
+                    }
+                    else if ((node->leftSon->data == '1' || node->leftSon->data == '0') && (node->rightSon->data == '1' || node->rightSon->data == '0'))
+                    {
+                        bool leftValue = node->leftSon - '0';
+                        bool rightValue = node->rightSon - '0';
+                        bool binaryData = calculateBoolean(node, leftValue, rightValue);
+                        
+                        delete node->rightSon;
+                        delete node->leftSon;
+                        delete node;
+                        node = new BinaryBooleanTreeNode(binaryData + '0');
+                    }                    
+                }
             }
+            simplifyBooleanTree(node->leftSon);
+            simplifyBooleanTree(node->rightSon);
+        }
+        void findAllVariables (BinaryBooleanTreeNode* node, string &variables)
+        {
+            if(node == nullptr)
+                return;
+            if(!isOperator(node->data))
+            {
+                if(!(node->data == '0' || node->data == '1'))
+                {
+                    if(variables.find(node->data) ==  string::npos)
+                        variables += node->data;
+                }
+            }
+
+            findAllVariables(node->leftSon, variables);
+            findAllVariables(node->rightSon, variables);
+        }
     public:
         BinaryBooleanTreeNode* root;
         BooleanTree(string& expression)
@@ -410,11 +486,41 @@ class BooleanTree
         {
             outputSpaceMethod(root, 0);
         } 
-        void calculateBooleanTree()
+        void calculate()
         {
             map <char, int> input;
             bool answer = calculatePostorder(root, input) ;
             cout << "Result:" << answer << endl;
+        }
+        void simplify()
+        {
+            simplifyBooleanTree(root);
+        }
+        int checkStateResult()
+        {
+            map <char, int> input;
+            string variables;
+            variables.clear();
+            int answer[2] = {0,0};
+            findAllVariables(root, variables);
+            int pow2 = 1;
+            for(int i = 0; i <variables.size(); i++)
+            {
+                cout << "SET # " << i << endl;
+                for(auto symb: variables)
+                {
+                    input[symb] = ((i - i % pow2)/pow2)%2;
+                    cout << symb << " = " << input[symb] << endl;
+                }
+                int res = calculatePostorder(root, input);
+                cout << "f = " << res << endl;
+                answer[res]++;
+                pow2 *= 2;
+            }
+
+            if (answer[0] == variables.size()) return 0;
+            if (answer[1] == variables.size()) return 1;
+            return -1;
         }
 };
 
@@ -478,15 +584,47 @@ void DemonstrationMode()
 
 
     cout << "**************** BOOLEAN TREE *****************" << endl;
-    string expression = "( ! (1 | 0)) - (1 - a)"; // output 1
+    string expression;
+    num = 2; //rand() % 5;
+    switch (num)
+    {
+        case 1:
+        {
+            expression = "( ! (1 | 0)) - (1 - a)"; // output 1
+            break;
+        }
+        case 2:
+        {
+            expression = "(A & !A) | (B & !B)"; //always state
+            break;
+        }  
+        case 3:
+        {
+            expression = "(a | b) & (a & a)"; // simplify: (a | b) & a
+            break;
+        }
+        case 4:
+        {
+            expression = "(a - a) & (b = b)"; // simplify: 1 & 1
+            break;
+        }
+    
+    }
+
     BooleanTree boolTree(expression);
     boolTree.printDirectOrder(expression);
     cout << "\n ==== SPACE METHOD === " << endl;
     boolTree.printSpaceMethod();
-    cout << "\nCalculate 0/1 Tree: ";
-    boolTree.calculateBooleanTree();
-    /*if(boolTree.calculateBooleanTree()) cout << 1;
-    else cout << 0; */
+    cout << "\nCalculate 0/1 Tree: \n";
+    boolTree.calculate();
+    cout << "\nSimplify: \n";
+    boolTree.simplify();
+    boolTree.printSpaceMethod();    
+    cout << "\nCheck:\n";
+    int res = boolTree.checkStateResult();
+    if(res == 0) cout << "Contradiction"<< endl;
+    else if(res == 1) cout << "Tautology" << endl;
+    else cout << "No rule" << endl;
 }
 
 void BenchmarkMode()

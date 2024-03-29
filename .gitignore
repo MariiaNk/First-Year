@@ -35,3 +35,6 @@
 #Files
 *.bin
 *.txt
+
+*.vcxproj.filters
+*.vcxproj
