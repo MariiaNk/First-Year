@@ -1,16 +1,19 @@
+//numbers 0 - 100
 #include <iostream>
 #include <vector>
+#include <cmath>
 #include <chrono>
+#include <algorithm>
 #define NMAX 100000
 
 using namespace std;
 using namespace std::chrono;
 
-void insertionSort(vector<float>& bucket) 
+void insertionSort(vector<int>& bucket) 
 {
     for (int i = 1; i < bucket.size(); ++i) 
     {
-        float key = bucket[i];
+        int key = bucket[i];
         int j = i - 1;
         while (j >= 0 && bucket[j] > key) 
         {
@@ -21,13 +24,23 @@ void insertionSort(vector<float>& bucket)
     }
 }
 
-void bucketSort(float arr[], int n)
+int maxValueInArray(int *arr, int n)
 {
-    vector<float> b[n];
-
+    int etalon = arr[0];
+    for(int i = 1; i < n; i++)
+    {
+        if(arr[i] > etalon)
+            etalon = arr[i];
+    }
+    return etalon;
+}
+void bucketSort(int* arr, int n)
+{
+    vector<int> b[n];
+    int M = maxValueInArray(arr, n) + 1;
     for (int i = 0; i < n; i++) 
     {
-        int bi = n * arr[i];
+        int bi = floor(n * arr[i] / M);
         b[bi].push_back(arr[i]);
     }
 
@@ -43,7 +56,7 @@ void bucketSort(float arr[], int n)
     }
 }
 
-void outputArr(const float *arr, int n)
+void outputArr(const int *arr, int n)
 {
     cout << "==== ARRAY ====" << endl;
     for(int i = 0; i < n; i++)
@@ -53,8 +66,8 @@ void outputArr(const float *arr, int n)
 
 void DemonstrationMode()
 {
-    float arr[] = {0.3465, 0.632, 0.667, 0.565, 0.1253, 0.667, 0.888 };
-    int n = 7; 
+    int arr[] = {35, 901, 68, 13, 14, 67, 87, 98, 150, 890, 650, 651};
+    int n = 12; 
 
     outputArr(arr, n);
     cout << "***  BUCKET SORT  ***\n";
@@ -64,21 +77,35 @@ void DemonstrationMode()
     
 }
 
+void copyArray(int *str1, const int *str2, int n)
+{
+    for (int i = 0; i < n; ++i) 
+        str1[i] = str2[i];
+}
+
 void BenchmarkMode()
 {
-    float arr[NMAX];
+    int arr[NMAX], copy[NMAX];
     int n;
-    cout << "Enter count of element (<10000): ";
+    cout << "Enter count of element: ";
     cin >> n;
 
     for(int i = 0; i < n; i++)
-        arr[i] = rand() %1000 / 1000;
+        arr[i] = rand() % 1000 ;
 
+    copyArray(copy, arr, n);
     auto start = high_resolution_clock::now();
-    bucketSort(arr, n);
+    bucketSort(copy, n);
     auto stop = high_resolution_clock::now();
     auto duration = duration_cast<microseconds>(stop - start);
     cout << "Time taken by BACKET SORT:  " << duration.count() << " microseconds" << endl;
+
+    copyArray(copy, arr, n);
+    start = high_resolution_clock::now();
+    sort(copy, copy + n);
+    stop = high_resolution_clock::now();
+    duration = duration_cast<microseconds>(stop - start);
+    cout << "Time taken by STANDART SORT:  " << duration.count() << " microseconds" << endl;
 }
 
 
