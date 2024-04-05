@@ -1,82 +1,37 @@
 #include <iostream>
 #include <vector>
 #include <chrono>
+#include <algorithm>
 #define NMAX 100000
 
 using namespace std;
 using namespace std::chrono;
 
+const int CUBE_SIZE = 8;
 
-int custom_log2(int x)
+// function to sort the cube
+void cubeSort(int arr[], int n)
 {
-    int res = 0;
-    while (x >>= 1) res++;
-    return res;
-}
-
-void insertionSort(int *arr, int size)
-{
-    for (int i = 1; i < size; ++i) 
+    // divide the array into cubes of size CUBE_SIZE 
+    for (int i = 0; i < n; i += CUBE_SIZE)
     {
-        int key = arr[i];
-        int j = i - 1;
-        while (j >= 0 && arr[j] > key) 
-        {
-            arr[j + 1] = arr[j];
-            j--;
-        }
-        arr[j + 1] = key;
+        std::sort(arr + i, arr + std::min(i + CUBE_SIZE, n));
     }
-}
 
-void merge(int *arr1, int *arr2, int size1, int size2) 
-{
-    int merged[size1 + size2];
-    int i = 0, j = 0, k = 0;
-    while (i < size1 && j < size2) 
+    // merge the cubes 
+    int temp[n];
+    for (int i = 0; i < n; i += CUBE_SIZE)
     {
-        if (arr1[i] <= arr2[j])
-            merged[k++] = arr1[i++];
-        else
-            merged[k++] = arr2[j++];
+        std::merge(arr + i, arr + std::min(i + CUBE_SIZE, n),
+                   arr + std::min(i + CUBE_SIZE, n),
+                   arr + std::min(i + 2*CUBE_SIZE, n),
+                   temp + i);
     }
-    while (i < size1)
-        merged[k++] = arr1[i++];
-
-    while (j < size2)
-        merged[k++] = arr2[j++];
-
-    for (int m = 0; m < size1 + size2; m++)
-        arr1[m] = merged[m];
+    // copy the result from temp[] back to arr[] 
+    for (int i = 0; i < n; i++)
+        arr[i] = temp[i];
 }
 
-void cubesort(int *arr, int n, int p)
-{
-    int subarraySize = n / p;
-    int subarray[subarraySize];
-
-    for (int i = 0; i < p; i++) {
-        for (int j = 0; j < subarraySize; j++)
-            subarray[j] = arr[i * subarraySize + j];
-
-        insertionSort(subarray, subarraySize);
-
-        for (int k = 0; k < custom_log2(p); k++) {
-            int partner = i ^ (1 << k);
-            int buffer[subarraySize];
-            for (int j = 0; j < subarraySize; j++)
-                buffer[j] = arr[partner * subarraySize + j];
-
-            if (i < partner)
-                merge(subarray, buffer, subarraySize, subarraySize);
-            else
-                merge(buffer, subarray, subarraySize, subarraySize);
-        }
-
-        for (int j = 0; j < subarraySize; j++)
-            arr[i * subarraySize + j] = subarray[j];
-    }
-}
 void outputArr(const int *arr, int n)
 {
     cout << "==== ARRAY ====" << endl;
@@ -92,28 +47,45 @@ void DemonstrationMode()
     
     outputArr(arr, n);
     cout << "***  CUBE SORT  ***\n";
-    cubesort(arr, n, 2);
+    cubeSort(arr, n);
     outputArr(arr, n);
     cout << endl;
     
 }
 
+void copyArray(int *str1, const int *str2, int n)
+{
+    for (int i = 0; i < n; ++i) 
+        str1[i] = str2[i];
+}
+
 void BenchmarkMode()
 {
-    int arr[NMAX];
+    int arr[NMAX], copy[NMAX];
     int n;
-    cout << "Enter count of element (<10000): ";
+    cout << "Enter count of element: ";
     cin >> n;
 
     for(int i = 0; i < n; i++)
         arr[i] = rand() % 100;
 
+    outputArr(arr, n);
     int p = rand() % 5;
+    copyArray(copy, arr, n);
     auto start = high_resolution_clock::now();
-    cubesort(arr, n, p);
+    cubeSort(copy, n);
     auto stop = high_resolution_clock::now();
     auto duration = duration_cast<microseconds>(stop - start);
     cout << "Time taken by CUBE SORT:  " << duration.count() << " microseconds" << endl;
+    outputArr(copy, n);
+
+    copyArray(copy, arr, n);
+    start = high_resolution_clock::now();
+    sort(copy, copy + n);
+    stop = high_resolution_clock::now();
+    duration = duration_cast<microseconds>(stop - start);
+    cout << "Time taken by STANDART SORT:  " << duration.count() << " microseconds" << endl;
+
 }
 
 
