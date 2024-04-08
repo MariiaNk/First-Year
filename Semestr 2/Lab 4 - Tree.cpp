@@ -478,6 +478,14 @@ class BooleanTree
         {
             root = buildExpressionTreeHelper(expression);
         }
+        BooleanTree()
+        {
+            root = nullptr;
+        }
+        void BuildTree(string& expression)
+        {
+            root = buildExpressionTreeHelper(expression);
+        }
         void printDirectOrder(string& expression)
         {
             outputDirectOrder(root);
@@ -626,49 +634,120 @@ void DemonstrationMode()
     else if(res == 1) cout << "Tautology" << endl;
     else cout << "No rule" << endl;
 }
-
-void BenchmarkMode()
+void outputMenu()
 {
-    int n;
-    cout << "Enter count of element (<100): ";
-    cin >> n;
-    int minCnt, maxCnt, data;
-    Tree myTree;
-    duration<double> durationProcess;
-    for(int i = 0; i < n; i++)
-    {
-        minCnt = 1 + rand()%5;
-        maxCnt = minCnt+rand()%5;
-        data = rand()%1000;
-        auto start = high_resolution_clock::now();
-        myTree.addNode(data, minCnt, maxCnt);
-        auto stop = high_resolution_clock::now();
-        durationProcess += duration_cast<microseconds>(stop - start);
-    }
-
-    cout << "Time taken by ADD NODE:  " << durationProcess.count() << " microseconds" << endl;
-    
-    auto start = high_resolution_clock::now();
-    myTree.deleteNode(rand()%1000);
-    auto stop = high_resolution_clock::now();
-    auto durationDelete = duration_cast<microseconds>(stop - start);
-    cout << "Time taken by DELETE NODE: " << durationDelete.count() << " microseconds" << endl;
-    
-
+    cout << "==== Tree Menu ====\n";
+    cout << "1 - Add node to tree\n";
+    cout << "2 - Delete node from tree\n";
+    cout << "3 - Output tree\n";
+    cout << "==== Binary Tree Menu ====\n";
+    cout << "4 - Add node to binary tree\n";
+    cout << "5 - Output binary tree\n";
+    cout << "6 - Output directed order for binary tree\n";
+    cout << "==== Tree For Boolaen Expression Menu ====\n";
+    cout << "7 - Convert expression to tree\n";
+    cout << "8 - Calculate expression tree\n";
+    cout << "9 - Simplify expression tree\n";
+    cout << "10 - Check if expression is state\n";
+    cout << "11 - Output tree for boolaen expression\n";
+    cout << "0 - End program\n";
+    cout << "===============================================\n";
 }
 
+
+void InteractiveMode()
+{
+    Tree myTree;
+    BinaryTree myBinTree;
+    BooleanTree myBoolTree;
+    int request;
+    int input;
+    outputMenu();
+    do {
+        cout << "Please, write the number of your request:  ";
+        cin >> request;
+        switch (request) 
+        {
+            case 1:
+                cout << "Enter node value: ";
+                cin >> input;
+                int minPow, maxPow;
+                cout << "Enter minimum exponent: ";
+                cin >> minPow;
+                cout << "Enter maximum exponent: ";
+                cin >> maxPow;
+                myTree.addNode(input, minPow, maxPow);
+                cout << " ==== Complete =====";
+                break;
+            case 2:
+                cout << "Enter deleting node value: ";
+                cin >> input;
+                myTree.deleteNode(input);
+                cout << " ==== Complete =====";
+                break;
+            case 3:
+                myTree.printSpaceMethod();
+                break;
+            case 4:
+                cout << "Enter node value: ";
+                cin >> input;
+                myBinTree.addNode(input);
+                cout << " ==== Complete =====";
+                break;
+            case 5:
+                myBinTree.printSpaceMethod();
+                break;
+            case 6:
+                myBinTree.printDirectOrder();
+                break;
+            case 7:
+            {
+                cout << "Enter boolean expression: ";
+                string expression;
+                //(a|b)&(a&a)
+                cin >> expression;
+                myBoolTree.BuildTree(expression);
+                cout << " ==== Complete =====";
+                break;
+            }
+            case 8:
+                myBoolTree.calculate();
+                break;
+            case 9:
+                myBoolTree.simplify();
+                cout << " ==== Complete =====";
+                break;
+            case 10:
+            {
+                int res = myBoolTree.checkStateResult();
+                if(res == 0) cout << "Contradiction"<< endl;
+                else if(res == 1) cout << "Tautology" << endl;
+                else cout << "No rule" << endl;
+                break;
+            }
+            case 11:
+                myBoolTree.printSpaceMethod();
+                break;
+            default:
+                cout << "----- Error! Wrong request! Try again!!! -----";
+                break;
+        }
+        cout << endl;
+    } while (request !=0);
+
+} 
 
 int main() 
 {
     srand(0);
-    cout << "Input mode of work\nd - demonstration\nb - benchmark\n";
+    cout << "Input mode of work\nd - demonstration\ni - interactive\n";
     cout << "Enter request:";
     char mode;
     cin >> mode;
     if(mode == 'd')
         DemonstrationMode();
-    else if(mode == 'b')
-        BenchmarkMode();
+    else if(mode == 'i')
+        InteractiveMode();
     else
     {
         cout << "Error. Program isn't started\n";
