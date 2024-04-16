@@ -188,7 +188,7 @@ namespace GraphBuilder {
 			this->Controls->Add(this->start_point);
 			this->Controls->Add(this->label2);
 			this->Controls->Add(this->label1);
-			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
+			//this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
 			this->Name = L"weighted_graph_edge";
 			this->Text = L"Вага ребра";
 			this->Load += gcnew System::EventHandler(this, &weighted_graph_edge::weighted_graph_edge_Load);

@@ -192,7 +192,7 @@ namespace GraphBuilder {
 			this->Controls->Add(this->boldness_edge);
 			this->Controls->Add(this->color_edge);
 			this->Controls->Add(this->color_vertex);
-			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
+			//this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
 			this->Name = L"settings_graph";
 			this->Text = L"Параметри";
 			this->Load += gcnew System::EventHandler(this, &settings_graph::settings_graph_Load);

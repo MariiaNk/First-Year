@@ -1,5 +1,4 @@
 ﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(531,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (Bilder.vcxproj).  This can lead to incorrect clean and rebuild behavior.
-  input_weighted_edge.cpp
   Main.cpp
 D:\Programing\GitHub\University\First-Year\Semestr 2\Lab 7 - GraphBuilder\Bilder\Main.cpp(110,44): warning C4244: 'return': conversion from 'double' to 'int', possible loss of data
 D:\Programing\GitHub\University\First-Year\Semestr 2\Lab 7 - GraphBuilder\Bilder\Main.cpp(145,54): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
@@ -14,15 +13,7 @@ D:\Programing\GitHub\University\First-Year\Semestr 2\Lab 7 - GraphBuilder\Bilder
 D:\Programing\GitHub\University\First-Year\Semestr 2\Lab 7 - GraphBuilder\Bilder\Main.cpp(500,18): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
 D:\Programing\GitHub\University\First-Year\Semestr 2\Lab 7 - GraphBuilder\Bilder\Main.cpp(848,32): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
 D:\Programing\GitHub\University\First-Year\Semestr 2\Lab 7 - GraphBuilder\Bilder\Main.cpp(1065,33): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-  settings_graph.cpp
-D:\Programing\GitHub\University\First-Year\Semestr 2\Lab 7 - GraphBuilder\Bilder\settings_graph.cpp(19,24): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Programing\GitHub\University\First-Year\Semestr 2\Lab 7 - GraphBuilder\Bilder\settings_graph.cpp(25,88): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-D:\Programing\GitHub\University\First-Year\Semestr 2\Lab 7 - GraphBuilder\Bilder\settings_graph.cpp(32,87): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-D:\Programing\GitHub\University\First-Year\Semestr 2\Lab 7 - GraphBuilder\Bilder\settings_graph.cpp(32,54): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-D:\Programing\GitHub\University\First-Year\Semestr 2\Lab 7 - GraphBuilder\Bilder\settings_graph.cpp(37,91): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-D:\Programing\GitHub\University\First-Year\Semestr 2\Lab 7 - GraphBuilder\Bilder\settings_graph.cpp(37,58): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
   weighted_graph_edge.cpp
-  .NETFramework,Version=v4.7.2.AssemblyAttributes.cpp
   Generating Code...
 D:\Programing\GitHub\University\First-Year\Semestr 2\Lab 7 - GraphBuilder\Bilder\Main.cpp(91,1): warning C4715: 'IdSelected': not all control paths return a value
   input_weighted_edge.obj : MSIL module encountered; incremental linking is disabled for MSIL; performing full link
