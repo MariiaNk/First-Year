@@ -18,8 +18,8 @@ public:
     virtual void printMatrix() = 0;
     virtual string className() = 0;
     virtual void WarsallTransitiveClosure() = 0;
-    virtual void bfs_random(int) = 0;
-    virtual void bfs_priority(int) = 0;
+    virtual string bfsRandom(int) = 0;
+    virtual string bfsPriority(int) = 0;
     void generateGraph(int, int);
     void changeSavingType();
 };
@@ -60,7 +60,7 @@ public:
 
 bool cmp(pair<int, int> a, pair<int, int> b)
 {
-    return a.second > b.second;
+    return a.second < b.second;
 }
 
 class GraphMatrix: public Graph
@@ -97,7 +97,7 @@ public:
         {
             for(int j = 0; j < n; j++)
             {
-                cout << setw(5) << adjacencyMatrix[i][j] << " ";
+                cout << setw(5) << ((adjacencyMatrix[i][j] != INF) ? adjacencyMatrix[i][j] : 0) << " ";
             } 
             cout << endl;
         }
@@ -112,24 +112,29 @@ public:
                 {
                     if (adjacencyMatrix[i][j] > adjacencyMatrix[i][k] + adjacencyMatrix[k][j])
                         adjacencyMatrix[i][j] = adjacencyMatrix[i][k] + adjacencyMatrix[k][j];
-                    //adjacencyMatrix[j][k] = adjacencyMatrix[j][k] || (adjacencyMatrix[j][i] && adjacencyMatrix[i][k]);
                 }
             }
         }
     }
-    void bfs_random(int startNode)
+    string bfsRandom(int startNode)
     {
+        if(startNode >= n || startNode < 0) return "error";
         bool visited[n];
         queue <int> q;
+        string orderBFS;
+        orderBFS.clear();
 
         visited[startNode] = true;
         q.push(startNode);
 
         while(!q.empty())
         {
+            int currentNode = q.front();
+            q.pop();
+            orderBFS += to_string(currentNode) + " ";
             for(int i = 0; i < n; i++)
             {
-                if(adjacencyMatrix[startNode][i] != 0 && !visited[i])
+                if(adjacencyMatrix[currentNode][i] != 0 && !visited[i])
                 {
                     visited[i] = true;
                     q.push(i);
@@ -137,42 +142,54 @@ public:
                     
             }
         }
+        return orderBFS;
     }
-    void bfs_priority(int startNode)
+    string bfsPriority(int startNode)
     {
-        bool visited[n];
+        if(startNode >= n || startNode < 0) return "error";
+        bool visited[n] = {0};
         vector <pair<int, int>> neighbours;
         queue <int> q;
+        string orderBFS;
+        orderBFS.clear();
 
         visited[startNode] = true;
         q.push(startNode);
 
         while(!q.empty())
         {
+            int currentNode = q.front();
+            q.pop();
+            orderBFS += to_string(currentNode) + " ";
             for(int i = 0; i < n; i++)
             {
-                if(adjacencyMatrix[startNode][i] != 0 && !visited[i])
+                if(adjacencyMatrix[currentNode][i] != 0 && !visited[i])
                 {
                     visited[i] = true;
                     neighbours.push_back({i, adjacencyMatrix[startNode][i]});
                 }
-                sort(neighbours.begin(), neighbours.end(), cmp);
-                for(pair<int, int> neighbourNode: neighbours)
-                {
-                    q.push(neighbourNode.first);   
-                    cout << neighbourNode.second << " ";
-                }
-                neighbours.clear();
             }
+            /*cout << "Neighbour " << currentNode << ": " ;
+            for(pair<int, int> neighbourNode: neighbours)
+                cout << neighbourNode.first << " ";  
+            cout << endl;*/
+            sort(neighbours.begin(), neighbours.end(), cmp);
+            for(pair<int, int> neighbourNode: neighbours)
+                q.push(neighbourNode.first);   
+            neighbours.clear();
         }
+        return orderBFS;
     }
+    void BellmanFordAlgo
+    {
+        
+    } 
 };
 
 
 void Graph::generateGraph(int CntVertex, int CntEdge)
 {
     cleanGraph();
-    srand(0);
     int st, fn, value;
     bool directed;
     for(int i = 0; i < CntEdge-1; i++)
@@ -225,9 +242,12 @@ void DemonstrationMode()
     myGraph->WarsallTransitiveClosure();
     myGraph->printMatrix();
 
+    cout << "   ==== GENERETE GRAPH ====\n";
     myGraph->generateGraph(5, 12);
     myGraph->printMatrix();
-    myGraph->bfs_priority(6);
+    cout << "Order BFS: " << myGraph->bfsRandom(3) << endl;
+    cout << "Order priority BFS: " << myGraph->bfsPriority(3) << endl;
+    
 }
 
 int main()
