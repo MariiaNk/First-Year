@@ -16,10 +16,12 @@ public:
     virtual void cleanGraph() = 0;
     virtual void addEdge(int, int, int, bool) = 0;
     virtual void printMatrix() = 0;
+    virtual int size() = 0;
     virtual string className() = 0;
     virtual void WarsallTransitiveClosure() = 0;
     virtual string bfsRandom(int) = 0;
     virtual string bfsPriority(int) = 0;
+    virtual int* BellmanFordAlgo(int) = 0;
     void generateGraph(int, int);
     void changeSavingType();
 };
@@ -83,6 +85,10 @@ public:
     string className()
     {
         return "Matrix";
+    }
+    int size()
+    {
+        return n;
     }
     void addEdge(int st, int fn, int weight = 1, bool directedEdge = false)
     {
@@ -180,9 +186,25 @@ public:
         }
         return orderBFS;
     }
-    void BellmanFordAlgo
+    int* BellmanFordAlgo(int startNode)
     {
-        
+        int* distance = new int[NMAX];
+        for(int i = 0; i < n; i++)
+            distance[i] = INF;
+        distance[startNode] = 0;
+
+        for(int i = 0; i < n; i++)
+        {
+            for(int j = 0; j < n; j++)
+            {
+                if(adjacencyMatrix[i][j] != 0)
+                {
+                    if(distance[i] + adjacencyMatrix[i][j] < distance[j])
+                        distance[j] = distance[i] + adjacencyMatrix[i][j];
+                }
+            }
+        }
+        return distance;
     } 
 };
 
@@ -196,11 +218,21 @@ void Graph::generateGraph(int CntVertex, int CntEdge)
     {
         st = rand() % CntVertex;
         fn = rand() % CntVertex;
+        if(st == fn)
+        {
+            i--;
+            continue;
+        }
         value = rand() % MAXVALUE;
         directed = rand()%2;
         addEdge(st, fn, value, directed);
     }
-    st = rand() % CntVertex;
+    do
+    {
+        st = rand() % CntVertex;
+    } while (st == CntVertex-1);
+    
+    
     value = rand() % MAXVALUE;
     directed = rand()%2;
     addEdge(st, CntVertex - 1, value, directed);
@@ -247,7 +279,15 @@ void DemonstrationMode()
     myGraph->printMatrix();
     cout << "Order BFS: " << myGraph->bfsRandom(3) << endl;
     cout << "Order priority BFS: " << myGraph->bfsPriority(3) << endl;
-    
+
+    cout << " ==== SHORTEST PATH ====\n";
+    int startNode = rand() % (myGraph->size());
+    int * distance = myGraph->BellmanFordAlgo(startNode);
+    for(int i = 0; i < myGraph->size(); i++)
+    {
+        cout << "From " << startNode << " to " << i << " = " << distance[i] << endl;
+    }
+
 }
 
 int main()
