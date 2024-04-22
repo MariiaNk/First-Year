@@ -24,6 +24,7 @@ public:
     virtual int* BellmanFordAlgo(int) = 0;
     virtual vector <int> KahnAlgo() = 0;
     virtual Graph* spanningTreeBFS (int) = 0;
+    virtual int KruskalAlgo() = 0;
     void generateGraph(int, int, bool);
     void changeSavingType();
 };
@@ -294,10 +295,47 @@ public:
         }
         return spanningTree;
     }
+
+    int KruskalAlgo();
     
 };
 
+int findPath(int* parent, int id)
+{
+    while(parent[id] != id)
+        id = parent[id];
+    return id;
+}
+int GraphMatrix::KruskalAlgo()
+{
+    int minWeight = 0;
+    int edgeCount = 0;
+    int parent[n];
+    for(int i = 0; i < n; i++)
+        parent[i] = i;
+    
+    while(edgeCount < n - 1)
+    {
+        int minEdge = INT_MAX, st, fn;
+        st = fn = -1;
+        for(int i = 0; i < n; i++)
+            for(int j = 0; j < n; j++)
+            {
+                int iPath = findPath(parent, i), jPath = findPath(parent,j);
+                if(iPath != jPath && adjacencyMatrix[i][j] < minEdge && adjacencyMatrix[i][j] != 0)
+                {
+                    minEdge = adjacencyMatrix[i][j];
+                    st = iPath;
+                    fn = jPath;
+                }
+            }
+        parent[st] = fn;
+        edgeCount++;
+        minWeight += minEdge;
+    }
+    return minWeight;
 
+}
 void Graph::generateGraph(int CntVertex, int CntEdge, bool directedGraph = false)
 {
     cleanGraph();
@@ -407,6 +445,20 @@ void DemonstrationMode()
     Graph* spanningTree = myGraph->spanningTreeBFS(startNode);
     cout << "Spanning Tree: start node = " << startNode << endl;
     spanningTree->printMatrix();
+
+    cout << " ===== MIN SPANNING TREE ALGORITHM ======\n";
+    myGraph->cleanGraph();
+    myGraph->addEdge(0, 1, 2, false);
+    myGraph->addEdge(0, 3, 6, false);
+    myGraph->addEdge(1, 2, 3, false);
+    myGraph->addEdge(1, 3, 8, false);
+    myGraph->addEdge(1, 4, 5, false);
+    myGraph->addEdge(2, 4, 7, false);
+    myGraph->addEdge(3, 4, 9, false);
+    cout << "Graph:" << endl;
+    myGraph->printMatrix();
+    int minWeight = myGraph->KruskalAlgo();
+    cout << "Min weight of spanning tree: " << minWeight << endl;
 }
 
 int main()
