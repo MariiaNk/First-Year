@@ -22,6 +22,7 @@ public:
     virtual string bfsRandom(int) = 0;
     virtual string bfsPriority(int) = 0;
     virtual int* BellmanFordAlgo(int) = 0;
+    virtual vector <int> KahnAlgo() = 0;
     void generateGraph(int, int);
     void changeSavingType();
 };
@@ -60,11 +61,23 @@ public:
     }
 };*/
 
+// comparator for sorting node neighbours [use i bfsPriority]
 bool cmp(pair<int, int> a, pair<int, int> b)
 {
     return a.second < b.second;
 }
 
+// temp function to output queue
+void outputQueue(queue <int> q)
+{
+    cout << "Output queue: ";
+    while(!q.empty())
+    {
+        cout << q.front() << " ";
+        q.pop();
+    }
+    cout << endl;
+}
 class GraphMatrix: public Graph
 {
 private:
@@ -206,6 +219,51 @@ public:
         }
         return distance;
     } 
+    vector<int> KahnAlgo()
+    {
+        int * indegree = new int[n];
+        for(int i = 0; i < n; i++)
+        {
+            indegree[i] = 0;
+        }
+
+        for(int i = 0; i < n; i++)
+        {
+            for(int j = 0; j < n; j++)
+            {
+                if(adjacencyMatrix[j][i] != 0 && adjacencyMatrix[j][i] != INF)
+                {
+                    indegree[i]++;
+                    //cout << "Edge " << i << " to " << j << ";";
+                }
+            }
+        }
+        queue <int> q;
+        for(int i = 0; i < n; i++)
+        {
+            //cout << i << " -> " << indegree[i] << "\n";
+            if (indegree[i] == 0)
+                q.push(i);
+        }
+        vector <int> topologicalOrder;
+        while(!q.empty())
+        {
+            //outputQueue(q);
+            int currentNode = q.front();
+            q.pop();
+            topologicalOrder.push_back(currentNode);
+            for (int i = 0; i < n; i++) 
+            {
+                if (adjacencyMatrix[currentNode][i] != 0 && adjacencyMatrix[currentNode][i] != INF) 
+                {
+                    indegree[i]--;
+                    if (indegree[i] == 0) 
+                        q.push(i);
+                }
+            }
+        }
+        return topologicalOrder;
+    }
 };
 
 
@@ -287,6 +345,29 @@ void DemonstrationMode()
     {
         cout << "From " << startNode << " to " << i << " = " << distance[i] << endl;
     }
+
+    cout << " ==== TOPOLOGICAL ORDER ====\n";
+    myGraph->cleanGraph();
+    //Example 1
+    /*myGraph->addEdge(0, 1, 1, true);
+    myGraph->addEdge(1, 2, 3, true);
+    myGraph->addEdge(3, 1, 51, true);
+    myGraph->addEdge(3, 2, -2, true);*/
+    //Example 2
+    myGraph->addEdge(5, 0, 1, true);
+    myGraph->addEdge(5, 2, 1, true);
+    myGraph->addEdge(4, 0, 1, true);
+    myGraph->addEdge(4, 1, 1, true);
+    myGraph->addEdge(3, 1, 1, true);
+    myGraph->addEdge(2, 0, 1, true);
+    myGraph->addEdge(2, 3, 1, true);
+    myGraph->addEdge(1, 0, 1, true);
+    myGraph->printMatrix();
+    vector <int> topologicalOrder = myGraph->KahnAlgo();
+    cout << "Order: ";
+    for(auto node: topologicalOrder)
+        cout << node << " ";
+    cout << endl;
 
 }
 
