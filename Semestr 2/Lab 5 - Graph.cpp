@@ -15,33 +15,35 @@ class Graph
 public:
     virtual void cleanGraph() = 0;
     virtual void addEdge(int, int, int, bool) = 0;
-    virtual void printMatrix() = 0;
+    virtual void print() = 0;
     virtual int size() = 0;
     virtual string className() = 0;
-    virtual void WarsallTransitiveClosure() = 0;
+    //virtual void WarsallTransitiveClosure() = 0;
     virtual string bfsRandom(int) = 0;
     virtual string bfsPriority(int) = 0;
-    virtual int* BellmanFordAlgo(int) = 0;
-    virtual vector <int> KahnAlgo() = 0;
-    virtual Graph* spanningTreeBFS (int) = 0;
-    virtual int KruskalAlgo() = 0;
+    // virtual int* BellmanFordAlgo(int) = 0;
+    // virtual vector <int> KahnAlgo() = 0;
+    // virtual Graph* spanningTreeBFS (int) = 0;
+    // virtual int KruskalAlgo() = 0;
     void generateGraph(int, int, bool);
     void changeSavingType();
 };
 
-/*class GraphVector: public Graph
+// comparator for sorting node neighbours [use i bfsPriority]
+bool cmp(pair<int, int> a, pair<int, int> b)
+{
+    return a.second < b.second;
+}
+
+
+class GraphVector: public Graph
 {
 private:
-    int n;
-    vector< vector<bool>> adjacencyMatrix;
-    vector<vector<int>> weights;
+    vector<vector<pair<int, int>>> adjacencyVector;
 public:
     void cleanGraph()
     {
-        n = 0;
-        for(int i = 0; i < NMAX; i++)
-            for(int j = 0; j < NMAX; j++)
-                adjacencyMatrix[i][j] = false;
+        adjacencyVector.clear();
     }
     GraphVector()
     {
@@ -51,23 +53,93 @@ public:
     {
         return "Vector";
     }
+    int size()
+    {
+        return adjacencyVector.size();
+    }
     void addEdge(int st, int fn, int weight = 1, bool directedEdge = false) 
     {
-        adjacencyMatrix[st][fn] = true;
-        weights[st][fn] = weight;
+        if(adjacencyVector.size() <= st)
+            adjacencyVector.resize(st + 1);
+        if(adjacencyVector.size() <= fn)
+                adjacencyVector.resize(fn + 1); 
+        
+        adjacencyVector[st].push_back({fn, weight});
         if (!directedEdge) 
+            adjacencyVector[fn].push_back({st, weight});
+    }
+    void print()
+    {
+        for(int i = 0; i < adjacencyVector.size(); i++)
         {
-            adjacencyMatrix[fn][st] = true;
-            weights[fn][st] = weight;
+            cout << i << ": ";
+            for(pair<int, int> neighbours: adjacencyVector[i])
+                cout << neighbours.first << "[" << neighbours.second << "] ";
+            cout << endl;
         }
     }
-};*/
+    string bfsRandom(int startNode)
+    {
+        if(startNode >=  adjacencyVector.size()|| startNode < 0) return "error";
+        bool visited[ adjacencyVector.size()];
+        queue <int> q;
+        string orderBFS;
+        orderBFS.clear();
 
-// comparator for sorting node neighbours [use i bfsPriority]
-bool cmp(pair<int, int> a, pair<int, int> b)
-{
-    return a.second < b.second;
-}
+        visited[startNode] = true;
+        q.push(startNode);
+
+        while(!q.empty())
+        {
+            int currentNode = q.front();
+            q.pop();
+            orderBFS += to_string(currentNode) + " ";
+            for(pair<int, int> neighbour: adjacencyVector[currentNode])
+            {
+                if(!visited[neighbour.first])
+                {
+                    visited[neighbour.first] = true;
+                    q.push(neighbour.first);
+                }
+                    
+            }
+        }
+        return orderBFS;
+    }
+    string bfsPriority(int startNode)
+    {
+        if(startNode >=  adjacencyVector.size() || startNode < 0) return "error";
+        bool visited[ adjacencyVector.size()] = {0};
+        vector <pair<int, int>> neighbours;
+        queue <int> q;
+        string orderBFS;
+        orderBFS.clear();
+
+        visited[startNode] = true;
+        q.push(startNode);
+
+        while(!q.empty())
+        {
+            int currentNode = q.front();
+            q.pop();
+            orderBFS += to_string(currentNode) + " ";
+            for(pair<int, int> neighbour: adjacencyVector[currentNode])
+            {
+                if(!visited[neighbour.first])
+                {
+                    visited[neighbour.first] = true;
+                    neighbours.push_back(neighbour);
+                }
+            }
+            sort(neighbours.begin(), neighbours.end(), cmp);
+            for(pair<int, int> neighbourNode: neighbours)
+                q.push(neighbourNode.first);   
+            neighbours.clear();
+        }
+        return orderBFS;
+    }
+};
+
 
 // temp function to output queue
 void outputQueue(queue <int> q)
@@ -112,7 +184,7 @@ public:
         if(!directedEdge) adjacencyMatrix[fn][st] = weight;
         else  adjacencyMatrix[fn][st] = INF;
     }
-    void printMatrix()
+    void print()
     {
         for(int i = 0; i < n; i++)
         {
@@ -375,16 +447,16 @@ void Graph::changeSavingType()
 void DemonstrationMode()
 {
     Graph* myGraph;
-    cout << "Save type:\nv - bit vector\nm - adjacency matrix\n";
+    cout << "Save type:\nv - adjacency vector\nm - adjacency matrix\n";
     char type;
     cin >> type;
     switch (type)
     {
     case 'v':
-        //myGraph = new GraphVector;
+        myGraph = new GraphVector();
         break;
     case 'm':
-        myGraph = new GraphMatrix;
+        myGraph = new GraphMatrix();
         break;
     default:
         cout << "----- Error! Wrong request! Try again!!! -----";
@@ -395,14 +467,14 @@ void DemonstrationMode()
     myGraph->addEdge(3, 1, -1, true);
     myGraph->addEdge(0, 2, -2, true);
     myGraph->addEdge(2, 3, 2, true);
-    myGraph->printMatrix();
-    cout << "     === Closure ===    \n";
+    myGraph->print();
+    /*cout << "     === Closure ===    \n";
     myGraph->WarsallTransitiveClosure();
-    myGraph->printMatrix();
+    myGraph->print();
 
     cout << "   ==== GENERETE GRAPH ====\n";
     myGraph->generateGraph(5, 12);
-    myGraph->printMatrix();
+    myGraph->print();
     cout << "Order BFS: " << myGraph->bfsRandom(3) << endl;
     cout << "Order priority BFS: " << myGraph->bfsPriority(3) << endl;
 
@@ -420,7 +492,8 @@ void DemonstrationMode()
     /*myGraph->addEdge(0, 1, 1, true);
     myGraph->addEdge(1, 2, 3, true);
     myGraph->addEdge(3, 1, 51, true);
-    myGraph->addEdge(3, 2, -2, true);*/
+    myGraph->addEdge(3, 2, -2, true);
+    //
     //Example 2
     myGraph->addEdge(5, 0, 1, true);
     myGraph->addEdge(5, 2, 1, true);
@@ -430,7 +503,7 @@ void DemonstrationMode()
     myGraph->addEdge(2, 0, 1, true);
     myGraph->addEdge(2, 3, 1, true);
     myGraph->addEdge(1, 0, 1, true);
-    myGraph->printMatrix();
+    myGraph->print();
     vector <int> topologicalOrder = myGraph->KahnAlgo();
     cout << "Order: ";
     for(auto node: topologicalOrder)
@@ -440,11 +513,11 @@ void DemonstrationMode()
     cout << " ===== SPANNING TREE ALGORITHM ======\n";
     myGraph->generateGraph(5, 13);
     cout << "Graph:" << endl;
-    myGraph->printMatrix();
+    myGraph->print();
     startNode = rand() % (myGraph->size());
     Graph* spanningTree = myGraph->spanningTreeBFS(startNode);
     cout << "Spanning Tree: start node = " << startNode << endl;
-    spanningTree->printMatrix();
+    spanningTree->print();
 
     cout << " ===== MIN SPANNING TREE ALGORITHM ======\n";
     myGraph->cleanGraph();
@@ -456,9 +529,9 @@ void DemonstrationMode()
     myGraph->addEdge(2, 4, 7, false);
     myGraph->addEdge(3, 4, 9, false);
     cout << "Graph:" << endl;
-    myGraph->printMatrix();
+    myGraph->print();
     int minWeight = myGraph->KruskalAlgo();
-    cout << "Min weight of spanning tree: " << minWeight << endl;
+    cout << "Min weight of spanning tree: " << minWeight << endl;*/
 }
 
 int main()
