@@ -23,7 +23,8 @@ public:
     virtual string bfsPriority(int) = 0;
     virtual int* BellmanFordAlgo(int) = 0;
     virtual vector <int> KahnAlgo() = 0;
-    void generateGraph(int, int);
+    virtual Graph* spanningTreeBFS (int) = 0;
+    void generateGraph(int, int, bool);
     void changeSavingType();
 };
 
@@ -264,14 +265,44 @@ public:
         }
         return topologicalOrder;
     }
+    GraphMatrix* spanningTreeBFS (int startNode)
+    {
+        GraphMatrix* spanningTree = new GraphMatrix;
+        if(startNode >= n || startNode < 0) return spanningTree;
+        
+        bool visited[n] = {0};
+        queue <int> q;
+
+        visited[startNode] = true;
+        q.push(startNode);
+
+        while(!q.empty())
+        {
+            int currentNode = q.front();
+            q.pop();
+            for(int i = 0; i < n; i++)
+            {
+                if(adjacencyMatrix[currentNode][i] != 0 && !visited[i])
+                {
+                    visited[i] = true;
+                    q.push(i);
+                    cout << "Add edge to spanning tree: " << currentNode << "-" << i << endl;
+                    spanningTree->addEdge(currentNode, i, adjacencyMatrix[currentNode][i]);
+                }
+                    
+            }
+        }
+        return spanningTree;
+    }
+    
 };
 
 
-void Graph::generateGraph(int CntVertex, int CntEdge)
+void Graph::generateGraph(int CntVertex, int CntEdge, bool directedGraph = false)
 {
     cleanGraph();
     int st, fn, value;
-    bool directed;
+    bool directed = false;
     for(int i = 0; i < CntEdge-1; i++)
     {
         st = rand() % CntVertex;
@@ -282,17 +313,16 @@ void Graph::generateGraph(int CntVertex, int CntEdge)
             continue;
         }
         value = rand() % MAXVALUE;
-        directed = rand()%2;
+        if(directedGraph) directed = rand()%2;
         addEdge(st, fn, value, directed);
     }
+
     do
     {
         st = rand() % CntVertex;
     } while (st == CntVertex-1);
-    
-    
     value = rand() % MAXVALUE;
-    directed = rand()%2;
+    if(directedGraph) directed = rand()%2;
     addEdge(st, CntVertex - 1, value, directed);
 }
 /*
@@ -369,6 +399,14 @@ void DemonstrationMode()
         cout << node << " ";
     cout << endl;
 
+    cout << " ===== SPANNING TREE ALGORITHM ======\n";
+    myGraph->generateGraph(5, 13);
+    cout << "Graph:" << endl;
+    myGraph->printMatrix();
+    startNode = rand() % (myGraph->size());
+    Graph* spanningTree = myGraph->spanningTreeBFS(startNode);
+    cout << "Spanning Tree: start node = " << startNode << endl;
+    spanningTree->printMatrix();
 }
 
 int main()
