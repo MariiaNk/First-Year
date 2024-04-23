@@ -69,6 +69,8 @@ public:
     string bfsPriority(int startNode);
     int* BellmanFordAlgo(int startNode); // minPath algorithm 
     vector<int> KahnAlgo(); //topological sort
+    GraphVector* spanningTreeBFS (int startNode);
+    int KruskalAlgo(); //min spanning tree
 };
 
 
@@ -81,7 +83,7 @@ void DemonstrationMode()
     switch (type)
     {
     case 'v':
-        //myGraph = new GraphVector();
+        myGraph = new GraphVector();
         break;
     case 'm':
         myGraph = new GraphMatrix();
@@ -166,10 +168,10 @@ void DemonstrationMode()
     int minWeight = myGraph->KruskalAlgo();
     cout << "Min weight of spanning tree: " << minWeight << endl;
 }
-
+/*
 bool cmp(pair<int, int> a, pair<int, int> b); // comparator for sorting node neighbours [use i bfsPriority]
 void outputQueue(queue <int> q); // temp function to output queue
-
+*/
 int main()
 {
     srand((unsigned)time(0));
@@ -370,10 +372,56 @@ vector<int> GraphVector::KahnAlgo()
         {
             indegree[vertex.first]--;
             if (indegree[vertex.first] == 0)
-                q.push(i);
+                q.push(vertex.first);
         }
     }
     return topologicalOrder;
+}
+
+GraphVector* GraphVector::spanningTreeBFS (int startNode)
+{
+    int n = adjacencyVector.size();
+    GraphVector* spanningTree = new GraphVector();
+    if(startNode >= n || startNode < 0) return spanningTree;
+
+    bool visited[n] = {0};
+    queue <int> q;
+
+    visited[startNode] = true;
+    q.push(startNode);
+
+    while(!q.empty())
+    {
+        int currentNode = q.front();
+        q.pop();
+        for(pair<int, int> vertex: adjacencyVector[currentNode])
+        {
+            if(!visited[vertex.first])
+            {
+                visited[vertex.first] = true;
+                q.push(vertex.first);
+                //cout << "Add edge to spanning tree: " << currentNode << "-" << i << endl;
+                spanningTree->addEdge(currentNode, vertex.first, vertex.second);
+            }
+
+        }
+    }
+    return spanningTree;
+}
+
+int findPath(int* parent, int id)
+{
+    while(parent[id] != id)
+        id = parent[id];
+    return id;
+}
+
+int GraphVector::KruskalAlgo()
+{
+    int n = adjacencyVector.size();
+
+    int minWeight = 0;
+    return minWeight;
 }
 
 void GraphMatrix::cleanGraph()
@@ -585,7 +633,7 @@ GraphMatrix* GraphMatrix::spanningTreeBFS (int startNode)
             {
                 visited[i] = true;
                 q.push(i);
-                cout << "Add edge to spanning tree: " << currentNode << "-" << i << endl;
+                //cout << "Add edge to spanning tree: " << currentNode << "-" << i << endl;
                 spanningTree->addEdge(currentNode, i, adjacencyMatrix[currentNode][i]);
             }
 
@@ -594,12 +642,7 @@ GraphMatrix* GraphMatrix::spanningTreeBFS (int startNode)
     return spanningTree;
 }
 
-int findPath(int* parent, int id)
-{
-    while(parent[id] != id)
-        id = parent[id];
-    return id;
-}
+
 int GraphMatrix::KruskalAlgo()
 {
     int minWeight = 0;
