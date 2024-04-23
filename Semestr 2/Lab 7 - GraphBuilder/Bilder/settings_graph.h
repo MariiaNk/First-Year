@@ -49,6 +49,8 @@ namespace GraphBuilder {
 	private: System::Windows::Forms::Timer^ timer1;
 	private: System::Windows::Forms::TrackBar^ choose_boldness;
 	private: System::Windows::Forms::Button^ button1;
+	private: System::Windows::Forms::Button^ backButton;
+
 	private: System::ComponentModel::IContainer^ components;
 
 	private:
@@ -65,7 +67,6 @@ namespace GraphBuilder {
 		void InitializeComponent(void)
 		{
 			this->components = (gcnew System::ComponentModel::Container());
-			System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(settings_graph::typeid));
 			this->colorDialog1 = (gcnew System::Windows::Forms::ColorDialog());
 			this->color_vertex = (gcnew System::Windows::Forms::Button());
 			this->color_edge = (gcnew System::Windows::Forms::Button());
@@ -76,6 +77,7 @@ namespace GraphBuilder {
 			this->timer1 = (gcnew System::Windows::Forms::Timer(this->components));
 			this->choose_boldness = (gcnew System::Windows::Forms::TrackBar());
 			this->button1 = (gcnew System::Windows::Forms::Button());
+			this->backButton = (gcnew System::Windows::Forms::Button());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->choose_radius))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->choose_boldness))->BeginInit();
@@ -85,12 +87,12 @@ namespace GraphBuilder {
 			// 
 			this->color_vertex->BackColor = System::Drawing::Color::White;
 			this->color_vertex->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
-			this->color_vertex->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 7.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
+			this->color_vertex->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
 			this->color_vertex->ForeColor = System::Drawing::Color::Teal;
-			this->color_vertex->Location = System::Drawing::Point(12, 110);
+			this->color_vertex->Location = System::Drawing::Point(9, 130);
 			this->color_vertex->Name = L"color_vertex";
-			this->color_vertex->Size = System::Drawing::Size(133, 46);
+			this->color_vertex->Size = System::Drawing::Size(190, 70);
 			this->color_vertex->TabIndex = 0;
 			this->color_vertex->Text = L"Колір вершини";
 			this->color_vertex->UseVisualStyleBackColor = false;
@@ -100,12 +102,12 @@ namespace GraphBuilder {
 			// 
 			this->color_edge->BackColor = System::Drawing::Color::White;
 			this->color_edge->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
-			this->color_edge->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 7.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
+			this->color_edge->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
 			this->color_edge->ForeColor = System::Drawing::Color::Teal;
-			this->color_edge->Location = System::Drawing::Point(9, 300);
+			this->color_edge->Location = System::Drawing::Point(9, 341);
 			this->color_edge->Name = L"color_edge";
-			this->color_edge->Size = System::Drawing::Size(133, 46);
+			this->color_edge->Size = System::Drawing::Size(190, 70);
 			this->color_edge->TabIndex = 1;
 			this->color_edge->Text = L"Колір ребра";
 			this->color_edge->UseVisualStyleBackColor = false;
@@ -114,10 +116,12 @@ namespace GraphBuilder {
 			// boldness_edge
 			// 
 			this->boldness_edge->BackColor = System::Drawing::Color::Azure;
+			this->boldness_edge->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
 			this->boldness_edge->ForeColor = System::Drawing::Color::Teal;
-			this->boldness_edge->Location = System::Drawing::Point(3, 197);
+			this->boldness_edge->Location = System::Drawing::Point(10, 236);
 			this->boldness_edge->Name = L"boldness_edge";
-			this->boldness_edge->Size = System::Drawing::Size(133, 25);
+			this->boldness_edge->Size = System::Drawing::Size(190, 40);
 			this->boldness_edge->TabIndex = 2;
 			this->boldness_edge->Text = L"Товщина ребра";
 			this->boldness_edge->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
@@ -125,10 +129,12 @@ namespace GraphBuilder {
 			// radius_vertex
 			// 
 			this->radius_vertex->BackColor = System::Drawing::Color::Azure;
+			this->radius_vertex->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
 			this->radius_vertex->ForeColor = System::Drawing::Color::Teal;
-			this->radius_vertex->Location = System::Drawing::Point(12, 20);
+			this->radius_vertex->Location = System::Drawing::Point(9, 20);
 			this->radius_vertex->Name = L"radius_vertex";
-			this->radius_vertex->Size = System::Drawing::Size(133, 25);
+			this->radius_vertex->Size = System::Drawing::Size(190, 25);
 			this->radius_vertex->TabIndex = 3;
 			this->radius_vertex->Text = L"Радіус вершини";
 			this->radius_vertex->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
@@ -136,7 +142,7 @@ namespace GraphBuilder {
 			// pictureBox1
 			// 
 			this->pictureBox1->BackColor = System::Drawing::Color::Azure;
-			this->pictureBox1->Location = System::Drawing::Point(152, 18);
+			this->pictureBox1->Location = System::Drawing::Point(205, 18);
 			this->pictureBox1->Name = L"pictureBox1";
 			this->pictureBox1->Size = System::Drawing::Size(400, 400);
 			this->pictureBox1->TabIndex = 6;
@@ -144,9 +150,9 @@ namespace GraphBuilder {
 			// 
 			// choose_radius
 			// 
-			this->choose_radius->Location = System::Drawing::Point(12, 48);
+			this->choose_radius->Location = System::Drawing::Point(9, 60);
 			this->choose_radius->Name = L"choose_radius";
-			this->choose_radius->Size = System::Drawing::Size(130, 56);
+			this->choose_radius->Size = System::Drawing::Size(190, 56);
 			this->choose_radius->TabIndex = 7;
 			this->choose_radius->Scroll += gcnew System::EventHandler(this, &settings_graph::choose_radius_Scroll);
 			// 
@@ -157,9 +163,9 @@ namespace GraphBuilder {
 			// 
 			// choose_boldness
 			// 
-			this->choose_boldness->Location = System::Drawing::Point(9, 225);
+			this->choose_boldness->Location = System::Drawing::Point(9, 279);
 			this->choose_boldness->Name = L"choose_boldness";
-			this->choose_boldness->Size = System::Drawing::Size(130, 56);
+			this->choose_boldness->Size = System::Drawing::Size(190, 56);
 			this->choose_boldness->TabIndex = 8;
 			this->choose_boldness->Scroll += gcnew System::EventHandler(this, &settings_graph::choose_boldness_Scroll);
 			// 
@@ -170,20 +176,36 @@ namespace GraphBuilder {
 			this->button1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->button1->ForeColor = System::Drawing::Color::Teal;
-			this->button1->Location = System::Drawing::Point(9, 362);
+			this->button1->Location = System::Drawing::Point(411, 424);
 			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(133, 56);
+			this->button1->Size = System::Drawing::Size(186, 58);
 			this->button1->TabIndex = 9;
 			this->button1->Text = L"Застосувати зміни";
 			this->button1->UseVisualStyleBackColor = false;
 			this->button1->Click += gcnew System::EventHandler(this, &settings_graph::button1_Click);
+			// 
+			// backButton
+			// 
+			this->backButton->BackColor = System::Drawing::Color::LightPink;
+			this->backButton->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
+			this->backButton->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->backButton->ForeColor = System::Drawing::Color::Crimson;
+			this->backButton->Location = System::Drawing::Point(214, 424);
+			this->backButton->Name = L"backButton";
+			this->backButton->Size = System::Drawing::Size(186, 58);
+			this->backButton->TabIndex = 10;
+			this->backButton->Text = L"Скасувати зміни";
+			this->backButton->UseVisualStyleBackColor = false;
+			this->backButton->Click += gcnew System::EventHandler(this, &settings_graph::button2_Click);
 			// 
 			// settings_graph
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::Color::Azure;
-			this->ClientSize = System::Drawing::Size(564, 430);
+			this->ClientSize = System::Drawing::Size(617, 494);
+			this->Controls->Add(this->backButton);
 			this->Controls->Add(this->button1);
 			this->Controls->Add(this->choose_boldness);
 			this->Controls->Add(this->choose_radius);
@@ -192,7 +214,6 @@ namespace GraphBuilder {
 			this->Controls->Add(this->boldness_edge);
 			this->Controls->Add(this->color_edge);
 			this->Controls->Add(this->color_vertex);
-			//this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
 			this->Name = L"settings_graph";
 			this->Text = L"Параметри";
 			this->Load += gcnew System::EventHandler(this, &settings_graph::settings_graph_Load);
