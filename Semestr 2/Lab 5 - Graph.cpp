@@ -421,6 +421,30 @@ int GraphVector::KruskalAlgo()
     int n = adjacencyVector.size();
 
     int minWeight = 0;
+    int edgeCount = 0;
+    int parent[n];
+    for(int i = 0; i < n; i++)
+        parent[i] = i;
+
+    while(edgeCount < n - 1)
+    {
+        int minEdge = INT_MAX, st, fn;
+        st = fn = -1;
+        for(int i = 0; i < n; i++)
+            for(auto vertex: adjacencyVector[i])
+            {
+                int iPath = findPath(parent, i), jPath = findPath(parent,vertex.first);
+                if(iPath != jPath && vertex.second< minEdge)
+                {
+                    minEdge = vertex.second;
+                    st = iPath;
+                    fn = jPath;
+                }
+            }
+        parent[st] = fn;
+        edgeCount++;
+        minWeight += minEdge;
+    }
     return minWeight;
 }
 
