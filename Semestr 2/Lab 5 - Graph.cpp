@@ -3,6 +3,11 @@
 #include <queue>
 #include <iomanip>
 #include <algorithm>
+#include "windows.h"
+#include "psapi.h"
+
+#include "benchmark.h"
+
 #define NMAX 1000
 #define MAXVALUE 500
 #define INF 99999
@@ -337,6 +342,187 @@ void InteractiveMode()
     } while (request !=0);
 
 }
+size_t get_current_virtual_memory() 
+{
+    PROCESS_MEMORY_COUNTERS_EX pmc;
+    GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
+    SIZE_T virtualMemUsedByMe = pmc.PrivateUsage;
+    return virtualMemUsedByMe;
+}
+
+size_t get_current_physical_memory() 
+{
+    PROCESS_MEMORY_COUNTERS_EX pmc;
+    GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
+    SIZE_T physMemUsedByMe = pmc.WorkingSetSize;
+    return physMemUsedByMe;
+}
+void BenchmarkMode()
+{
+    Graph* vecGraph = new GraphVector();
+    Graph* matGraph = new GraphMatrix();
+    size_t memBefore, memAfter;
+    size_t physMemBefore, physMemAfter;
+    size_t virtualMemUsed, physMemUsed;
+    int cntVertex, cntEdge;
+    
+    cout << "Enter count of vertex: ";
+    cin >> cntVertex;
+    cout << "Enter count of edge: ";
+    cin >> cntEdge;    
+
+    cout << " == Generate graph =================\n";
+    cout << " *Vector Save Method*\n";
+    memBefore = get_current_virtual_memory();
+    physMemBefore = get_current_physical_memory();
+    vecGraph->generateGraph(cntVertex, cntEdge, true);
+    memAfter = get_current_virtual_memory();
+    physMemAfter = get_current_physical_memory();
+    virtualMemUsed = memAfter - memBefore;
+    physMemUsed = physMemAfter - physMemBefore;
+    cout << "Virtual Memory Used: " << virtualMemUsed << " bytes" << std::endl;
+    cout << "Physical Memory Used: " << physMemUsed << " bytes" << std::endl;
+    
+    cout << " *Matrix Save Method*\n";
+    memBefore = get_current_virtual_memory();
+    physMemBefore = get_current_physical_memory();
+    matGraph->generateGraph(cntVertex, cntEdge, true);
+    memAfter = get_current_virtual_memory();
+    physMemAfter = get_current_physical_memory();
+    virtualMemUsed = memAfter - memBefore;
+    physMemUsed = physMemAfter - physMemBefore;
+    cout << "Virtual Memory Used: " << virtualMemUsed << " bytes" << std::endl;
+    cout << "Physical Memory Used: " << physMemUsed << " bytes" << std::endl;
+    
+    cout << " == Closure of graph =================\n";
+    Graph* closure = new GraphMatrix();
+    cout << " *Vector Save Method*\n";
+    memBefore = get_current_virtual_memory();
+    physMemBefore = get_current_physical_memory();
+    closure = vecGraph->TransitiveClosure();
+    memAfter = get_current_virtual_memory();
+    physMemAfter = get_current_physical_memory();
+    virtualMemUsed = memAfter - memBefore;
+    physMemUsed = physMemAfter - physMemBefore;
+    cout << "Virtual Memory Used: " << virtualMemUsed << " bytes" << std::endl;
+    cout << "Physical Memory Used: " << physMemUsed << " bytes" << std::endl;
+
+    cout << " *Matrix Save Method*\n";
+    memBefore = get_current_virtual_memory();
+    physMemBefore = get_current_physical_memory();
+    closure = matGraph->TransitiveClosure();
+    memAfter = get_current_virtual_memory();
+    physMemAfter = get_current_physical_memory();
+    virtualMemUsed = memAfter - memBefore;
+    physMemUsed = physMemAfter - physMemBefore;
+    cout << "Virtual Memory Used: " << virtualMemUsed << " bytes" << std::endl;
+    cout << "Physical Memory Used: " << physMemUsed << " bytes" << std::endl;
+
+    cout << " == BFS order of graph =================\n";
+    string order;
+    cout << " *Vector Save Method*\n";
+    int numNode = rand() % (vecGraph->size());
+    memBefore = get_current_virtual_memory();
+    physMemBefore = get_current_physical_memory();
+    order = vecGraph->bfsRandom(numNode);
+    memAfter = get_current_virtual_memory();
+    physMemAfter = get_current_physical_memory();
+    virtualMemUsed = memAfter - memBefore;
+    physMemUsed = physMemAfter - physMemBefore;
+    cout << "Virtual Memory Used: " << virtualMemUsed << " bytes" << std::endl;
+    cout << "Physical Memory Used: " << physMemUsed << " bytes" << std::endl;
+
+    cout << " *Vector Save Method*\n";
+    numNode = rand() % (matGraph->size());
+    memBefore = get_current_virtual_memory();
+    physMemBefore = get_current_physical_memory();
+    order = matGraph->bfsRandom(numNode);
+    memAfter = get_current_virtual_memory();
+    physMemAfter = get_current_physical_memory();
+    virtualMemUsed = memAfter - memBefore;
+    physMemUsed = physMemAfter - physMemBefore;
+    cout << "Virtual Memory Used: " << virtualMemUsed << " bytes" << std::endl;
+    cout << "Physical Memory Used: " << physMemUsed << " bytes" << std::endl;
+
+
+    // cout << " ==== SHORTEST PATH ====\n";
+    // int startNode = rand() % (myGraph->size());
+    // int * distance = myGraph->BellmanFordAlgo(startNode);
+    // for(int i = 0; i < myGraph->size(); i++)
+    // {
+    //     cout << "From " << startNode << " to " << i << " = " << distance[i] << endl;
+    // }
+
+    // cout << " ==== TOPOLOGICAL ORDER ====\n";
+    // myGraph->cleanGraph();
+    // Example 1
+    // /*myGraph->addEdge(0, 1, 1, true);
+    // myGraph->addEdge(1, 2, 3, true);
+    // myGraph->addEdge(3, 1, 51, true);
+    // myGraph->addEdge(3, 2, -2, true);*/
+    // Example 2
+    // myGraph->addEdge(5, 0, 1, true);
+    // myGraph->addEdge(5, 2, 1, true);
+    // myGraph->addEdge(4, 0, 1, true);
+    // myGraph->addEdge(4, 1, 1, true);
+    // myGraph->addEdge(3, 1, 1, true);
+    // myGraph->addEdge(2, 0, 1, true);
+    // myGraph->addEdge(2, 3, 1, true);
+    // myGraph->addEdge(1, 0, 1, true);
+    // myGraph->print();
+    // vector <int> topologicalOrder = myGraph->KahnAlgo();
+    // cout << "Order: ";
+    // for(auto node: topologicalOrder)
+    //     cout << node << " ";
+    // cout << endl;
+
+    // cout << " ===== SPANNING TREE ALGORITHM ======\n";
+    // myGraph->generateGraph(5, 13, false);
+    // cout << "Graph:" << endl;
+    // myGraph->print();
+    // startNode = rand() % (myGraph->size());
+    // Graph* spanningTree = myGraph->spanningTreeBFS(startNode);
+    // cout << "Spanning Tree: start node = " << startNode << endl;
+    // spanningTree->print();
+
+    // cout << " ===== MIN SPANNING TREE ALGORITHM ======\n";
+    // myGraph->cleanGraph();
+    // myGraph->addEdge(0, 1, 2, false);
+    // myGraph->addEdge(0, 3, 6, false);
+    // myGraph->addEdge(1, 2, 3, false);
+    // myGraph->addEdge(1, 3, 8, false);
+    // myGraph->addEdge(1, 4, 5, false);
+    // myGraph->addEdge(2, 4, 7, false);
+    // myGraph->addEdge(3, 4, 9, false);
+    // cout << "Graph:" << endl;
+    // myGraph->print();
+    // int minWeight = myGraph->KruskalAlgo();
+    // cout << "Min weight of spanning tree: " << minWeight << endl;
+    
+
+    // for(int i = 0; i < n; i++)
+    //     arr[i] = rand() % 100;
+
+    // outputArr(arr, n);
+    // int p = rand() % 5;
+    // copyArray(copy, arr, n);
+    // auto start = high_resolution_clock::now();
+    // cubeSort(copy, n, p);
+    // auto stop = high_resolution_clock::now();
+    // auto duration = duration_cast<microseconds>(stop - start);
+    // cout << "Time taken by CUBE SORT:  " << duration.count() << " microseconds" << endl;
+    // outputArr(copy, n);
+
+    // copyArray(copy, arr, n);
+    // start = high_resolution_clock::now();
+    // sort(copy, copy + n);
+    // stop = high_resolution_clock::now();
+    // duration = duration_cast<microseconds>(stop - start);
+    // cout << "Time taken by STANDART SORT:  " << duration.count() << " microseconds" << endl;
+
+}
+
+
 int main()
 {
     srand((unsigned)time(0));
@@ -348,8 +534,8 @@ int main()
     else
     if(mode == 'd')
         DemonstrationMode();
-    // else if(mode == 'b')
-    //     BenchmarkMode();
+    else if(mode == 'b')
+        BenchmarkMode();
     else
     {
         cout << "Error. Program isn't started\n";
