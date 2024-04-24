@@ -12,6 +12,8 @@ using namespace std;
 
 class Graph
 {
+private:
+    
 public:
     virtual void cleanGraph() = 0;
     virtual void addEdge(int, int, int, bool) = 0;
@@ -21,14 +23,14 @@ public:
     virtual Graph* TransitiveClosure() = 0;
     virtual string bfsRandom(int) = 0;
     virtual string bfsPriority(int) = 0;
-    virtual int* BellmanFordAlgo(int) = 0;
+    virtual int* BellmanFordAlgo(int) = 0; // minPath algorithm
     virtual vector <int> KahnAlgo() = 0;
     virtual Graph* spanningTreeBFS (int) = 0;
     virtual int KruskalAlgo() = 0;
     void generateGraph(int CntVertex, int CntEdge, bool directedGraph);
-    void changeSavingType();
-};
+    virtual Graph* changeType() = 0;
 
+};
 class GraphMatrix: public Graph
 {
 private:
@@ -45,11 +47,11 @@ public:
     GraphMatrix* TransitiveClosure ();
     string bfsRandom(int startNode);
     string bfsPriority(int startNode);
-    int* BellmanFordAlgo(int startNode); // minPath algorithm 
+    int* BellmanFordAlgo(int startNode); // minPath algorithm
     vector<int> KahnAlgo(); //topological sort
     GraphMatrix* spanningTreeBFS (int startNode);
     int KruskalAlgo(); //min spanning tree
-
+    Graph* changeType();
 };
 
 class GraphVector: public Graph
@@ -67,10 +69,11 @@ public:
     GraphMatrix* TransitiveClosure();
     string bfsRandom(int startNode);
     string bfsPriority(int startNode);
-    int* BellmanFordAlgo(int startNode); // minPath algorithm 
+    int* BellmanFordAlgo(int startNode); // minPath algorithm
     vector<int> KahnAlgo(); //topological sort
     GraphVector* spanningTreeBFS (int startNode);
     int KruskalAlgo(); //min spanning tree
+    Graph* changeType();
 };
 
 
@@ -168,19 +171,181 @@ void DemonstrationMode()
     int minWeight = myGraph->KruskalAlgo();
     cout << "Min weight of spanning tree: " << minWeight << endl;
 }
-/*
-bool cmp(pair<int, int> a, pair<int, int> b); // comparator for sorting node neighbours [use i bfsPriority]
-void outputQueue(queue <int> q); // temp function to output queue
-*/
+void outputMenu()
+{
+    cout << "==== Graph Menu ====\n";
+    cout << "1 - Add edge to graph\n";
+    cout << "2 - Print graph\n";
+    cout << "3 - Transitive closure of graph\n";
+    cout << "4 - BFS order for graph\n";
+    cout << "5 - BFS(priority) order for graph\n";
+    cout << "6 - Min path from vetrex\n";
+    cout << "7 - Topological sort order for graph\n";
+    cout << "8 - Build spanning tree from graph\n";
+    cout << "9 - Calculate weight of min spanning tree from graph\n";
+    cout << "------------------------------------------------\n";
+    cout << "10 - Generete graph\n";
+    cout << "11 - Change saving type\n";
+    cout << "12 - Output saving type\n";
+    cout << "0 - End program\n";
+    cout << "===============================================\n";
+}
+
+
+void InteractiveMode()
+{
+    Graph* myGraph;
+    cout << "Save type:\nv - adjacency vector\nm - adjacency matrix\n";
+    char type;
+    cin >> type;
+    switch (type)
+    {
+    case 'v':
+        myGraph = new GraphVector();
+        break;
+    case 'm':
+        myGraph = new GraphMatrix();
+        break;
+    default:
+        cout << "----- Error! Wrong request! Try again!!! -----";
+        break;
+    }
+    outputMenu();
+    int startNode, request;
+    int fn, value = 1;
+    bool rule;
+    do {
+        cout << "Please, write the number of your request:  ";
+        cin >> request;
+        switch (request)
+        {
+            case 1:
+            {
+                cout << "Enter start vertex: ";
+                cin >> startNode;
+                cout << "Enter end vertex: ";
+                cin >> fn;
+                cout << "Is vertex weighted? [0 - false / 1 - true] ";
+                cin >> rule;
+                if(rule)
+                {
+                    cout << "Enter value:";
+                    cin >> value;
+                }
+                cout << "Is vertex directed? [0 - false / 1 - true] ";
+                cin >> rule;
+                myGraph->addEdge(startNode, fn, value, rule);
+                cout << " ==== Complete =====";
+                break;
+            }
+            case 2:
+                myGraph->print();
+                break;
+            case 3:
+            {
+                Graph *closure = myGraph->TransitiveClosure();
+                closure->print();
+                break;
+            }
+            case 4:
+                cout << "Enter start vetrex number: ";
+                cin >> startNode;
+                cout << "Order BFS: " << myGraph->bfsRandom(startNode) << endl;
+                break;
+            case 5:
+                cout << "Enter start vetrex number: ";
+                cin >> startNode;
+                cout << "Order priority BFS: " << myGraph->bfsPriority(startNode) << endl;
+                break;
+            case 6:
+            {
+                cout << "Enter start vertex: ";
+                cin >> startNode;
+                int * distance = myGraph->BellmanFordAlgo(startNode);
+                cout << "Write for every other vertex ? [0 - false / 1 - true] ";
+                cin >> rule;
+                if(!rule)
+                {
+                    cout << "Enter end vertex: ";
+                    cin >> fn;
+                    cout << "From " << startNode << " to " << fn << " = " << distance[fn] << endl;
+                }
+                else
+                {
+                    for(int i = 0; i < myGraph->size(); i++)
+                        cout << "From " << startNode << " to " << i << " = " << distance[i] << endl;
+                }
+                break;
+            }
+            case 7:
+            {
+                vector <int> topologicalOrder = myGraph->KahnAlgo();
+                cout << "Order: ";
+                for(auto node: topologicalOrder)
+                    cout << node << " ";
+                cout << endl;
+                break;
+            }
+            case 8:
+            {
+                cout << "Enter start vetrex number: ";
+                cin >> startNode;
+                Graph* spanningTree = myGraph->spanningTreeBFS(startNode);
+                cout << "Spanning Tree: start node = " << startNode << endl;
+                spanningTree->print();
+                break;
+            }
+            case 9:
+            {
+                int minWeight = myGraph->KruskalAlgo();
+                cout << "Min weight of spanning tree: " << minWeight << endl;
+                break;
+            }
+            case 10:
+            {
+                bool rule;
+                int cntVertex, maxCntEdge, cntEdge;
+                cout << "Enter vertex count: ";
+                cin >> cntVertex;
+                maxCntEdge = cntVertex*(cntVertex+1)/2;
+                do
+                {
+                    cout << "Enter edge count [<" << maxCntEdge << "]: ";
+                    cin >> cntEdge;
+                } while (cntEdge > maxCntEdge);
+                cout << "Is graph directed? [0 - false / 1 - true] ";
+                cin >> rule;
+                myGraph->generateGraph(cntVertex, cntEdge, rule);
+                break;
+            }
+            case 11:
+            {
+                myGraph = myGraph->changeType();
+                cout << " ==== Complete =====";
+                break;
+            }
+            case 12:
+            {
+                cout << myGraph->className();
+                break;
+            }
+            default:
+                cout << "----- Error! Wrong request! Try again!!! -----";
+                break;
+        }
+        cout << endl;
+    } while (request !=0);
+
+}
 int main()
 {
     srand((unsigned)time(0));
     cout << "Input mode of work\ni - interactive\nd - demonstration\nb - benchmark\n";
     char mode;
     cin >> mode;
-    // //if (mode == 'i')
-    //     //InteractiveMode();
-    // else
+    if (mode == 'i')
+        InteractiveMode();
+    else
     if(mode == 'd')
         DemonstrationMode();
     // else if(mode == 'b')
@@ -249,7 +414,7 @@ void GraphVector::DFSUtil(int st, int fn, GraphMatrix* TransClosure)
 
     for (pair <int, int> vertex : adjacencyVector[fn])
     {
-        if (!TransClosure->isConectedEdge(st, vertex.first)) 
+        if (!TransClosure->isConectedEdge(st, vertex.first))
         {
             DFSUtil(st, vertex.first, TransClosure);
         }
@@ -500,7 +665,7 @@ GraphMatrix* GraphMatrix::TransitiveClosure()
         {
             for (int j = 0; j < n; j++)
             {
-                if (TransClosure->adjacencyMatrix[i][k] == 1 && TransClosure->adjacencyMatrix[k][j] == 1) 
+                if (TransClosure->adjacencyMatrix[i][k] == 1 && TransClosure->adjacencyMatrix[k][j] == 1)
                     TransClosure->adjacencyMatrix[i][j] = 1;
             }
         }
@@ -734,4 +899,31 @@ void Graph::generateGraph(int CntVertex, int CntEdge, bool directedGraph)
     if(directedGraph) directed = rand()%2;
     addEdge(st, CntVertex - 1, value, directed);
 }
-
+Graph * GraphVector::changeType()
+{
+    Graph* changeGraph = new GraphMatrix();
+    for(int i = 0; i < size(); i++)
+    {
+        for(auto vertex: adjacencyVector[i])
+        {
+            changeGraph->addEdge(i, vertex.first, vertex.second, false);
+        }
+    }
+    return changeGraph;
+}
+Graph * GraphMatrix::changeType()
+{
+    Graph* changeGraph = new GraphVector();
+    for(int i = 0; i < size(); i++)
+    {
+        for(int j = i + 1; j < size(); j++)
+        {
+            if(adjacencyMatrix[i][j] != 0 )  
+            {
+                if(adjacencyMatrix[i][j] == INF) changeGraph->addEdge(i, j, adjacencyMatrix[j][i], true);
+                else changeGraph->addEdge(i, j, adjacencyMatrix[i][j], true);
+            }
+        }
+    }
+    return changeGraph;
+}
