@@ -1,6 +1,18 @@
 #include "Graph.h"
 #include <cmath>
 
+
+void Graph::unSelectVertex()
+{
+	for (int i = 0; i < cntSelectedVertex; i++)
+	{
+		point[idSelectedPoints[i]]->selected = false;
+		idSelectedPoints[i] = -1;
+	}
+	cntSelectedVertex = 0;
+}
+
+
 Graph::Graph()
 {
 	point = gcnew array<Vertex*>(1000);
@@ -8,10 +20,15 @@ Graph::Graph()
 	matrix = gcnew array<array<int>^>(1000);
 	for (int i = 0; i < 1000; i++)
 		matrix[i] = gcnew array<int>(1000);
-
+	for (int i = 0; i < 1000; i++)
+	{
+		idSelectedPoints[i] = -1;
+		for (int j = 0; j < 1000; j++)
+			matrix[i][j] = 0;
+	}
+		
 	cntVertex = 0;
 	cntEdge = 0;
-	cntSelectedVertex = 0;
 	directedGraph = false;
 	weightedGraph = false;
 
@@ -28,11 +45,12 @@ int distance(Vertex* a, Vertex* b)
 	return sqrt(distanceX) + sqrt(distanceY);
 }
 
+
+
 void Graph::addVertex(Vertex* coord)
 {
 	point[cntVertex] = coord;
-	point[cntVertex]->selected = false;
-	cntVertex++;
+
 	if (cntSelectedVertex > 0)
 	{
 		for (int i = 0; i < cntSelectedVertex; i++)
@@ -40,23 +58,15 @@ void Graph::addVertex(Vertex* coord)
 			matrix[cntVertex][idSelectedPoints[i]] = 1;
 			matrix[idSelectedPoints[i]][cntVertex] = 1;
 		}
-		cntSelectedVertex = 0;
 	}
-}
 
-void Graph::unSelectVertex()
-{
-	for (int i = 0; i < cntSelectedVertex; i++)
-	{
-		point[idSelectedPoints[i]]->selected = false;
-		idSelectedPoints[i] = 0;
-	}
-	cntSelectedVertex = 0;
+	cntVertex++;
+	unSelectVertex();
 }
 
 bool Graph::conectedVertex(int numStart, int numFinish)
 {
-	return (matrix[numStart][numFinish] != 0 || matrix[numFinish][numStart] != 0);
+	return !(matrix[numStart][numFinish] == 0 && matrix[numFinish][numStart] == 0);
 }
 
 bool Graph::checkSelectedVertex(int num)
@@ -102,7 +112,7 @@ System::String^ Graph::typeClick(Vertex* coord)
 		}
 	}
 	addVertex(coord);
-	unSelectVertex();
+
 	return " ";
 }
 

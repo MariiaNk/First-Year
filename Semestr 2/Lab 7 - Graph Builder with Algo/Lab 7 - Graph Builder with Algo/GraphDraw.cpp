@@ -57,7 +57,7 @@ void Graph::redrawGraph(Graphics^ graf)
 	{
 		for (int j = 0; j < cntVertex; j++)
 		{
-			if (matrix[i][j] != 0)
+			if (matrix[i][j] == 1)
 			{
 				Vertex* st = point[i];
 				Vertex* fn = point[j];
