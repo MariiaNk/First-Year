@@ -32,10 +32,6 @@ Graph::Graph()
 	directedGraph = false;
 	weightedGraph = false;
 
-	radius = 15;
-	boldness = 8;
-	colorVertex = Brushes::Gold;
-	colorEdge = Brushes::Goldenrod;
 }
 
 int distance(Vertex* a, Vertex* b)
@@ -95,7 +91,7 @@ System::String^ Graph::typeClick(Vertex* coord)
 	for (int i = 0; i < cntVertex; i++)
 	{
 		tempDistance = distance(point[i], coord);
-		if (tempDistance < 2 * radius)
+		if (tempDistance < 2 * style.radius)
 		{
 			if (checkSelectedVertex(i))
 			{
@@ -106,7 +102,7 @@ System::String^ Graph::typeClick(Vertex* coord)
 			else unSelectVertex();
 			return " ";
 		}
-		else if (tempDistance < 3 * radius)
+		else if (tempDistance < 3 * style.radius)
 		{
 			return L"Не можна малювати вершини надто близько!";
 		}

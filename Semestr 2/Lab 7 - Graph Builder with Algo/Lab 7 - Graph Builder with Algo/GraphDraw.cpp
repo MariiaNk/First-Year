@@ -1,6 +1,14 @@
 #include "Graph.h"
 #include <cmath>
 
+void Graph::changeStyle(viewGraph% newGraphStyle)
+{
+	style.radius = newGraphStyle.radius;
+	style.boldness = newGraphStyle.boldness;
+	style.colorVertex = newGraphStyle.colorVertex;
+	style.colorEdge = newGraphStyle.colorEdge;
+}
+
 void Graph::drawVertex(Graphics^ graf, Vertex* a, int numVertex, int type)
 {
 	/* Types:
@@ -11,15 +19,15 @@ void Graph::drawVertex(Graphics^ graf, Vertex* a, int numVertex, int type)
 	switch (type)
 	{
 	case 1:
-		graf->FillEllipse(colorVertex, a->x - radius, a->y - radius, 2 * radius, 2 * radius);
-		graf->DrawEllipse(Pens::Black, a->x - radius, a->y - radius, 2 * radius, 2 * radius);
+		graf->FillEllipse(style.colorVertex, a->x - style.radius, a->y - style.radius, 2 * style.radius, 2 * style.radius);
+		graf->DrawEllipse(Pens::Black, a->x - style.radius, a->y - style.radius, 2 * style.radius, 2 * style.radius);
 		break;
 	case 2:
-		graf->FillEllipse(Brushes::Red, a->x - radius, a->y - radius, 2 * radius, 2 * radius);
-		graf->DrawEllipse(Pens::Black, a->x - radius, a->y - radius, 2 * radius, 2 * radius);
+		graf->FillEllipse(Brushes::Red, a->x - style.radius, a->y - style.radius, 2 * style.radius, 2 * style.radius);
+		graf->DrawEllipse(Pens::Black, a->x - style.radius, a->y - style.radius, 2 * style.radius, 2 * style.radius);
 		break;
 	case 3:
-		graf->FillEllipse(Brushes::White, a->x - radius, a->y - radius, 2 * radius, 2 * radius);
+		graf->FillEllipse(Brushes::White, a->x - style.radius, a->y - style.radius, 2 * style.radius, 2 * style.radius);
 		break;
 	}
 
@@ -27,10 +35,10 @@ void Graph::drawVertex(Graphics^ graf, Vertex* a, int numVertex, int type)
 	Brush^ brush = gcnew SolidBrush(Color::Blue);
 	graf->TextRenderingHint = System::Drawing::Text::TextRenderingHint::AntiAlias;
 
-	int paddingX, paddingY = round(0.5 * radius);
-	Font^ font = gcnew Font("Microsoft Sans Serif", 0.8 * radius, FontStyle::Bold);
-	if (numVertex > 8) paddingX = round(0.8 * radius);
-	else paddingX = round(0.5 * radius);
+	int paddingX, paddingY = round(0.5 * style.radius);
+	Font^ font = gcnew Font("Microsoft Sans Serif", 0.8 * style.radius, FontStyle::Bold);
+	if (numVertex > 8) paddingX = round(0.8 * style.radius);
+	else paddingX = round(0.5 * style.radius);
 	graf->DrawString(num, font, brush, a->x - paddingX, a->y - paddingY);
 }
 
@@ -41,13 +49,13 @@ void Graph::drawEdge(Graphics^ graf, Vertex* a, Vertex* b, int type)
 	switch (type)
 	{
 		case 1:
-			pen = gcnew Pen(colorEdge);
+			pen = gcnew Pen(style.colorEdge);
 			break;
 		case 2:
 			pen = gcnew Pen(Brushes::Red);
 			break;
 	}
-	pen->Width = boldness;
+	pen->Width = style.boldness;
 	graf->DrawLine(pen, a->x, a->y, b->x, b->y);
 }
 

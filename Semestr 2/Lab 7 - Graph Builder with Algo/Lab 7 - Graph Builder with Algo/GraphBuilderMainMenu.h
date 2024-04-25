@@ -40,6 +40,15 @@ namespace Lab7GraphBuilderwithAlgo {
 	private: System::Windows::Forms::Button^ buttonVertexColor;
 	private: System::Windows::Forms::Label^ SettingsLabel;
 	private: System::Windows::Forms::Button^ buttonEdgeColor;
+	private: System::Windows::Forms::TrackBar^ trackRadius;
+	private: System::Windows::Forms::Label^ RadiusLabel;
+	private: System::Windows::Forms::Label^ BoldnessLabel;
+	private: System::Windows::Forms::TrackBar^ trackBoldness;
+	private: System::Windows::Forms::Button^ discardChanges;
+	private: System::Windows::Forms::Button^ saveChanges;
+	private: System::Windows::Forms::MenuStrip^ GraphMenu;
+	private: System::Windows::Forms::ToolStripMenuItem^ settingsTool;
+
 
 	protected:
 
@@ -64,7 +73,18 @@ namespace Lab7GraphBuilderwithAlgo {
 			this->buttonVertexColor = (gcnew System::Windows::Forms::Button());
 			this->SettingsLabel = (gcnew System::Windows::Forms::Label());
 			this->buttonEdgeColor = (gcnew System::Windows::Forms::Button());
+			this->trackRadius = (gcnew System::Windows::Forms::TrackBar());
+			this->RadiusLabel = (gcnew System::Windows::Forms::Label());
+			this->BoldnessLabel = (gcnew System::Windows::Forms::Label());
+			this->trackBoldness = (gcnew System::Windows::Forms::TrackBar());
+			this->discardChanges = (gcnew System::Windows::Forms::Button());
+			this->saveChanges = (gcnew System::Windows::Forms::Button());
+			this->GraphMenu = (gcnew System::Windows::Forms::MenuStrip());
+			this->settingsTool = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->MainCanvas))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackRadius))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBoldness))->BeginInit();
+			this->GraphMenu->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// MainCanvas
@@ -104,6 +124,7 @@ namespace Lab7GraphBuilderwithAlgo {
 			this->buttonVertexColor->TabIndex = 9;
 			this->buttonVertexColor->Text = L"Колір вершин";
 			this->buttonVertexColor->UseVisualStyleBackColor = false;
+			this->buttonVertexColor->Click += gcnew System::EventHandler(this, &GraphBuilderMainMenu::buttonVertexColor_Click);
 			// 
 			// SettingsLabel
 			// 
@@ -132,6 +153,94 @@ namespace Lab7GraphBuilderwithAlgo {
 			this->buttonEdgeColor->Text = L"Колір ребра";
 			this->buttonEdgeColor->UseVisualStyleBackColor = false;
 			// 
+			// trackRadius
+			// 
+			this->trackRadius->Location = System::Drawing::Point(1225, 187);
+			this->trackRadius->Name = L"trackRadius";
+			this->trackRadius->Size = System::Drawing::Size(257, 56);
+			this->trackRadius->TabIndex = 13;
+			// 
+			// RadiusLabel
+			// 
+			this->RadiusLabel->AutoSize = true;
+			this->RadiusLabel->Font = (gcnew System::Drawing::Font(L"Miriam Libre", 10.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->RadiusLabel->ForeColor = System::Drawing::Color::Teal;
+			this->RadiusLabel->Location = System::Drawing::Point(1291, 165);
+			this->RadiusLabel->Name = L"RadiusLabel";
+			this->RadiusLabel->Size = System::Drawing::Size(134, 24);
+			this->RadiusLabel->TabIndex = 14;
+			this->RadiusLabel->Text = L"Радіус вершин";
+			this->RadiusLabel->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
+			// 
+			// BoldnessLabel
+			// 
+			this->BoldnessLabel->AutoSize = true;
+			this->BoldnessLabel->Font = (gcnew System::Drawing::Font(L"Miriam Libre", 10.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->BoldnessLabel->ForeColor = System::Drawing::Color::Teal;
+			this->BoldnessLabel->Location = System::Drawing::Point(1291, 331);
+			this->BoldnessLabel->Name = L"BoldnessLabel";
+			this->BoldnessLabel->Size = System::Drawing::Size(142, 24);
+			this->BoldnessLabel->TabIndex = 16;
+			this->BoldnessLabel->Text = L"Товщина ребра";
+			this->BoldnessLabel->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
+			// 
+			// trackBoldness
+			// 
+			this->trackBoldness->Location = System::Drawing::Point(1225, 353);
+			this->trackBoldness->Name = L"trackBoldness";
+			this->trackBoldness->Size = System::Drawing::Size(257, 56);
+			this->trackBoldness->TabIndex = 15;
+			// 
+			// discardChanges
+			// 
+			this->discardChanges->BackColor = System::Drawing::Color::MistyRose;
+			this->discardChanges->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
+			this->discardChanges->Font = (gcnew System::Drawing::Font(L"Miriam Libre", 10.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->discardChanges->ForeColor = System::Drawing::Color::Maroon;
+			this->discardChanges->Location = System::Drawing::Point(1225, 499);
+			this->discardChanges->Name = L"discardChanges";
+			this->discardChanges->Size = System::Drawing::Size(257, 52);
+			this->discardChanges->TabIndex = 17;
+			this->discardChanges->Text = L"Відхилиити зміни";
+			this->discardChanges->UseVisualStyleBackColor = false;
+			this->discardChanges->Click += gcnew System::EventHandler(this, &GraphBuilderMainMenu::discardChanges_Click);
+			// 
+			// saveChanges
+			// 
+			this->saveChanges->BackColor = System::Drawing::Color::LightCyan;
+			this->saveChanges->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
+			this->saveChanges->Font = (gcnew System::Drawing::Font(L"Miriam Libre", 10.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->saveChanges->ForeColor = System::Drawing::Color::Teal;
+			this->saveChanges->Location = System::Drawing::Point(1225, 557);
+			this->saveChanges->Name = L"saveChanges";
+			this->saveChanges->Size = System::Drawing::Size(257, 52);
+			this->saveChanges->TabIndex = 18;
+			this->saveChanges->Text = L"Зберегти зміни";
+			this->saveChanges->UseVisualStyleBackColor = false;
+			this->saveChanges->Click += gcnew System::EventHandler(this, &GraphBuilderMainMenu::saveChanges_Click);
+			// 
+			// GraphMenu
+			// 
+			this->GraphMenu->BackColor = System::Drawing::Color::PowderBlue;
+			this->GraphMenu->ImageScalingSize = System::Drawing::Size(20, 20);
+			this->GraphMenu->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->settingsTool });
+			this->GraphMenu->Location = System::Drawing::Point(0, 0);
+			this->GraphMenu->Name = L"GraphMenu";
+			this->GraphMenu->Size = System::Drawing::Size(1499, 28);
+			this->GraphMenu->TabIndex = 19;
+			this->GraphMenu->Text = L"GraphMenu";
+			// 
+			// settingsTool
+			// 
+			this->settingsTool->Name = L"settingsTool";
+			this->settingsTool->Size = System::Drawing::Size(102, 24);
+			this->settingsTool->Text = L"Параметри";
+			this->settingsTool->Click += gcnew System::EventHandler(this, &GraphBuilderMainMenu::settingsTool_Click);
+			// 
 			// GraphBuilderMainMenu
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
@@ -139,18 +248,31 @@ namespace Lab7GraphBuilderwithAlgo {
 			this->AutoValidate = System::Windows::Forms::AutoValidate::EnableAllowFocusChange;
 			this->BackColor = System::Drawing::Color::Azure;
 			this->ClientSize = System::Drawing::Size(1499, 660);
+			this->Controls->Add(this->saveChanges);
+			this->Controls->Add(this->discardChanges);
+			this->Controls->Add(this->BoldnessLabel);
+			this->Controls->Add(this->trackBoldness);
+			this->Controls->Add(this->RadiusLabel);
+			this->Controls->Add(this->trackRadius);
 			this->Controls->Add(this->buttonEdgeColor);
 			this->Controls->Add(this->SettingsLabel);
 			this->Controls->Add(this->buttonVertexColor);
 			this->Controls->Add(this->warningLabel);
 			this->Controls->Add(this->MainCanvas);
+			this->Controls->Add(this->GraphMenu);
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedToolWindow;
+			this->MainMenuStrip = this->GraphMenu;
 			this->Margin = System::Windows::Forms::Padding(3, 2, 3, 2);
 			this->MaximizeBox = false;
 			this->MinimizeBox = false;
 			this->Name = L"GraphBuilderMainMenu";
 			this->Text = L"Графобудівник";
+			this->Load += gcnew System::EventHandler(this, &GraphBuilderMainMenu::GraphBuilderMainMenu_Load);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->MainCanvas))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackRadius))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBoldness))->EndInit();
+			this->GraphMenu->ResumeLayout(false);
+			this->GraphMenu->PerformLayout();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -158,8 +280,13 @@ namespace Lab7GraphBuilderwithAlgo {
 #pragma endregion
 	private:
 		Graph myGraph;
+		viewGraph newStyle;
+		Graphics^ graf;
 		System::Void MainCanvas_MouseUp(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e);
-	private: System::Void progressBar1_Click(System::Object^ sender, System::EventArgs^ e) {
-	}
+		System::Void GraphBuilderMainMenu_Load(System::Object^ sender, System::EventArgs^ e);
+		System::Void buttonVertexColor_Click(System::Object^ sender, System::EventArgs^ e);
+		System::Void settingsTool_Click(System::Object^ sender, System::EventArgs^ e);
+		System::Void discardChanges_Click(System::Object^ sender, System::EventArgs^ e);
+		System::Void saveChanges_Click(System::Object^ sender, System::EventArgs^ e);
 };
 }

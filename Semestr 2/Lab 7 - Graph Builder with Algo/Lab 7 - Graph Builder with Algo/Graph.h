@@ -10,14 +10,35 @@ struct Vertex
 	bool selected;
 	Vertex(int x = 0, int y = 0, bool selected = false) : x(x), y(y), selected(selected) {}
 	
+	
 };
+ref struct viewGraph
+{
+	Brush^ colorVertex;
+	Brush^ colorEdge;
+	int radius, boldness;
+	viewGraph()
+	{
+		radius = 15;
+		boldness = 8;
+		colorVertex = Brushes::Gold;
+		colorEdge = Brushes::Goldenrod;
+	}
+	viewGraph% operator= (viewGraph% other)
+	{
+		/*radius = other.radius;
+		boldness = other.boldness;
+		colorVertex = other.colorVertex;
+		colorEdge = other.colorEdge;*/
+		return other;
+	}
+};
+
 ref class Graph
 {
 private:
 	bool directedGraph, weightedGraph;
-	Brush^ colorVertex;
-	Brush^ colorEdge;
-	int radius, boldness;
+	viewGraph style;
 	int cntVertex, cntEdge;
 public:
 	cli::array<Vertex*>^ point;
@@ -31,6 +52,7 @@ public:
 	bool checkSelectedVertex(int num);
 	System::String^ typeClick(Vertex* coord);
 
+	void changeStyle(viewGraph% newGraphStyle);
 	void Graph::drawEdge(Graphics^ graf, Vertex* a, Vertex* b, int type);
 	void redrawGraph(Graphics^ graf);
 	void drawVertex(Graphics^ graf, Vertex* a, int numVertex, int type);
