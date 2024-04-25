@@ -62,9 +62,10 @@ namespace Lab7GraphBuilderwithAlgo {
 			// 
 			this->MainCanvas->BackColor = System::Drawing::SystemColors::Window;
 			this->MainCanvas->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
-			this->MainCanvas->Location = System::Drawing::Point(12, 47);
+			this->MainCanvas->Location = System::Drawing::Point(9, 38);
+			this->MainCanvas->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
 			this->MainCanvas->Name = L"MainCanvas";
-			this->MainCanvas->Size = System::Drawing::Size(748, 396);
+			this->MainCanvas->Size = System::Drawing::Size(925, 457);
 			this->MainCanvas->TabIndex = 0;
 			this->MainCanvas->TabStop = false;
 			this->MainCanvas->MouseUp += gcnew System::Windows::Forms::MouseEventHandler(this, &GraphBuilderMainMenu::MainCanvas_MouseUp);
@@ -76,19 +77,25 @@ namespace Lab7GraphBuilderwithAlgo {
 			this->warningLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->warningLabel->ForeColor = System::Drawing::Color::Red;
-			this->warningLabel->Location = System::Drawing::Point(15, 451);
+			this->warningLabel->Location = System::Drawing::Point(11, 507);
+			this->warningLabel->Margin = System::Windows::Forms::Padding(2, 0, 2, 0);
 			this->warningLabel->Name = L"warningLabel";
-			this->warningLabel->Size = System::Drawing::Size(0, 25);
+			this->warningLabel->Size = System::Drawing::Size(0, 20);
 			this->warningLabel->TabIndex = 8;
 			// 
 			// GraphBuilderMainMenu
 			// 
-			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
+			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
+			this->AutoValidate = System::Windows::Forms::AutoValidate::EnableAllowFocusChange;
 			this->BackColor = System::Drawing::Color::Azure;
-			this->ClientSize = System::Drawing::Size(774, 484);
+			this->ClientSize = System::Drawing::Size(945, 536);
 			this->Controls->Add(this->warningLabel);
 			this->Controls->Add(this->MainCanvas);
+			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
+			this->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
+			this->MaximizeBox = false;
+			this->MinimizeBox = false;
 			this->Name = L"GraphBuilderMainMenu";
 			this->Text = L"Графобудівник";
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->MainCanvas))->EndInit();

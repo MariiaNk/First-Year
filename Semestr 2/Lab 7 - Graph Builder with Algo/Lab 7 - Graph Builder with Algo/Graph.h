@@ -25,8 +25,12 @@ public:
 	int cntSelectedVertex;
 	cli::array<cli::array<int>^>^ matrix;
 	Graph();
-	System::String^ addVertex(Vertex* coord);
-	
+	void addVertex(Vertex* coord);
+	void unSelectVertex();
+	bool conectedVertex(int numStart, int numFinish);
+	bool checkSelectedVertex(int num);
+	System::String^ typeClick(Vertex* coord);
+
 	void Graph::drawEdge(Graphics^ graf, Vertex* a, Vertex* b, int type);
 	void redrawGraph(Graphics^ graf);
 	void drawVertex(Graphics^ graf, Vertex* a, int numVertex, int type);

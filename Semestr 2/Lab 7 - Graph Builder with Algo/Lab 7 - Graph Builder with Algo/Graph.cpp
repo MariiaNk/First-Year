@@ -16,8 +16,9 @@ Graph::Graph()
 	weightedGraph = false;
 
 	radius = 15;
-	colorVertex = Brushes::LightGoldenrodYellow;
-	colorEdge = Brushes::Crimson;
+	boldness = 8;
+	colorVertex = Brushes::Gold;
+	colorEdge = Brushes::Goldenrod;
 }
 
 int distance(Vertex* a, Vertex* b)
@@ -27,32 +28,81 @@ int distance(Vertex* a, Vertex* b)
 	return sqrt(distanceX) + sqrt(distanceY);
 }
 
-System::String^ Graph::addVertex(Vertex* coord)
+void Graph::addVertex(Vertex* coord)
 {
+	point[cntVertex] = coord;
+	point[cntVertex]->selected = false;
+	cntVertex++;
+	if (cntSelectedVertex > 0)
+	{
+		for (int i = 0; i < cntSelectedVertex; i++)
+		{
+			matrix[cntVertex][idSelectedPoints[i]] = 1;
+			matrix[idSelectedPoints[i]][cntVertex] = 1;
+		}
+		cntSelectedVertex = 0;
+	}
+}
+
+void Graph::unSelectVertex()
+{
+	for (int i = 0; i < cntSelectedVertex; i++)
+	{
+		point[idSelectedPoints[i]]->selected = false;
+		idSelectedPoints[i] = 0;
+	}
+	cntSelectedVertex = 0;
+}
+
+bool Graph::conectedVertex(int numStart, int numFinish)
+{
+	return (matrix[numStart][numFinish] != 0 || matrix[numFinish][numStart] != 0);
+}
+
+bool Graph::checkSelectedVertex(int num)
+{
+	bool selected = true;
+	for (int i = 0; i < cntSelectedVertex; i++)
+	{
+		if (!conectedVertex(idSelectedPoints[i], num))
+		{
+			selected = false;
+			matrix[idSelectedPoints[i]][num] = 1;
+			matrix[num][idSelectedPoints[i]] = 1;
+		}
+	}
+	return selected;
+}
+
+System::String^ Graph::typeClick(Vertex* coord)
+{
+	/*
+	1 - new vertex
+	2 - select vertex
+	3 - can't draw vertex
+	*/
 	int tempDistance = 0;
 	for (int i = 0; i < cntVertex; i++)
 	{
 		tempDistance = distance(point[i], coord);
 		if (tempDistance < 2 * radius)
 		{
-			idSelectedPoints[cntSelectedVertex] = i;
-			cntSelectedVertex++;
+			if (checkSelectedVertex(i))
+			{
+				idSelectedPoints[cntSelectedVertex] = i;
+				point[i]->selected = true;
+				cntSelectedVertex++;
+			}
+			else unSelectVertex();
 			return " ";
 		}
 		else if (tempDistance < 3 * radius)
-			return L"Не можна малювати вершини надто близько!";
-	}
-
-	point[cntVertex] = coord;
-	cntVertex++;
-	if (cntSelectedVertex > 0)
-	{
-		for (int i = 0; i < cntSelectedVertex; i++)
 		{
-			matrix[cntVertex][idSelectedPoints[i]] = -1;
-			matrix[idSelectedPoints[i]][cntVertex] = -1;
+			return L"Не можна малювати вершини надто близько!";
 		}
-		cntSelectedVertex = 0;
 	}
-	return "";
+	addVertex(coord);
+	unSelectVertex();
+	return " ";
 }
+

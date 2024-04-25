@@ -38,16 +38,16 @@ void Graph::drawVertex(Graphics^ graf, Vertex* a, int numVertex, int type)
 void Graph::drawEdge(Graphics^ graf, Vertex* a, Vertex* b, int type)
 {
 	Pen^ pen;
-	pen->Width = boldness;
 	switch (type)
 	{
-	case 1:
-		pen = gcnew Pen(colorEdge);
-		break;
-	case 2:
-		pen = gcnew Pen(Brushes::Red);
-		break;
+		case 1:
+			pen = gcnew Pen(colorEdge);
+			break;
+		case 2:
+			pen = gcnew Pen(Brushes::Red);
+			break;
 	}
+	pen->Width = boldness;
 	graf->DrawLine(pen, a->x, a->y, b->x, b->y);
 }
 
@@ -57,7 +57,7 @@ void Graph::redrawGraph(Graphics^ graf)
 	{
 		for (int j = 0; j < cntVertex; j++)
 		{
-			if (matrix[i][j] == -1)
+			if (matrix[i][j] != 0)
 			{
 				Vertex* st = point[i];
 				Vertex* fn = point[j];
@@ -66,9 +66,11 @@ void Graph::redrawGraph(Graphics^ graf)
 
 		}
 	}
+	int type = 1;
 	for (int i = 0; i < cntVertex; i++)
 	{
-		drawVertex(graf, point[i], i, 1);
+		type = (point[i]->selected) ? 2 : 1;
+		drawVertex(graf, point[i], i, type);
 	}
 }
 

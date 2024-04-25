@@ -6,7 +6,7 @@ System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::MainCanvas_MouseUp(
 {
 	Graphics^ graf = MainCanvas->CreateGraphics();
 	Vertex* temp = new Vertex(e->X, e->Y);
-	String^ error = myGraph.addVertex(temp);
+	String^ error = myGraph.typeClick(temp);	
 	warningLabel->Text = error;
 	myGraph.redrawGraph(graf);
 }
