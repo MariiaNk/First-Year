@@ -5,8 +5,10 @@
 System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::MainCanvas_MouseUp(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e)
 {
 	Graphics^ graf = MainCanvas->CreateGraphics();
-	warningLabel->Text = "";
-	Vertex temp(e->X, e->Y);
+	Vertex* temp = new Vertex(e->X, e->Y);
+	String^ error = myGraph.addVertex(temp);
+	warningLabel->Text = error;
+	myGraph.redrawGraph(graf);
 }
 
 

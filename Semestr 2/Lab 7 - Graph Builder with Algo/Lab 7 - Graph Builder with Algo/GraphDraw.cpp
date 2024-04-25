@@ -27,12 +27,13 @@ void Graph::drawVertex(Graphics^ graf, Vertex* a, int numVertex, int type)
 	Brush^ brush = gcnew SolidBrush(Color::Blue);
 	graf->TextRenderingHint = System::Drawing::Text::TextRenderingHint::AntiAlias;
 
-	int padding;
+	int paddingX, paddingY = round(0.5 * radius);
 	Font^ font = gcnew Font("Microsoft Sans Serif", 0.8 * radius, FontStyle::Bold);
-	if (numVertex > 8) padding = round(0. * radius);
-	else padding = round(0.5 * radius);
-	graf->DrawString(num, font, brush, a->x - padding, a->y - padding);
+	if (numVertex > 8) paddingX = round(0.8 * radius);
+	else paddingX = round(0.5 * radius);
+	graf->DrawString(num, font, brush, a->x - paddingX, a->y - paddingY);
 }
+
 
 void Graph::drawEdge(Graphics^ graf, Vertex* a, Vertex* b, int type)
 {
@@ -49,6 +50,7 @@ void Graph::drawEdge(Graphics^ graf, Vertex* a, Vertex* b, int type)
 	}
 	graf->DrawLine(pen, a->x, a->y, b->x, b->y);
 }
+
 void Graph::redrawGraph(Graphics^ graf)
 {
 	for (int i = 0; i < cntVertex; i++)
@@ -66,35 +68,11 @@ void Graph::redrawGraph(Graphics^ graf)
 	}
 	for (int i = 0; i < cntVertex; i++)
 	{
-		drawVertex(graf, point[i], i + 1, 1);
+		drawVertex(graf, point[i], i, 1);
 	}
 }
 
-int distance(Vertex* a, Vertex* b)
-{
-	return sqrt(a->x * a->x - b->x * b->x) + sqrt(a->y * a->y - b->y * b->y);
-}
-System::String^ Graph::addVertex(Vertex* coord)
-{
-	for (int i = 0; i < cntVertex; i++)
-	{
-		if (distance(point[i], coord) < 3 * radius)
-		{
-			return L"Не можна малювати вершини надто близько!";
-		}
-	}
-	point[cntVertex] = coord;
-	cntVertex++;
-	if (cntSelectedVertex > 0)
-	{
-		for (int i = 0; i < cntSelectedVertex; i++)
-		{
-			matrix[cntVertex][idSelectedPoints[i]] = -1;
-			matrix[idSelectedPoints[i]][cntVertex] = -1;
-		}
-		cntSelectedVertex = 0;
-	}
-}
+
 
 
 
