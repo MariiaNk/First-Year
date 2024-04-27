@@ -9,6 +9,13 @@ struct Vertex
 	int y;
 	bool selected;
 	Vertex(int x = 0, int y = 0, bool selected = false) : x(x), y(y), selected(selected) {}
+	Vertex* operator= (const Vertex* other)
+	{
+		x = other->x;
+		y = other->y;
+		selected = other->selected;
+		return this;
+	}
 	
 	
 };
@@ -26,11 +33,11 @@ ref struct viewGraph
 	}
 	viewGraph% operator= (viewGraph% other)
 	{
-		/*radius = other.radius;
+		radius = other.radius;
 		boldness = other.boldness;
 		colorVertex = other.colorVertex;
-		colorEdge = other.colorEdge;*/
-		return other;
+		colorEdge = other.colorEdge;
+		return *this;
 	}
 };
 
@@ -38,9 +45,9 @@ ref class Graph
 {
 private:
 	bool directedGraph, weightedGraph;
-	viewGraph style;
 	int cntVertex, cntEdge;
 public:
+	viewGraph style;
 	cli::array<Vertex*>^ point;
 	cli::array <int>^ idSelectedPoints;
 	int cntSelectedVertex;
@@ -50,9 +57,9 @@ public:
 	void unSelectVertex();
 	bool conectedVertex(int numStart, int numFinish);
 	bool checkSelectedVertex(int num);
+	int checkClickCoord(Vertex* coord);
 	System::String^ typeClick(Vertex* coord);
 
-	void changeStyle(viewGraph% newGraphStyle);
 	void Graph::drawEdge(Graphics^ graf, Vertex* a, Vertex* b, int type);
 	void redrawGraph(Graphics^ graf);
 	void drawVertex(Graphics^ graf, Vertex* a, int numVertex, int type);

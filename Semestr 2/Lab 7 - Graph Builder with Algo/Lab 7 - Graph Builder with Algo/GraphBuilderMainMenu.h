@@ -1,5 +1,6 @@
 #pragma once
 #include "Graph.h"
+
 namespace Lab7GraphBuilderwithAlgo {
 
 	using namespace System;
@@ -50,6 +51,9 @@ namespace Lab7GraphBuilderwithAlgo {
 	private: System::Windows::Forms::ToolStripMenuItem^ settingsTool;
 
 
+	private: System::ComponentModel::IContainer^ components;
+
+
 	protected:
 
 	protected:
@@ -58,7 +62,7 @@ namespace Lab7GraphBuilderwithAlgo {
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
-		System::ComponentModel::Container ^components;
+
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -97,6 +101,8 @@ namespace Lab7GraphBuilderwithAlgo {
 			this->MainCanvas->Size = System::Drawing::Size(1194, 562);
 			this->MainCanvas->TabIndex = 0;
 			this->MainCanvas->TabStop = false;
+			this->MainCanvas->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &GraphBuilderMainMenu::MainCanvas_MouseDown);
+			this->MainCanvas->MouseMove += gcnew System::Windows::Forms::MouseEventHandler(this, &GraphBuilderMainMenu::MainCanvas_MouseMove);
 			this->MainCanvas->MouseUp += gcnew System::Windows::Forms::MouseEventHandler(this, &GraphBuilderMainMenu::MainCanvas_MouseUp);
 			// 
 			// warningLabel
@@ -152,13 +158,18 @@ namespace Lab7GraphBuilderwithAlgo {
 			this->buttonEdgeColor->TabIndex = 12;
 			this->buttonEdgeColor->Text = L"Колір ребра";
 			this->buttonEdgeColor->UseVisualStyleBackColor = false;
+			this->buttonEdgeColor->Click += gcnew System::EventHandler(this, &GraphBuilderMainMenu::buttonEdgeColor_Click);
 			// 
 			// trackRadius
 			// 
 			this->trackRadius->Location = System::Drawing::Point(1225, 187);
+			this->trackRadius->Maximum = 50;
+			this->trackRadius->Minimum = 10;
 			this->trackRadius->Name = L"trackRadius";
 			this->trackRadius->Size = System::Drawing::Size(257, 56);
 			this->trackRadius->TabIndex = 13;
+			this->trackRadius->Value = 10;
+			this->trackRadius->Scroll += gcnew System::EventHandler(this, &GraphBuilderMainMenu::trackRadius_Scroll);
 			// 
 			// RadiusLabel
 			// 
@@ -189,9 +200,13 @@ namespace Lab7GraphBuilderwithAlgo {
 			// trackBoldness
 			// 
 			this->trackBoldness->Location = System::Drawing::Point(1225, 353);
+			this->trackBoldness->Maximum = 50;
+			this->trackBoldness->Minimum = 10;
 			this->trackBoldness->Name = L"trackBoldness";
 			this->trackBoldness->Size = System::Drawing::Size(257, 56);
 			this->trackBoldness->TabIndex = 15;
+			this->trackBoldness->Value = 10;
+			this->trackBoldness->Scroll += gcnew System::EventHandler(this, &GraphBuilderMainMenu::trackBoldness_Scroll);
 			// 
 			// discardChanges
 			// 
@@ -280,13 +295,21 @@ namespace Lab7GraphBuilderwithAlgo {
 #pragma endregion
 	private:
 		Graph myGraph;
-		viewGraph newStyle;
+		viewGraph prewStyle;
 		Graphics^ graf;
+		bool isMouseDown = false, changePosition = false;
+		Vertex* startPosition;
+		Vertex* currPosition;
 		System::Void MainCanvas_MouseUp(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e);
 		System::Void GraphBuilderMainMenu_Load(System::Object^ sender, System::EventArgs^ e);
 		System::Void buttonVertexColor_Click(System::Object^ sender, System::EventArgs^ e);
 		System::Void settingsTool_Click(System::Object^ sender, System::EventArgs^ e);
 		System::Void discardChanges_Click(System::Object^ sender, System::EventArgs^ e);
 		System::Void saveChanges_Click(System::Object^ sender, System::EventArgs^ e);
+		System::Void trackRadius_Scroll(System::Object^ sender, System::EventArgs^ e);
+		System::Void trackBoldness_Scroll(System::Object^ sender, System::EventArgs^ e);
+		System::Void buttonEdgeColor_Click(System::Object^ sender, System::EventArgs^ e);
+		System::Void MainCanvas_MouseDown(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e);
+		System::Void MainCanvas_MouseMove(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e);
 };
 }

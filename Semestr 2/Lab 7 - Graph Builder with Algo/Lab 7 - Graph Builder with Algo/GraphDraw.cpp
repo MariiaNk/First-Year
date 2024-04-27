@@ -1,14 +1,6 @@
 #include "Graph.h"
 #include <cmath>
 
-void Graph::changeStyle(viewGraph% newGraphStyle)
-{
-	style.radius = newGraphStyle.radius;
-	style.boldness = newGraphStyle.boldness;
-	style.colorVertex = newGraphStyle.colorVertex;
-	style.colorEdge = newGraphStyle.colorEdge;
-}
-
 void Graph::drawVertex(Graphics^ graf, Vertex* a, int numVertex, int type)
 {
 	/* Types:
@@ -61,6 +53,7 @@ void Graph::drawEdge(Graphics^ graf, Vertex* a, Vertex* b, int type)
 
 void Graph::redrawGraph(Graphics^ graf)
 {
+	graf->Clear(Color::White);
 	for (int i = 0; i < cntVertex; i++)
 	{
 		for (int j = 0; j < cntVertex; j++)

@@ -80,35 +80,43 @@ bool Graph::checkSelectedVertex(int num)
 	return selected;
 }
 
-System::String^ Graph::typeClick(Vertex* coord)
+int Graph::checkClickCoord(Vertex* coord)
 {
 	/*
-	1 - new vertex
-	2 - select vertex
-	3 - can't draw vertex
+	num - select vertex
+	-1 - can't draw vertex
+	-2 - free space
 	*/
 	int tempDistance = 0;
 	for (int i = 0; i < cntVertex; i++)
 	{
 		tempDistance = distance(point[i], coord);
 		if (tempDistance < 2 * style.radius)
-		{
-			if (checkSelectedVertex(i))
-			{
-				idSelectedPoints[cntSelectedVertex] = i;
-				point[i]->selected = true;
-				cntSelectedVertex++;
-			}
-			else unSelectVertex();
-			return " ";
-		}
+			return i;
 		else if (tempDistance < 3 * style.radius)
-		{
-			return L"Не можна малювати вершини надто близько!";
-		}
+			return -1;
 	}
-	addVertex(coord);
+	return -2;
+}
+System::String^ Graph::typeClick(Vertex* coord)
+{
+	int numVertex = checkClickCoord(coord);
+	if(numVertex == -1) return L"Не можна малювати вершини надто близько!";
+	if (numVertex == -2)
+	{
+		addVertex(coord);
+		return " ";
+	}
 
+	if (checkSelectedVertex(numVertex))
+	{
+		idSelectedPoints[cntSelectedVertex] = numVertex;
+		point[numVertex]->selected = true;
+		cntSelectedVertex++;
+	}
+	else unSelectVertex();
 	return " ";
+
+	
 }
 
