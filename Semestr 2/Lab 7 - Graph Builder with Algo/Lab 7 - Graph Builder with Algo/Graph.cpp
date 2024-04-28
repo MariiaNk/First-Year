@@ -38,7 +38,7 @@ int distance(Vertex* a, Vertex* b)
 {
 	int distanceX = (a->x - b->x)* (a->x - b->x);
 	int distanceY = (a->y - b->y) * (a->y - b->y);
-	return sqrt(distanceX) + sqrt(distanceY);
+	return sqrt(distanceX + distanceY);
 }
 
 

@@ -89,22 +89,24 @@ System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::MainCanvas_MouseUp(
 {
 	if (changePosition)
 	{
+		changePosition = false;
+		isMouseDown = false;
 		int statusPoint = 0;
 		for (int i = 0; i < myGraph.cntSelectedVertex; i++)
 		{
 			Vertex* temp = myGraph.point[myGraph.idSelectedPoints[i]];
 			statusPoint = myGraph.checkClickCoord(temp);
-			if (statusPoint > -2) 
+			if (statusPoint > -2 && statusPoint != myGraph.idSelectedPoints[i])
 			{
 				System::Media::SystemSounds::Beep->Play();
-				warningLabel->Text = L"Не можна пересувати вершини надто близько";
+				warningLabel->Text = L" Не можна пересувати вершини надто близько";
 				myGraph.point[myGraph.idSelectedPoints[i]]->x += startPosition->x - e->X;
 				myGraph.point[myGraph.idSelectedPoints[i]]->y += startPosition->y - e->Y;
 			}
 			else
 			{
 				int max_x = MainCanvas->Width, max_y = MainCanvas->Height;
-				if (temp->x > 1.5 * myGraph.style.radius && temp->y > 1.5 * myGraph.style.radius && (temp->x < max_x - 1.5 * myGraph.style.radius) && (temp->y < max_y - 1.5 * myGraph.style.radius))
+				if (!(temp->x > 1.5 * myGraph.style.radius && temp->y > 1.5 * myGraph.style.radius && (temp->x < max_x - 1.5 * myGraph.style.radius) && (temp->y < max_y - 1.5 * myGraph.style.radius)))
 				{
 					System::Media::SystemSounds::Beep->Play();
 					warningLabel->Text = L"Не можна пересувати вершину надто близько до межі!";
@@ -114,8 +116,7 @@ System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::MainCanvas_MouseUp(
 			}
 			
 		}
-		changePosition = false;
-		isMouseDown = false;
+		
 		myGraph.unSelectVertex();
 	}
 	else
