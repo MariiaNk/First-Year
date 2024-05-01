@@ -45,7 +45,8 @@ ref class Graph
 {
 private:
 	bool directedGraph, weightedGraph;
-	int cntVertex, cntEdge;
+	int cntVertex;
+	//cntEdge;
 public:
 	viewGraph style;
 	cli::array<Vertex*>^ point;
@@ -55,6 +56,7 @@ public:
 	Graph();
 	void addVertex(Vertex* coord);
 	void unSelectVertex();
+	void deleteSelectedVertex();
 	bool conectedVertex(int numStart, int numFinish);
 	bool checkSelectedVertex(int num);
 	int checkClickCoord(Vertex* coord);

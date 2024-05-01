@@ -28,12 +28,43 @@ Graph::Graph()
 	}
 		
 	cntVertex = 0;
-	cntEdge = 0;
 	directedGraph = false;
 	weightedGraph = false;
 
 }
 
+void Graph::deleteSelectedVertex()
+{
+	System::Array::Sort(idSelectedPoints, 0, cntSelectedVertex);
+	cli::array<cli::array<int>^>^ newMatrix = gcnew array<array<int>^>(1000);
+	for (int i = 0; i < 1000; i++)
+		newMatrix[i] = gcnew array<int>(1000);
+	int jRow = 0, jCol = 0;
+	for (int i = 0; i < cntVertex; i++)
+	{
+		if (i != idSelectedPoints[jRow] || jRow == cntSelectedVertex)
+		{
+			jCol = 0;
+			for (int k = 0; k < cntVertex; k++)
+			{
+				if (k != idSelectedPoints[jCol] || jCol == cntSelectedVertex)
+					newMatrix[i - jRow][k - jCol] = matrix[i][k];
+				else jCol++;
+			}
+		}
+		else jRow++;
+	}
+	matrix = newMatrix;
+	for (int i = cntSelectedVertex - 1; i >= 0; i--)
+	{
+		for (int j = idSelectedPoints[i]; j < cntVertex - 1; j++)
+			point[j] = point[j + 1];
+		if( i == cntSelectedVertex - 1) point[cntVertex - 1] = new Vertex;
+		idSelectedPoints[i] = -1;
+	}
+	cntVertex -= cntSelectedVertex;
+	cntSelectedVertex = 0;
+}
 int distance(Vertex* a, Vertex* b)
 {
 	int distanceX = (a->x - b->x)* (a->x - b->x);

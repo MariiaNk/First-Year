@@ -1,10 +1,12 @@
 #include "GraphBuilderMainMenu.h"
 #include "Graph.h"
+#include <algorithm>
 
 System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::GraphBuilderMainMenu_Load(System::Object^ sender, System::EventArgs^ e)
 {
 	graf = MainCanvas->CreateGraphics();
 	Width = 930;
+	GraphBuilderMainMenu::Focus();
 }
 
 
@@ -128,3 +130,31 @@ System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::MainCanvas_MouseUp(
 	myGraph.redrawGraph(graf);
 }
 
+System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::GraphBuilderMainMenu_KeyPress(System::Object^ sender, System::Windows::Forms::KeyPressEventArgs^ e)
+{
+	if (e->KeyChar == (char)Keys::Back)
+	{
+		if (myGraph.cntSelectedVertex > 0)
+		{
+			myGraph.deleteSelectedVertex();
+			myGraph.redrawGraph(graf);
+		}
+
+	}
+}
+
+System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::algoMode_Click(System::Object^ sender, System::EventArgs^ e)
+{
+	algoModeMarker->Checked = true;
+	exitAlgoModeButton->Visible = true;
+	MainCanvas->Enabled = false;
+	myGraph.redrawGraph(graf);
+}
+
+System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::exitAlgoModeButton_Click(System::Object^ sender, System::EventArgs^ e)
+{
+	algoModeMarker->Checked = false;
+	exitAlgoModeButton->Visible = false;
+	MainCanvas->Enabled = true;
+	myGraph.redrawGraph(graf);
+}
