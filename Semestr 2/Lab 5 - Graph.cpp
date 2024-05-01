@@ -13,7 +13,7 @@
 #define INF 99999
 
 using namespace std;
-
+using namespace std::chrono;
 
 class Graph
 {
@@ -366,111 +366,174 @@ void BenchmarkMode()
     cout << "Enter count of edge: ";
     cin >> cntEdge;    
 
+    auto start = high_resolution_clock::now();
     BenchmarkMax* bmVec = new BenchmarkMax("Create GraphVector");
     Graph* vecGraph = new GraphVector();
     delete bmVec;
+    auto stop = high_resolution_clock::now();
+    auto duration = duration_cast<microseconds>(stop - start);
+    cout << "Time taken by create GraphVector:  " << duration.count() << " microseconds" << endl;
+
+    start = high_resolution_clock::now();
     BenchmarkMax* bmMat = new BenchmarkMax("Create GraphMatrix");
     Graph* matGraph = new GraphMatrix();
     delete bmMat;
+    stop = high_resolution_clock::now();
+    duration = duration_cast<microseconds>(stop - start);
+    cout << "Time taken by create GraphMatrix:  " << duration.count() << " microseconds" << endl;
 
     cout << " == Generate graph =================\n";
+    start = high_resolution_clock::now();
     bmVec = new BenchmarkMax("Generete GraphVector");
     vecGraph->generateGraph(cntVertex, cntEdge, true);
     delete bmVec;
+    stop = high_resolution_clock::now();
+    duration = duration_cast<microseconds>(stop - start);
+    cout << "Time taken by create GraphVector:  " << duration.count() << " microseconds" << endl;
+
     
+    start = high_resolution_clock::now();
     bmMat = new BenchmarkMax("Generete GraphMatrix");
     matGraph->generateGraph(cntVertex, cntEdge, true);
     delete bmMat;
+    stop = high_resolution_clock::now();
+    duration = duration_cast<microseconds>(stop - start);
+    cout << "Time taken by create GraphMatrix:  " << duration.count() << " microseconds" << endl;
+
     
     cout << " == Closure of graph =================\n";
+    start = high_resolution_clock::now();
     bmMat = new BenchmarkMax("Create Closure Matrix");
     Graph* closure = new GraphMatrix();
     delete bmMat;
+    stop = high_resolution_clock::now();
+    duration = duration_cast<microseconds>(stop - start);
+    cout << "Time taken by create GraphMatrix:  " << duration.count() << " microseconds" << endl;
 
+    start = high_resolution_clock::now();
     bmVec = new BenchmarkMax("GraphVector");
     closure = vecGraph->TransitiveClosure();
     delete bmVec;
+    stop = high_resolution_clock::now();
+    duration = duration_cast<microseconds>(stop - start);
+    cout << "Time taken by create GraphVector:  " << duration.count() << " microseconds" << endl;
+
     
+    start = high_resolution_clock::now();
     bmMat = new BenchmarkMax("GraphMatrix");
     closure = matGraph->TransitiveClosure();
     delete bmMat;
+    stop = high_resolution_clock::now();
+    duration = duration_cast<microseconds>(stop - start);
+    cout << "Time taken by create GraphMatrix:  " << duration.count() << " microseconds" << endl;
     
     cout << " == BFS order of graph =================\n";
     string order;
     int numNode = rand() % cntVertex;
 
+    start = high_resolution_clock::now();
     bmVec = new BenchmarkMax("GraphVector");
     order = vecGraph->bfsRandom(numNode);
     delete bmVec;
+    stop = high_resolution_clock::now();
+    duration = duration_cast<microseconds>(stop - start);
+    cout << "Time taken by create GraphVector:  " << duration.count() << " microseconds" << endl;
 
+
+    start = high_resolution_clock::now();
     bmMat = new BenchmarkMax("GraphMatrix");
     order = matGraph->bfsRandom(numNode);
     delete bmMat;
+    stop = high_resolution_clock::now();
+    duration = duration_cast<microseconds>(stop - start);
+    cout << "Time taken by create GraphMatrix:  " << duration.count() << " microseconds" << endl;
+
 
 
     cout << " ==== SHORTEST PATH ====\n";
     int startNode = rand() % cntVertex;
     int * distance;
 
+    start = high_resolution_clock::now();
     bmVec = new BenchmarkMax("GraphVector");
     distance = vecGraph->BellmanFordAlgo(startNode);
     delete bmVec;
+    stop = high_resolution_clock::now();
+    duration = duration_cast<microseconds>(stop - start);
+    cout << "Time taken by create GraphVector:  " << duration.count() << " microseconds" << endl;
 
+
+    start = high_resolution_clock::now();
     bmMat = new BenchmarkMax("GraphMatrix");
     distance = matGraph->BellmanFordAlgo(startNode);
     delete bmMat;
+    stop = high_resolution_clock::now();
+    duration = duration_cast<microseconds>(stop - start);
+    cout << "Time taken by create GraphMatrix:  " << duration.count() << " microseconds" << endl;
+
 
     cout << " ==== TOPOLOGICAL ORDER ====\n";
+    start = high_resolution_clock::now();
     vector <int> topologicalOrder;
     bmVec = new BenchmarkMax("GraphVector");
     topologicalOrder = vecGraph->KahnAlgo();
     delete bmVec;
+    stop = high_resolution_clock::now();
+    duration = duration_cast<microseconds>(stop - start);
+    cout << "Time taken by create GraphVector:  " << duration.count() << " microseconds" << endl;
 
+    start = high_resolution_clock::now();
     bmMat = new BenchmarkMax("GraphMatrix");
     topologicalOrder = matGraph->KahnAlgo();
     delete bmMat;
-
+    stop = high_resolution_clock::now();
+    duration = duration_cast<microseconds>(stop - start);
+    cout << "Time taken by create GraphMatrix:  " << duration.count() << " microseconds" << endl;
 
     cout << " ===== SPANNING TREE ALGORITHM ======\n";
+    start = high_resolution_clock::now();
     bmMat = new BenchmarkMax("Create Spanning Tree Matrix");
     Graph* spanningTree = new GraphMatrix();
     delete bmMat;
+    stop = high_resolution_clock::now();
+    duration = duration_cast<microseconds>(stop - start);
+    cout << "Time taken by create GraphMatrix:  " << duration.count() << " microseconds" << endl;
 
+    start = high_resolution_clock::now();
     bmVec = new BenchmarkMax("GraphVector");
     spanningTree = vecGraph->spanningTreeBFS(startNode);
     delete bmVec;
+    stop = high_resolution_clock::now();
+    duration = duration_cast<microseconds>(stop - start);
+    cout << "Time taken by create GraphVector:  " << duration.count() << " microseconds" << endl;
 
+    start = high_resolution_clock::now();
     bmMat = new BenchmarkMax("GraphMatrix");
     spanningTree = matGraph->spanningTreeBFS(startNode);
     delete bmMat;
+    stop = high_resolution_clock::now();
+    duration = duration_cast<microseconds>(stop - start);
+    cout << "Time taken by create GraphMatrix:  " << duration.count() << " microseconds" << endl;
 
     cout << " ===== MIN SPANNING TREE ALGORITHM ======\n";
+    start = high_resolution_clock::now();
     int minWeight;
     bmVec = new BenchmarkMax("GraphVector");
     minWeight = vecGraph->KruskalAlgo();
     delete bmVec;
+    stop = high_resolution_clock::now();
+    duration = duration_cast<microseconds>(stop - start);
+    cout << "Time taken by create GraphVector:  " << duration.count() << " microseconds" << endl;
 
+
+    start = high_resolution_clock::now();
     bmMat = new BenchmarkMax("GraphMatrix");
     minWeight = matGraph->KruskalAlgo();
     delete bmMat;
+    stop = high_resolution_clock::now();
+    duration = duration_cast<microseconds>(stop - start);
+    cout << "Time taken by create GraphMatrix:  " << duration.count() << " microseconds" << endl;
     
-    // outputArr(arr, n);
-    // int p = rand() % 5;
-    // copyArray(copy, arr, n);
-    // auto start = high_resolution_clock::now();
-    // cubeSort(copy, n, p);
-    // auto stop = high_resolution_clock::now();
-    // auto duration = duration_cast<microseconds>(stop - start);
-    // cout << "Time taken by CUBE SORT:  " << duration.count() << " microseconds" << endl;
-    // outputArr(copy, n);
-
-    // copyArray(copy, arr, n);
-    // start = high_resolution_clock::now();
-    // sort(copy, copy + n);
-    // stop = high_resolution_clock::now();
-    // duration = duration_cast<microseconds>(stop - start);
-    // cout << "Time taken by STANDART SORT:  " << duration.count() << " microseconds" << endl;
-
 }
 
 
