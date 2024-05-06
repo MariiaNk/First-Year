@@ -131,7 +131,7 @@ public:
         Node *current = head;
         bool found = false;
         bool stop = false;
-        while (current != NULL && !found && !stop) 
+        while (current != nullptr && !found && !stop) 
         {
             if (current->value == item)
                 found = true;
@@ -294,12 +294,58 @@ private:
     }
     void inorder(treeNode* node)
     {
-        if (node != NULL) 
+        if (node != nullptr) 
         {
             inorder(node->left);
             cout << node->value << "; ";
             inorder(node->right);
         }
+    }
+    treeNode* deleteNode(treeNode* root, complex key)
+    {
+        if (root == nullptr)
+            return root;
+        if (key < root->value) 
+        {
+            root->left = deleteNode(root->left, key);
+            return root;
+        }
+        else if (key > root->value) 
+        {
+            root->right = deleteNode(root->right, key);
+            return root;
+        }
+
+
+        if (root->left == nullptr)
+        {
+            treeNode* temp = root->right;
+            delete root;
+            return temp;
+        }
+        else if (root->right == nullptr) 
+        {
+            treeNode* temp = root->left;
+            delete root;
+            return temp;
+        }
+
+        treeNode* succParent = root;
+        treeNode* succ = root->right;
+        while (succ->left != nullptr) 
+        {
+            succParent = succ;
+            succ = succ->left;
+        }
+        root->value = succ->value;
+
+        if (succParent->left == succ)
+            succParent->left = succ->right;
+        else
+            succParent->right = succ->right;
+        
+        delete succ;
+        return root;
     }
 public:
     treeNode* root;
@@ -322,12 +368,16 @@ public:
     {
         inorder(root);
     }
+    void del(complex item)
+    {
+        root = deleteNode(root, item);
+    }
     
 
 };
 int main()
 {
-    orderedLinkedList myList;
+    binarySearchTree myList;
     myList.add({15, 4});
     myList.add({45, 1});
     myList.add({34, 0});
@@ -341,9 +391,9 @@ int main()
         cout << "Yes\n";
     else cout << "No\n";
     myList.del({56, 0});
-    vector <complex> searchResult = myList.searchByRange({13, 4}, {56, 8});
-    for(int i = 0; i < searchResult.size(); i++)
-    {
-        cout << searchResult[i] << "; ";
-    }
+    // vector <complex> searchResult = myList.searchByRange({13, 4}, {56, 8});
+    // for(int i = 0; i < searchResult.size(); i++)
+    // {
+    //     cout << searchResult[i] << "; ";
+    // }
 }
