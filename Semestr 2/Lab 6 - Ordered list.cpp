@@ -70,19 +70,23 @@ struct complex
         return os;
     }
 };
-struct Node
-{
-    complex value;
-    Node* next;
-    Node(complex valueItem = 0)
-    {
-        value = valueItem;
-        next = nullptr;
-    }
-};
+
+
 
 struct orderedLinkedList
 {
+private:
+    struct Node
+    {
+        complex value;
+        Node* next;
+        Node(complex valueItem = 0)
+        {
+            value = valueItem;
+            next = nullptr;
+        }
+    };
+public:
     Node* head;
     orderedLinkedList()
     {
@@ -180,6 +184,85 @@ struct orderedLinkedList
             cout << current->value << endl;
             current = current->next;
         }
+    }
+};
+
+struct OrderedArray
+{
+    vector<complex> data;
+
+    void add(complex item) 
+    {
+        int low = 0, high = data.size() - 1, mid;
+        while (low <= high)
+        {
+            mid = (low + high) / 2;
+            if (data[mid] < item)
+                low = mid + 1;
+            else
+                high = mid - 1;
+        }
+        data.insert(data.begin() + low, item);
+    }
+
+    bool search(complex item) {
+        int low = 0, high = data.size() - 1, mid;
+        while (low <= high) 
+        {
+            mid = (low + high) / 2;
+            if (data[mid] == item)
+                return true;
+            else 
+            {
+                if (data[mid] < item) 
+                    low = mid + 1;
+                else
+                    high = mid - 1;
+            }
+        }
+        return false;
+    }
+
+    void del(complex item) 
+    {
+        int low = 0, high = data.size() - 1, mid;
+        while (low <= high) 
+        {
+            mid = (low + high) / 2;
+            if (data[mid] == item)
+            {
+                data.erase(data.begin() + mid);
+                return;
+            }
+            else 
+            {
+                if (data[mid] < item)
+                    low = mid + 1;
+                else
+                    high = mid - 1;
+            }
+            
+        }
+    }
+
+    vector<complex> searchByRange(complex minValue, complex maxValue) 
+    {
+        vector<complex> results;
+        for (const auto& item : data) 
+        {
+            if (item > maxValue) 
+                break;
+            if (item > minValue || item == minValue) 
+                results.push_back(item);
+        }
+        return results;
+    }
+
+    void print() 
+    {
+        for (auto& item : data)
+            cout << item << " ";
+        cout << endl;
     }
 };
 
