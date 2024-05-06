@@ -48,6 +48,10 @@ struct complex
             return compare(other);
         return thisMod > otherMod;
     }
+    bool operator == (const complex& other) const
+    {
+        return (real == other.real) && (imaginary == other.imaginary);
+    }
     friend ostream& operator<<(ostream& os, const complex& c) 
     {
         if (c.imaginary >= 0)
@@ -109,6 +113,25 @@ struct orderedLinkedList
             } 
         }                      
     }
+    bool search(complex item) 
+    {
+        Node *current = head;
+        bool found = false;
+        bool stop = false;
+        while (current != NULL && !found && !stop) 
+        {
+            if (current->value == item)
+                found = true;
+            else 
+            {
+                if (current->value > item)
+                    stop = true;
+                else
+                    current = current->next;
+            }
+        }
+        return found;
+    }
 
     void print()
     {
@@ -130,4 +153,10 @@ int main()
     myList.add(56);
     myList.add(1);
     myList.print();
+    if(myList.search(15))
+        cout << "Yes\n";
+    else cout << "No\n";
+    if(myList.search(19))
+        cout << "Yes\n";
+    else cout << "No\n";
 }
