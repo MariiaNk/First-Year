@@ -73,7 +73,7 @@ struct complex
 
 
 
-struct orderedLinkedList
+class orderedLinkedList
 {
 private:
     struct Node
@@ -145,7 +145,6 @@ public:
         }
         return found;
     }
-
     void del(complex item) 
     {
         Node *curr = head, *prev = nullptr;
@@ -162,7 +161,6 @@ public:
             prev->next = curr->next;
         delete curr;
     }
-
     vector<complex> searchByRange(complex minValue, complex maxValue) 
     {
         vector<complex> results;
@@ -186,11 +184,10 @@ public:
         }
     }
 };
-
-struct OrderedArray
+class orderedArray
 {
+public:
     vector<complex> data;
-
     void add(complex item) 
     {
         int low = 0, high = data.size() - 1, mid;
@@ -204,8 +201,8 @@ struct OrderedArray
         }
         data.insert(data.begin() + low, item);
     }
-
-    bool search(complex item) {
+    bool search(complex item) 
+    {
         int low = 0, high = data.size() - 1, mid;
         while (low <= high) 
         {
@@ -222,7 +219,6 @@ struct OrderedArray
         }
         return false;
     }
-
     void del(complex item) 
     {
         int low = 0, high = data.size() - 1, mid;
@@ -244,7 +240,6 @@ struct OrderedArray
             
         }
     }
-
     vector<complex> searchByRange(complex minValue, complex maxValue) 
     {
         vector<complex> results;
@@ -257,7 +252,6 @@ struct OrderedArray
         }
         return results;
     }
-
     void print() 
     {
         for (auto& item : data)
@@ -265,7 +259,72 @@ struct OrderedArray
         cout << endl;
     }
 };
+class binarySearchTree
+{
+private:
+    struct treeNode
+    {
+        complex value;
+        treeNode* left;
+        treeNode* right;
+        treeNode(complex valueItem = 0)
+        {
+            value = valueItem;
+            left = nullptr;
+            right = nullptr;
+        }
+    };
+    treeNode* insert(treeNode* node, complex key)
+    {
+        if (node == nullptr)
+            return new treeNode(key);
+        if (key < node->value)
+            node->left = insert(node->left, key);
+        else if (key > node->value)
+            node->right = insert(node->right, key);
+        return node;
+    }
+    treeNode* searchRecur(treeNode* node, complex key)
+    {
+        if (node == nullptr || node->value == key)
+            return node;
+        if (node->value < key)
+            return searchRecur(node->right, key);
+        return searchRecur(node->left, key);
+    }
+    void inorder(treeNode* node)
+    {
+        if (node != NULL) 
+        {
+            inorder(node->left);
+            cout << node->value << "; ";
+            inorder(node->right);
+        }
+    }
+public:
+    treeNode* root;
+    binarySearchTree()
+    {
+        root = nullptr;
+    }
+    void add(complex item)
+    {
+        treeNode* newNode = insert(root, item);
+        if(root == nullptr) root = newNode;
+        
+    }
+    bool search(complex item) 
+    {
+        treeNode* searchResult = searchRecur(root, item);
+        return searchResult != nullptr;
+    }
+    void print() //inorder
+    {
+        inorder(root);
+    }
+    
 
+};
 int main()
 {
     orderedLinkedList myList;
