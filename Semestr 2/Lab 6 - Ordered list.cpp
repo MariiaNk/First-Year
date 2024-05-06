@@ -390,7 +390,8 @@ int main()
     if(myList.search(19))
         cout << "Yes\n";
     else cout << "No\n";
-    myList.del({56, 0});
+    myList.del({34, 0});
+    myList.print();
     // vector <complex> searchResult = myList.searchByRange({13, 4}, {56, 8});
     // for(int i = 0; i < searchResult.size(); i++)
     // {
