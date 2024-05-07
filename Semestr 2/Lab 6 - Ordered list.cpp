@@ -1,7 +1,10 @@
 #include <iostream>
 #include <cmath>
 #include <vector>
-
+#define UNDERLINE "\033[4m"
+#define CLOSEUNDERLINE "\033[0m"
+#define BOLD "\e[1m"
+#define CLOSEBOLD  "\e[0m"
 using namespace std;
 
 struct complex
@@ -60,6 +63,14 @@ struct complex
     bool operator == (const complex& other) const
     {
         return (real == other.real) && (imaginary == other.imaginary);
+    }
+    bool operator <= (const complex& other) const
+    {
+        return *this < other || *this == other;
+    }
+    bool operator >= (const complex& other) const
+    {
+        return *this > other || *this == other;
     }
     friend ostream& operator<<(ostream& os, const complex& c) 
     {
@@ -347,6 +358,19 @@ private:
         delete succ;
         return root;
     }
+    void searchRangeRecur(treeNode* node, complex low, complex high, vector<complex>& results) 
+    {
+        if (!node) return;
+
+        if (low < node->value)
+            searchRangeRecur(node->left, low, high, results);
+
+        if (low <= node->value && node->value <= high)
+            results.push_back(node->value);
+
+        if (node->value < high)
+            searchRangeRecur(node->right, low, high, results);
+    }
 public:
     treeNode* root;
     binarySearchTree()
@@ -366,13 +390,21 @@ public:
     }
     void print() //inorder
     {
+        cout << UNDERLINE << "Binary seacrh tree - [inorder]" << CLOSEUNDERLINE << endl;
         inorder(root);
+        cout << endl;
     }
     void del(complex item)
     {
         root = deleteNode(root, item);
     }
-    
+    vector<complex> searchByRange(complex minValue, complex maxValue) 
+    {
+        vector <complex> result;
+        result.clear();
+        searchRangeRecur(root, minValue, maxValue, result);
+        return result;
+    }
 
 };
 int main()
@@ -384,17 +416,23 @@ int main()
     myList.add(56);
     myList.add(1);
     myList.print();
-    if(myList.search({15, 4}))
+    complex searchItem(15, 4);
+    cout << "Is " << BOLD << searchItem << CLOSEBOLD << " in ordered list? - ";
+    if(myList.search(searchItem))
         cout << "Yes\n";
     else cout << "No\n";
-    if(myList.search(19))
+    searchItem = {19, -8};
+    cout << "Is " << BOLD << searchItem << CLOSEBOLD << " in ordered list? - ";
+    if(myList.search(searchItem))
         cout << "Yes\n";
     else cout << "No\n";
     myList.del({34, 0});
     myList.print();
-    // vector <complex> searchResult = myList.searchByRange({13, 4}, {56, 8});
-    // for(int i = 0; i < searchResult.size(); i++)
-    // {
-    //     cout << searchResult[i] << "; ";
-    // }
+    complex minValue(13, 4), maxValue(56, 8);
+    vector <complex> searchResult = myList.searchByRange(minValue, maxValue);
+    cout << "Result of searching in range: " << minValue << " to " << maxValue << endl; 
+    for(int i = 0; i < searchResult.size(); i++)
+    {
+        cout << searchResult[i] << "; ";
+    }
 }
