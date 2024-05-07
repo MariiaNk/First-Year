@@ -178,7 +178,7 @@ public:
         Node* curr = head;
         while (curr != nullptr && curr->value < minValue) 
             curr = curr->next; 
-        while (curr != nullptr && (curr->value < maxValue || curr->value == maxValue)) 
+        while (curr != nullptr && curr->value <= maxValue) 
         {
             results.push_back(curr->value);
             curr = curr->next;
@@ -258,7 +258,7 @@ public:
         {
             if (item > maxValue) 
                 break;
-            if (item > minValue || item == minValue) 
+            if (item >= minValue) 
                 results.push_back(item);
         }
         return results;
