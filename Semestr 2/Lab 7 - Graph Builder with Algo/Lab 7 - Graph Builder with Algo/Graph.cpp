@@ -1,12 +1,11 @@
 #include "Graph.h"
 #include <cmath>
 
-
 void Graph::unSelectVertex()
 {
 	for (int i = 0; i < cntSelectedVertex; i++)
 	{
-		point[idSelectedPoints[i]]->selected = false;
+		point[idSelectedPoints[i]]->marker = 0;
 		idSelectedPoints[i] = -1;
 	}
 	cntSelectedVertex = 0;
@@ -17,6 +16,7 @@ Graph::Graph()
 {
 	point = gcnew array<Vertex*>(1000);
 	idSelectedPoints = gcnew array<int>(1000);
+	Edge* selectedEdge = nullptr;
 	matrix = gcnew array<array<int>^>(1000);
 	for (int i = 0; i < 1000; i++)
 		matrix[i] = gcnew array<int>(1000);
@@ -72,7 +72,12 @@ int distance(Vertex* a, Vertex* b)
 	return sqrt(distanceX + distanceY);
 }
 
-
+void Graph::deleteSelectedEdge()
+{
+	matrix[selectedEdge->start][selectedEdge->end] = 0;
+	matrix[selectedEdge->end][selectedEdge->start] = 0;
+	selectedEdge = nullptr;
+}
 
 void Graph::addVertex(Vertex* coord)
 {
@@ -111,7 +116,7 @@ bool Graph::checkSelectedVertex(int num)
 	return selected;
 }
 
-int Graph::checkClickCoord(Vertex* coord)
+int Graph::ifClickVertex(Vertex* coord)
 {
 	/*
 	num - select vertex
@@ -127,27 +132,103 @@ int Graph::checkClickCoord(Vertex* coord)
 		else if (tempDistance < 3 * style.radius)
 			return -1;
 	}
+
 	return -2;
+}
+
+bool ifClickEdge(Vertex* start, Vertex* end, int radiusEdge, Vertex* curr)
+{
+	int kofA = (end->y - start->y);
+	int kofB = (start->x - end->x);
+	int kofC = (end->x * start->y - start->x * end->y);
+	int distance = abs(kofA * curr->x + kofB * curr->y + kofC) / sqrt(kofA*kofA + kofB*kofB);
+
+	if (distance < radiusEdge)
+	{
+		if (System::Math::Min(start->x, end->x) - radiusEdge <= curr->x && System::Math::Max(start->x, end->x) + radiusEdge >= curr->x)
+		{
+			if (System::Math::Min(start->y, end->y) - radiusEdge <= curr->y && System::Math::Max(start->y, end->y) + radiusEdge >= curr->y)
+			{
+				return true;
+			}
+			return false;
+		}
+		return false;
+	}
+	return false;
+
+}
+Edge Graph::ifselectedEdge(Vertex* coord)
+{
+	int radiusEdge = style.boldness / 2 + style.radius;
+	for (int i = 0; i < cntVertex; i++)
+	{
+		Vertex* start = point[i];
+		for (int j = i + 1; j < cntVertex; j++)
+		{
+			if (matrix[i][j] != 0 || matrix[j][i] != 0)
+			{
+				Vertex* end = point[j];
+				if (ifClickEdge(start, end, radiusEdge, coord))
+				{
+					if (matrix[i][j] != 0) return { i,j };
+					else return { j, i };
+				}
+			}
+		}
+	}
+	return{ -1, -1 };
 }
 System::String^ Graph::typeClick(Vertex* coord)
 {
-	int numVertex = checkClickCoord(coord);
+	int numVertex = ifClickVertex(coord);
+	selectedEdge = nullptr;
 	if(numVertex == -1) return L"Не можна малювати вершини надто близько!";
 	if (numVertex == -2)
 	{
-		addVertex(coord);
-		return " ";
+		Edge currSelectedEdge = ifselectedEdge(coord);
+		if (currSelectedEdge.end == -1 && currSelectedEdge.start == -1)
+		{
+			addVertex(coord);
+			
+		}
+		else
+		{
+			selectedEdge = new Edge();
+			selectedEdge->end = currSelectedEdge.end;
+			selectedEdge->start = currSelectedEdge.start;
+		}
+		return " ";		
 	}
 
 	if (checkSelectedVertex(numVertex))
 	{
 		idSelectedPoints[cntSelectedVertex] = numVertex;
-		point[numVertex]->selected = true;
+		point[numVertex]->marker = 1;
 		cntSelectedVertex++;
 	}
-	else unSelectVertex();
-	return " ";
-
-	
+	else
+	{
+		unSelectVertex();
+	}
+	return " ";	
+}
+void Graph::dfsRec(int startNode, bool* visited)
+{
+	visited[startNode] = true;
+	orderAlgo.Add(startNode);
+	for (int i = 0; i < cntVertex; i++)
+	{
+		if (matrix[startNode][i] != 0 && !visited[i])
+			dfsRec(i, visited);
+	}
 }
 
+void Graph::dfs(int startNode)
+{
+	orderAlgo.Clear();
+	bool *visited = new bool[cntVertex];
+	for (int i = 0; i < cntVertex; i++)
+		visited[i] = false;
+	dfsRec(startNode, visited);
+}

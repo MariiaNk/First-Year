@@ -2,22 +2,33 @@
 
 using namespace std;
 using namespace System::Drawing;
+using namespace System::Collections::Generic;
 
 struct Vertex
 {
 	int x;
 	int y;
-	bool selected;
-	Vertex(int x = 0, int y = 0, bool selected = false) : x(x), y(y), selected(selected) {}
+	int marker;
+	Vertex(int x = 0, int y = 0, int marker = 0) : x(x), y(y), marker(marker) {}
 	Vertex* operator= (const Vertex* other)
 	{
 		x = other->x;
 		y = other->y;
-		selected = other->selected;
+		marker = other->marker;
 		return this;
 	}
 	
 	
+};
+struct Edge
+{
+	int start;
+	int end;
+	Edge(int start = -1, int end = -1): start(start), end(end) {}
+	bool nonEdge()
+	{
+		return start == -1 && end == -1;
+	}
 };
 ref struct viewGraph
 {
@@ -47,22 +58,30 @@ private:
 	bool directedGraph, weightedGraph;
 	int cntVertex;
 	//cntEdge;
+	void dfsRec(int startNode, bool* visited);
 public:
 	viewGraph style;
 	cli::array<Vertex*>^ point;
+	Edge* selectedEdge;
 	cli::array <int>^ idSelectedPoints;
 	int cntSelectedVertex;
 	cli::array<cli::array<int>^>^ matrix;
+	int cntElemInOrder;
+	List <int> orderAlgo;
 	Graph();
 	void addVertex(Vertex* coord);
 	void unSelectVertex();
 	void deleteSelectedVertex();
+	void deleteSelectedEdge();
 	bool conectedVertex(int numStart, int numFinish);
 	bool checkSelectedVertex(int num);
-	int checkClickCoord(Vertex* coord);
+	int ifClickVertex(Vertex* coord);
+	Edge ifselectedEdge(Vertex* coord);
 	System::String^ typeClick(Vertex* coord);
 
-	void Graph::drawEdge(Graphics^ graf, Vertex* a, Vertex* b, int type);
+	void dfs(int startPoint);
+
+	void Graph::drawEdge(Graphics^ graf,Vertex* a, Vertex* b, int type, bool directed);
 	void redrawGraph(Graphics^ graf);
 	void drawVertex(Graphics^ graf, Vertex* a, int numVertex, int type);
 };

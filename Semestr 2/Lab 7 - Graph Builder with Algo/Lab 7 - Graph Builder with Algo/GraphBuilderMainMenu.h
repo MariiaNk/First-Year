@@ -61,6 +61,8 @@ namespace Lab7GraphBuilderwithAlgo {
 	private: System::Windows::Forms::ToolStripMenuItem^ algoMode;
 	private: System::Windows::Forms::Button^ exitAlgoModeButton;
 	private: System::Windows::Forms::PictureBox^ MainCanvas;
+	private: System::Windows::Forms::ToolStripMenuItem^ dfsAlgoMode;
+	private: System::Windows::Forms::Timer^ timer;
 
 
 
@@ -85,6 +87,7 @@ namespace Lab7GraphBuilderwithAlgo {
 		/// </summary>
 		void InitializeComponent(void)
 		{
+			this->components = (gcnew System::ComponentModel::Container());
 			this->MainCanvas = (gcnew System::Windows::Forms::PictureBox());
 			this->warningLabel = (gcnew System::Windows::Forms::Label());
 			this->pickColor = (gcnew System::Windows::Forms::ColorDialog());
@@ -103,10 +106,12 @@ namespace Lab7GraphBuilderwithAlgo {
 			this->çâàæåíèéToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->îð³ºíòîâàíèéToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->algoMode = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->dfsAlgoMode = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->orientedGraphMarker = (gcnew System::Windows::Forms::RadioButton());
 			this->weightedGraphMarker = (gcnew System::Windows::Forms::RadioButton());
 			this->algoModeMarker = (gcnew System::Windows::Forms::RadioButton());
 			this->exitAlgoModeButton = (gcnew System::Windows::Forms::Button());
+			this->timer = (gcnew System::Windows::Forms::Timer(this->components));
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->MainCanvas))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackRadius))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBoldness))->BeginInit();
@@ -305,10 +310,18 @@ namespace Lab7GraphBuilderwithAlgo {
 			// 
 			// algoMode
 			// 
+			this->algoMode->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->dfsAlgoMode });
 			this->algoMode->Name = L"algoMode";
 			this->algoMode->Size = System::Drawing::Size(147, 24);
 			this->algoMode->Text = L"Ðåæèì àëãîðèòìó";
 			this->algoMode->Click += gcnew System::EventHandler(this, &GraphBuilderMainMenu::algoMode_Click);
+			// 
+			// dfsAlgoMode
+			// 
+			this->dfsAlgoMode->Name = L"dfsAlgoMode";
+			this->dfsAlgoMode->Size = System::Drawing::Size(211, 26);
+			this->dfsAlgoMode->Text = L"Ïîøóê â ãëèáèíó";
+			this->dfsAlgoMode->Click += gcnew System::EventHandler(this, &GraphBuilderMainMenu::dfsAlgoMode_Click);
 			// 
 			// orientedGraphMarker
 			// 
@@ -372,6 +385,11 @@ namespace Lab7GraphBuilderwithAlgo {
 			this->exitAlgoModeButton->Visible = false;
 			this->exitAlgoModeButton->Click += gcnew System::EventHandler(this, &GraphBuilderMainMenu::exitAlgoModeButton_Click);
 			// 
+			// timer
+			// 
+			this->timer->Interval = 1000;
+			this->timer->Tick += gcnew System::EventHandler(this, &GraphBuilderMainMenu::timer_Tick);
+			// 
 			// GraphBuilderMainMenu
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
@@ -421,6 +439,7 @@ namespace Lab7GraphBuilderwithAlgo {
 		viewGraph prewStyle;
 		Graphics^ graf;
 		bool isMouseDown = false, changePosition = false;
+		int numTickAlgo = 0;
 		Vertex* startPosition;
 		Vertex* currPosition;
 		System::Void MainCanvas_MouseUp(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e);
@@ -437,5 +456,7 @@ namespace Lab7GraphBuilderwithAlgo {
 		System::Void GraphBuilderMainMenu_KeyPress(System::Object^ sender, System::Windows::Forms::KeyPressEventArgs^ e);
 		System::Void algoMode_Click(System::Object^ sender, System::EventArgs^ e);
 		System::Void exitAlgoModeButton_Click(System::Object^ sender, System::EventArgs^ e);
+		System::Void dfsAlgoMode_Click(System::Object^ sender, System::EventArgs^ e);
+		System::Void timer_Tick(System::Object^ sender, System::EventArgs^ e);
 };
 }
