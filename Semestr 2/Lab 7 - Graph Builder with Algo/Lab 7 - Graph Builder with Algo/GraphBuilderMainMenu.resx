@@ -117,16 +117,715 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="MainCanvas.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 81</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="MainCanvas.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 2, 3, 2</value>
+  </data>
+  <data name="MainCanvas.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1194, 562</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="MainCanvas.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;MainCanvas.Name" xml:space="preserve">
+    <value>MainCanvas</value>
+  </data>
+  <data name="&gt;&gt;MainCanvas.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;MainCanvas.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;MainCanvas.ZOrder" xml:space="preserve">
+    <value>15</value>
+  </data>
+  <data name="warningLabel.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="warningLabel.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 12pt</value>
+  </data>
+  <data name="warningLabel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 651</value>
+  </data>
+  <data name="warningLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>0, 25</value>
+  </data>
+  <data name="warningLabel.TabIndex" type="System.Int32, mscorlib">
+    <value>8</value>
+  </data>
+  <data name="&gt;&gt;warningLabel.Name" xml:space="preserve">
+    <value>warningLabel</value>
+  </data>
+  <data name="&gt;&gt;warningLabel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;warningLabel.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;warningLabel.ZOrder" xml:space="preserve">
+    <value>14</value>
+  </data>
   <metadata name="pickColor.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <data name="buttonVertexColor.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Popup</value>
+  </data>
+  <data name="buttonVertexColor.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Miriam Libre, 10.8pt</value>
+  </data>
+  <data name="buttonVertexColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>1225, 137</value>
+  </data>
+  <data name="buttonVertexColor.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 2, 3, 2</value>
+  </data>
+  <data name="buttonVertexColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>257, 52</value>
+  </data>
+  <data name="buttonVertexColor.TabIndex" type="System.Int32, mscorlib">
+    <value>9</value>
+  </data>
+  <data name="buttonVertexColor.Text" xml:space="preserve">
+    <value>Колір вершин</value>
+  </data>
+  <data name="&gt;&gt;buttonVertexColor.Name" xml:space="preserve">
+    <value>buttonVertexColor</value>
+  </data>
+  <data name="&gt;&gt;buttonVertexColor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;buttonVertexColor.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;buttonVertexColor.ZOrder" xml:space="preserve">
+    <value>13</value>
+  </data>
+  <data name="SettingsLabel.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="SettingsLabel.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Miriam Libre, 13.8pt, style=Bold, Underline</value>
+  </data>
+  <data name="SettingsLabel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>1235, 92</value>
+  </data>
+  <data name="SettingsLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>235, 30</value>
+  </data>
+  <data name="SettingsLabel.TabIndex" type="System.Int32, mscorlib">
+    <value>11</value>
+  </data>
+  <data name="SettingsLabel.Text" xml:space="preserve">
+    <value>Параметри графу</value>
+  </data>
+  <data name="SettingsLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleCenter</value>
+  </data>
+  <data name="&gt;&gt;SettingsLabel.Name" xml:space="preserve">
+    <value>SettingsLabel</value>
+  </data>
+  <data name="&gt;&gt;SettingsLabel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;SettingsLabel.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;SettingsLabel.ZOrder" xml:space="preserve">
+    <value>12</value>
+  </data>
+  <data name="buttonEdgeColor.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Popup</value>
+  </data>
+  <data name="buttonEdgeColor.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Miriam Libre, 10.8pt</value>
+  </data>
+  <data name="buttonEdgeColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>1225, 299</value>
+  </data>
+  <data name="buttonEdgeColor.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 2, 3, 2</value>
+  </data>
+  <data name="buttonEdgeColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>257, 52</value>
+  </data>
+  <data name="buttonEdgeColor.TabIndex" type="System.Int32, mscorlib">
+    <value>12</value>
+  </data>
+  <data name="buttonEdgeColor.Text" xml:space="preserve">
+    <value>Колір ребра</value>
+  </data>
+  <data name="&gt;&gt;buttonEdgeColor.Name" xml:space="preserve">
+    <value>buttonEdgeColor</value>
+  </data>
+  <data name="&gt;&gt;buttonEdgeColor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;buttonEdgeColor.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;buttonEdgeColor.ZOrder" xml:space="preserve">
+    <value>11</value>
+  </data>
+  <data name="trackRadius.Location" type="System.Drawing.Point, System.Drawing">
+    <value>1225, 222</value>
+  </data>
+  <data name="trackRadius.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 2, 3, 2</value>
+  </data>
+  <data name="trackRadius.Size" type="System.Drawing.Size, System.Drawing">
+    <value>257, 56</value>
+  </data>
+  <data name="trackRadius.TabIndex" type="System.Int32, mscorlib">
+    <value>13</value>
+  </data>
+  <data name="&gt;&gt;trackRadius.Name" xml:space="preserve">
+    <value>trackRadius</value>
+  </data>
+  <data name="&gt;&gt;trackRadius.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TrackBar, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;trackRadius.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;trackRadius.ZOrder" xml:space="preserve">
+    <value>10</value>
+  </data>
+  <data name="RadiusLabel.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="RadiusLabel.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Miriam Libre, 10.8pt</value>
+  </data>
+  <data name="RadiusLabel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>1291, 199</value>
+  </data>
+  <data name="RadiusLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>134, 24</value>
+  </data>
+  <data name="RadiusLabel.TabIndex" type="System.Int32, mscorlib">
+    <value>14</value>
+  </data>
+  <data name="RadiusLabel.Text" xml:space="preserve">
+    <value>Радіус вершин</value>
+  </data>
+  <data name="RadiusLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleCenter</value>
+  </data>
+  <data name="&gt;&gt;RadiusLabel.Name" xml:space="preserve">
+    <value>RadiusLabel</value>
+  </data>
+  <data name="&gt;&gt;RadiusLabel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;RadiusLabel.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;RadiusLabel.ZOrder" xml:space="preserve">
+    <value>9</value>
+  </data>
+  <data name="BoldnessLabel.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="BoldnessLabel.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Miriam Libre, 10.8pt</value>
+  </data>
+  <data name="BoldnessLabel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>1291, 366</value>
+  </data>
+  <data name="BoldnessLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>142, 24</value>
+  </data>
+  <data name="BoldnessLabel.TabIndex" type="System.Int32, mscorlib">
+    <value>16</value>
+  </data>
+  <data name="BoldnessLabel.Text" xml:space="preserve">
+    <value>Товщина ребра</value>
+  </data>
+  <data name="BoldnessLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleCenter</value>
+  </data>
+  <data name="&gt;&gt;BoldnessLabel.Name" xml:space="preserve">
+    <value>BoldnessLabel</value>
+  </data>
+  <data name="&gt;&gt;BoldnessLabel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;BoldnessLabel.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;BoldnessLabel.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="trackBoldness.Location" type="System.Drawing.Point, System.Drawing">
+    <value>1225, 386</value>
+  </data>
+  <data name="trackBoldness.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 2, 3, 2</value>
+  </data>
+  <data name="trackBoldness.Size" type="System.Drawing.Size, System.Drawing">
+    <value>257, 56</value>
+  </data>
+  <data name="trackBoldness.TabIndex" type="System.Int32, mscorlib">
+    <value>15</value>
+  </data>
+  <data name="&gt;&gt;trackBoldness.Name" xml:space="preserve">
+    <value>trackBoldness</value>
+  </data>
+  <data name="&gt;&gt;trackBoldness.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TrackBar, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;trackBoldness.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;trackBoldness.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="discardChanges.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Popup</value>
+  </data>
+  <data name="discardChanges.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Miriam Libre, 10.8pt</value>
+  </data>
+  <data name="discardChanges.Location" type="System.Drawing.Point, System.Drawing">
+    <value>1225, 533</value>
+  </data>
+  <data name="discardChanges.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 2, 3, 2</value>
+  </data>
+  <data name="discardChanges.Size" type="System.Drawing.Size, System.Drawing">
+    <value>257, 52</value>
+  </data>
+  <data name="discardChanges.TabIndex" type="System.Int32, mscorlib">
+    <value>17</value>
+  </data>
+  <data name="discardChanges.Text" xml:space="preserve">
+    <value>Відхилиити зміни</value>
+  </data>
+  <data name="&gt;&gt;discardChanges.Name" xml:space="preserve">
+    <value>discardChanges</value>
+  </data>
+  <data name="&gt;&gt;discardChanges.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;discardChanges.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;discardChanges.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="saveChanges.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Popup</value>
+  </data>
+  <data name="saveChanges.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Miriam Libre, 10.8pt</value>
+  </data>
+  <data name="saveChanges.Location" type="System.Drawing.Point, System.Drawing">
+    <value>1225, 591</value>
+  </data>
+  <data name="saveChanges.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 2, 3, 2</value>
+  </data>
+  <data name="saveChanges.Size" type="System.Drawing.Size, System.Drawing">
+    <value>257, 52</value>
+  </data>
+  <data name="saveChanges.TabIndex" type="System.Int32, mscorlib">
+    <value>18</value>
+  </data>
+  <data name="saveChanges.Text" xml:space="preserve">
+    <value>Зберегти зміни</value>
+  </data>
+  <data name="&gt;&gt;saveChanges.Name" xml:space="preserve">
+    <value>saveChanges</value>
+  </data>
+  <data name="&gt;&gt;saveChanges.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;saveChanges.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;saveChanges.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
   <metadata name="GraphMenu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>140, 17</value>
   </metadata>
+  <data name="settingsTool.Size" type="System.Drawing.Size, System.Drawing">
+    <value>102, 24</value>
+  </data>
+  <data name="settingsTool.Text" xml:space="preserve">
+    <value>Параметри</value>
+  </data>
+  <data name="weightedMode.Size" type="System.Drawing.Size, System.Drawing">
+    <value>190, 26</value>
+  </data>
+  <data name="weightedMode.Text" xml:space="preserve">
+    <value>Зважений</value>
+  </data>
+  <data name="directedMode.Size" type="System.Drawing.Size, System.Drawing">
+    <value>190, 26</value>
+  </data>
+  <data name="directedMode.Text" xml:space="preserve">
+    <value>Орієнтований</value>
+  </data>
+  <data name="типГрафуToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>93, 24</value>
+  </data>
+  <data name="типГрафуToolStripMenuItem.Text" xml:space="preserve">
+    <value>Тип графу</value>
+  </data>
+  <data name="dfsAlgoMode.Size" type="System.Drawing.Size, System.Drawing">
+    <value>211, 26</value>
+  </data>
+  <data name="dfsAlgoMode.Text" xml:space="preserve">
+    <value>Пошук в глибину</value>
+  </data>
+  <data name="algoMode.Size" type="System.Drawing.Size, System.Drawing">
+    <value>147, 24</value>
+  </data>
+  <data name="algoMode.Text" xml:space="preserve">
+    <value>Режим алгоритму</value>
+  </data>
+  <data name="save.Size" type="System.Drawing.Size, System.Drawing">
+    <value>224, 26</value>
+  </data>
+  <data name="save.Text" xml:space="preserve">
+    <value>Зберегти</value>
+  </data>
+  <data name="open.Size" type="System.Drawing.Size, System.Drawing">
+    <value>224, 26</value>
+  </data>
+  <data name="open.Text" xml:space="preserve">
+    <value>Відкрити</value>
+  </data>
+  <data name="clearCanvas.Size" type="System.Drawing.Size, System.Drawing">
+    <value>224, 26</value>
+  </data>
+  <data name="clearCanvas.Text" xml:space="preserve">
+    <value>Очистити полотно</value>
+  </data>
+  <data name="файлToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>59, 24</value>
+  </data>
+  <data name="файлToolStripMenuItem.Text" xml:space="preserve">
+    <value>Файл</value>
+  </data>
+  <data name="GraphMenu.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="GraphMenu.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>5, 2, 0, 2</value>
+  </data>
+  <data name="GraphMenu.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1499, 28</value>
+  </data>
+  <data name="GraphMenu.TabIndex" type="System.Int32, mscorlib">
+    <value>19</value>
+  </data>
+  <data name="GraphMenu.Text" xml:space="preserve">
+    <value>GraphMenu</value>
+  </data>
+  <data name="&gt;&gt;GraphMenu.Name" xml:space="preserve">
+    <value>GraphMenu</value>
+  </data>
+  <data name="&gt;&gt;GraphMenu.Type" xml:space="preserve">
+    <value>System.Windows.Forms.MenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;GraphMenu.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;GraphMenu.ZOrder" xml:space="preserve">
+    <value>16</value>
+  </data>
+  <data name="directedGraphMarker.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="directedGraphMarker.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Miriam Libre, 7.799999pt</value>
+  </data>
+  <data name="directedGraphMarker.Location" type="System.Drawing.Point, System.Drawing">
+    <value>13, 46</value>
+  </data>
+  <data name="directedGraphMarker.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 2, 3, 2</value>
+  </data>
+  <data name="directedGraphMarker.Size" type="System.Drawing.Size, System.Drawing">
+    <value>158, 21</value>
+  </data>
+  <data name="directedGraphMarker.TabIndex" type="System.Int32, mscorlib">
+    <value>20</value>
+  </data>
+  <data name="directedGraphMarker.Text" xml:space="preserve">
+    <value>Орієнтований граф</value>
+  </data>
+  <data name="&gt;&gt;directedGraphMarker.Name" xml:space="preserve">
+    <value>directedGraphMarker</value>
+  </data>
+  <data name="&gt;&gt;directedGraphMarker.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;directedGraphMarker.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;directedGraphMarker.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="weightedGraphMarker.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="weightedGraphMarker.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Miriam Libre, 7.799999pt</value>
+  </data>
+  <data name="weightedGraphMarker.Location" type="System.Drawing.Point, System.Drawing">
+    <value>177, 46</value>
+  </data>
+  <data name="weightedGraphMarker.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 2, 3, 2</value>
+  </data>
+  <data name="weightedGraphMarker.Size" type="System.Drawing.Size, System.Drawing">
+    <value>132, 21</value>
+  </data>
+  <data name="weightedGraphMarker.TabIndex" type="System.Int32, mscorlib">
+    <value>21</value>
+  </data>
+  <data name="weightedGraphMarker.Text" xml:space="preserve">
+    <value>Зважений граф</value>
+  </data>
+  <data name="&gt;&gt;weightedGraphMarker.Name" xml:space="preserve">
+    <value>weightedGraphMarker</value>
+  </data>
+  <data name="&gt;&gt;weightedGraphMarker.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;weightedGraphMarker.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;weightedGraphMarker.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="algoModeMarker.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="algoModeMarker.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Miriam Libre, 7.799999pt</value>
+  </data>
+  <data name="algoModeMarker.Location" type="System.Drawing.Point, System.Drawing">
+    <value>315, 46</value>
+  </data>
+  <data name="algoModeMarker.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 2, 3, 2</value>
+  </data>
+  <data name="algoModeMarker.Size" type="System.Drawing.Size, System.Drawing">
+    <value>146, 21</value>
+  </data>
+  <data name="algoModeMarker.TabIndex" type="System.Int32, mscorlib">
+    <value>22</value>
+  </data>
+  <data name="algoModeMarker.Text" xml:space="preserve">
+    <value>Режим алгоритму</value>
+  </data>
+  <data name="&gt;&gt;algoModeMarker.Name" xml:space="preserve">
+    <value>algoModeMarker</value>
+  </data>
+  <data name="&gt;&gt;algoModeMarker.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;algoModeMarker.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;algoModeMarker.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="exitAlgoModeButton.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Popup</value>
+  </data>
+  <data name="exitAlgoModeButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>957, 43</value>
+  </data>
+  <data name="exitAlgoModeButton.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 2, 3, 2</value>
+  </data>
+  <data name="exitAlgoModeButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>249, 27</value>
+  </data>
+  <data name="exitAlgoModeButton.TabIndex" type="System.Int32, mscorlib">
+    <value>23</value>
+  </data>
+  <data name="exitAlgoModeButton.Text" xml:space="preserve">
+    <value>Вийти з режиму алгортму</value>
+  </data>
+  <data name="exitAlgoModeButton.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="&gt;&gt;exitAlgoModeButton.Name" xml:space="preserve">
+    <value>exitAlgoModeButton</value>
+  </data>
+  <data name="&gt;&gt;exitAlgoModeButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;exitAlgoModeButton.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;exitAlgoModeButton.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
   <metadata name="timer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>277, 17</value>
   </metadata>
-  <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>25</value>
+  <data name="inputWeightBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>375, 650</value>
+  </data>
+  <data name="inputWeightBox.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 2, 3, 2</value>
+  </data>
+  <data name="inputWeightBox.Multiline" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="inputWeightBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>140, 25</value>
+  </data>
+  <data name="inputWeightBox.TabIndex" type="System.Int32, mscorlib">
+    <value>24</value>
+  </data>
+  <data name="inputWeightBox.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="inputWeightBox.WordWrap" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="&gt;&gt;inputWeightBox.Name" xml:space="preserve">
+    <value>inputWeightBox</value>
+  </data>
+  <data name="&gt;&gt;inputWeightBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;inputWeightBox.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;inputWeightBox.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <metadata name="saveFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>372, 17</value>
   </metadata>
+  <metadata name="openFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>529, 17</value>
+  </metadata>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>113</value>
+  </metadata>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>8, 16</value>
+  </data>
+  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
+    <value>1499, 686</value>
+  </data>
+  <data name="$this.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 2, 3, 2</value>
+  </data>
+  <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
+    <value>CenterScreen</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>Графобудівник</value>
+  </data>
+  <data name="&gt;&gt;pickColor.Name" xml:space="preserve">
+    <value>pickColor</value>
+  </data>
+  <data name="&gt;&gt;pickColor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ColorDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;settingsTool.Name" xml:space="preserve">
+    <value>settingsTool</value>
+  </data>
+  <data name="&gt;&gt;settingsTool.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;типГрафуToolStripMenuItem.Name" xml:space="preserve">
+    <value>типГрафуToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;типГрафуToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;weightedMode.Name" xml:space="preserve">
+    <value>weightedMode</value>
+  </data>
+  <data name="&gt;&gt;weightedMode.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;directedMode.Name" xml:space="preserve">
+    <value>directedMode</value>
+  </data>
+  <data name="&gt;&gt;directedMode.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;algoMode.Name" xml:space="preserve">
+    <value>algoMode</value>
+  </data>
+  <data name="&gt;&gt;algoMode.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;dfsAlgoMode.Name" xml:space="preserve">
+    <value>dfsAlgoMode</value>
+  </data>
+  <data name="&gt;&gt;dfsAlgoMode.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;файлToolStripMenuItem.Name" xml:space="preserve">
+    <value>файлToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;файлToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;save.Name" xml:space="preserve">
+    <value>save</value>
+  </data>
+  <data name="&gt;&gt;save.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;open.Name" xml:space="preserve">
+    <value>open</value>
+  </data>
+  <data name="&gt;&gt;open.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;clearCanvas.Name" xml:space="preserve">
+    <value>clearCanvas</value>
+  </data>
+  <data name="&gt;&gt;clearCanvas.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;timer.Name" xml:space="preserve">
+    <value>timer</value>
+  </data>
+  <data name="&gt;&gt;timer.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Timer, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;saveFileDialog.Name" xml:space="preserve">
+    <value>saveFileDialog</value>
+  </data>
+  <data name="&gt;&gt;saveFileDialog.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SaveFileDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;openFileDialog.Name" xml:space="preserve">
+    <value>openFileDialog</value>
+  </data>
+  <data name="&gt;&gt;openFileDialog.Type" xml:space="preserve">
+    <value>System.Windows.Forms.OpenFileDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>GraphBuilderMainMenu</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>

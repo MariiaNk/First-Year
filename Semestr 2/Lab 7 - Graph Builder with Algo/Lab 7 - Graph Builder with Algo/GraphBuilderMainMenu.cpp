@@ -1,6 +1,7 @@
 #include "GraphBuilderMainMenu.h"
 #include "Graph.h"
 #include <algorithm>
+#include <msclr\marshal_cppstd.h>
 
 System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::GraphBuilderMainMenu_Load(System::Object^ sender, System::EventArgs^ e)
 {
@@ -223,6 +224,7 @@ System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::directedMode_Click(
 {
 	directedGraphMarker->Checked = true;
 	myGraph.selectedEdge = nullptr;
+	myGraph.directedGraph = true;
 	myGraph.unSelectVertex();
 	myGraph.redrawGraph(graf);
 }
@@ -260,6 +262,7 @@ System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::weightedMode_Click(
 {
 	weightedGraphMarker->Checked = true;
 	MainCanvas->Enabled = false;
+	myGraph.weightedGraph = true;
 	myGraph.selectedEdge = nullptr;
 	myGraph.unSelectVertex();
 	myGraph.redrawGraph(graf);
@@ -298,7 +301,7 @@ System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::dfsAlgoMode_Click(S
 System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::clearCanvas_Click(System::Object^ sender, System::EventArgs^ e)
 {
 	String^ message = L"Ви впевнені, що хочете очистити полотно?\nПоточний граф не буде збережено";
-	String^ caption = "Form Closing";
+	String^ caption = "Попередження";
 	System::Windows::Forms::DialogResult result = MessageBox::Show(message, caption, MessageBoxButtons::YesNo, MessageBoxIcon::Question);
 	if (result == System::Windows::Forms::DialogResult::Yes)
 	{
@@ -306,4 +309,46 @@ System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::clearCanvas_Click(S
 		myGraph.redrawGraph(graf);
 	}
 }
-	
+
+System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::save_Click(System::Object^ sender, System::EventArgs^ e)
+{
+	if (saveFileDialog->ShowDialog() == System::Windows::Forms::DialogResult::OK)
+	{
+		string ss = msclr::interop::marshal_as<std::string>(saveFileDialog->FileName);
+		myGraph.outputGraph(ss);
+		MessageBox::Show(L"Граф збережено!");
+	}
+}
+
+System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::open_Click(System::Object^ sender, System::EventArgs^ e)
+{
+	String^ message = L"Ви впевнені, що хочете відкрити новий граф?\nПоточний граф не буде збережено";
+	String^ caption = "Попередження";
+	System::Windows::Forms::DialogResult result = MessageBox::Show(message, caption, MessageBoxButtons::YesNo, MessageBoxIcon::Question);
+	if (result == System::Windows::Forms::DialogResult::Yes)
+	{
+		if (openFileDialog->ShowDialog() == System::Windows::Forms::DialogResult::OK)
+		{
+			string ss = msclr::interop::marshal_as<std::string>(openFileDialog->FileName);
+			myGraph.readGraph(ss);
+			myGraph.redrawGraph(graf);
+		}
+	}
+
+}
+
+System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::GraphBuilderMainMenu_FormClosing(System::Object^ sender, System::Windows::Forms::FormClosingEventArgs^ e)
+{
+	String^ message = L"Чи бажаєте зберегти граф перед закриттям?";
+	String^ caption = "Попередження";
+	System::Windows::Forms::DialogResult result = MessageBox::Show(message, caption, MessageBoxButtons::YesNo, MessageBoxIcon::Question);
+	if (result == System::Windows::Forms::DialogResult::Yes)
+	{
+		if (saveFileDialog->ShowDialog() == System::Windows::Forms::DialogResult::OK)
+		{
+			string ss = msclr::interop::marshal_as<std::string>(saveFileDialog->FileName);
+			myGraph.outputGraph(ss);
+			MessageBox::Show(L"Граф збережено!");
+		}
+	}
+}

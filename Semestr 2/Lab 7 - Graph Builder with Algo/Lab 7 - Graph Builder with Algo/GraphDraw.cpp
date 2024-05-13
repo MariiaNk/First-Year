@@ -1,6 +1,7 @@
 #include "Graph.h"
 #include <cmath>
 #include <vector>
+#include <string>
 
 void Graph::drawVertex(Graphics^ graf, Vertex* a, int numVertex, int type)
 {
@@ -138,3 +139,57 @@ void Graph::redrawGraph(Graphics^ graf)
 
 
 
+void Graph::outputGraph(string path)
+{
+	ofstream writeGraph;
+	writeGraph.open(path);
+	writeGraph << cntVertex << endl;
+	for (int i = 0; i < cntVertex; i++)
+	{
+		writeGraph << point[i]->x << " " << point[i]->y << endl;
+	}
+	for (int i = 0; i < cntVertex; i++)
+	{
+		for (int j = 0; j < cntVertex; j++)
+		{
+			writeGraph << matrix[i][j] << " ";
+		}
+		writeGraph << endl;
+	}
+}
+
+void Graph::readGraph(string path)
+{
+	cleanGraph();
+	ifstream readGraph;
+	readGraph.open(path);
+	string num;
+	readGraph >> num;
+	cntVertex = stoi(num);
+	for (int i = 0; i < cntVertex; i++)
+	{
+		int tempX, tempY;
+		readGraph >> tempX >> tempY;
+		point[i] = new Vertex(tempX, tempY);
+	}
+	for (int i = 0; i < cntVertex; i++)
+	{
+		for (int j = 0; j < cntVertex; j++)
+		{
+			int tempValue;
+			readGraph >> tempValue;
+			matrix[i][j] = tempValue;
+			if (matrix[i][j] != -1 && matrix[i][j] != 0)
+			{
+				weightedGraph = true;
+			}
+		}
+	}
+	for (int i = 0; i < cntVertex && !directedGraph; i++)
+	{
+		for (int j = i + 1; j < cntVertex && !directedGraph; j++)
+		{
+			if (matrix[i][j] != matrix[j][i]) directedGraph = true;
+		}
+	}
+}

@@ -1,5 +1,6 @@
 #pragma once
-#include <cliext/vector>
+#include <fstream>
+#include <iostream>
 
 using namespace std;
 using namespace System::Drawing;
@@ -56,9 +57,7 @@ ref struct viewGraph
 ref class Graph
 {
 private:
-	bool directedGraph, weightedGraph;
 	int cntVertex;
-	//cntEdge;
 	void dfsRec(int startNode, bool* visited);
 public:
 	viewGraph style;
@@ -71,7 +70,7 @@ public:
 	List <int> orderAlgo;
 	int cntEdges;
 	cli::array <Edge*>^ allEdges;
-	bool needAddWeight;
+	bool directedGraph, weightedGraph;
 
 	void cleanGraph();
 	Graph();
@@ -91,4 +90,7 @@ public:
 	void Graph::drawEdge(Graphics^ graf,Vertex* a, Vertex* b, int type, bool directed, int value);
 	void redrawGraph(Graphics^ graf);
 	void drawVertex(Graphics^ graf, Vertex* a, int numVertex, int type);
+
+	void outputGraph(string path);
+	void readGraph(string path);
 };
