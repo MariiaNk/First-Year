@@ -1,4 +1,5 @@
 #pragma once
+#include <cliext/vector>
 
 using namespace std;
 using namespace System::Drawing;
@@ -68,6 +69,9 @@ public:
 	cli::array<cli::array<int>^>^ matrix;
 	int cntElemInOrder;
 	List <int> orderAlgo;
+	int cntEdges;
+	cli::array <Edge*>^ allEdges;
+	bool needAddWeight;
 	Graph();
 	void addVertex(Vertex* coord);
 	void unSelectVertex();
@@ -75,13 +79,14 @@ public:
 	void deleteSelectedEdge();
 	bool conectedVertex(int numStart, int numFinish);
 	bool checkSelectedVertex(int num);
-	int ifClickVertex(Vertex* coord);
+	int ifClickVertex(Vertex* coord, int numCompare);
 	Edge ifselectedEdge(Vertex* coord);
 	System::String^ typeClick(Vertex* coord);
-
+	void changeEdgeWeight(int st, int fn, int value);
+	void findAllEdges();
 	void dfs(int startPoint);
 
-	void Graph::drawEdge(Graphics^ graf,Vertex* a, Vertex* b, int type, bool directed);
+	void Graph::drawEdge(Graphics^ graf,Vertex* a, Vertex* b, int type, bool directed, int value);
 	void redrawGraph(Graphics^ graf);
 	void drawVertex(Graphics^ graf, Vertex* a, int numVertex, int type);
 };

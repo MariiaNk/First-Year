@@ -10,16 +10,16 @@ void Graph::unSelectVertex()
 	}
 	cntSelectedVertex = 0;
 }
-
-
 Graph::Graph()
 {
-	point = gcnew array<Vertex*>(1000);
-	idSelectedPoints = gcnew array<int>(1000);
+	point = gcnew cli::array<Vertex*>(1000);
+	idSelectedPoints = gcnew cli::array<int>(1000);
 	Edge* selectedEdge = nullptr;
-	matrix = gcnew array<array<int>^>(1000);
+	matrix = gcnew cli::array<cli::array<int>^>(1000);
 	for (int i = 0; i < 1000; i++)
-		matrix[i] = gcnew array<int>(1000);
+		matrix[i] = gcnew cli::array<int>(1000);
+	allEdges = gcnew cli::array<Edge*>(10000);
+	cntEdges = 0;
 	for (int i = 0; i < 1000; i++)
 	{
 		idSelectedPoints[i] = -1;
@@ -32,13 +32,12 @@ Graph::Graph()
 	weightedGraph = false;
 
 }
-
 void Graph::deleteSelectedVertex()
 {
 	System::Array::Sort(idSelectedPoints, 0, cntSelectedVertex);
-	cli::array<cli::array<int>^>^ newMatrix = gcnew array<array<int>^>(1000);
+	cli::array<cli::array<int>^>^ newMatrix = gcnew cli::array<cli::array<int>^>(1000);
 	for (int i = 0; i < 1000; i++)
-		newMatrix[i] = gcnew array<int>(1000);
+		newMatrix[i] = gcnew cli::array<int>(1000);
 	int jRow = 0, jCol = 0;
 	for (int i = 0; i < cntVertex; i++)
 	{
@@ -71,14 +70,12 @@ int distance(Vertex* a, Vertex* b)
 	int distanceY = (a->y - b->y) * (a->y - b->y);
 	return sqrt(distanceX + distanceY);
 }
-
 void Graph::deleteSelectedEdge()
 {
 	matrix[selectedEdge->start][selectedEdge->end] = 0;
 	matrix[selectedEdge->end][selectedEdge->start] = 0;
 	selectedEdge = nullptr;
 }
-
 void Graph::addVertex(Vertex* coord)
 {
 	point[cntVertex] = coord;
@@ -89,6 +86,8 @@ void Graph::addVertex(Vertex* coord)
 		{
 			matrix[cntVertex][idSelectedPoints[i]] = 1;
 			matrix[idSelectedPoints[i]][cntVertex] = 1;
+			allEdges[cntEdges] = new Edge(cntVertex, idSelectedPoints[i]);
+			cntEdges++;
 		}
 	}
 
@@ -100,7 +99,6 @@ bool Graph::conectedVertex(int numStart, int numFinish)
 {
 	return !(matrix[numStart][numFinish] == 0 && matrix[numFinish][numStart] == 0);
 }
-
 bool Graph::checkSelectedVertex(int num)
 {
 	bool selected = true;
@@ -111,12 +109,14 @@ bool Graph::checkSelectedVertex(int num)
 			selected = false;
 			matrix[idSelectedPoints[i]][num] = 1;
 			matrix[num][idSelectedPoints[i]] = 1;
+			allEdges[cntEdges] = new Edge(num, idSelectedPoints[i]);
+			cntEdges++;
 		}
 	}
 	return selected;
 }
-
-int Graph::ifClickVertex(Vertex* coord)
+//numCompare - вершина з якою ми порівнюємо 
+int Graph::ifClickVertex(Vertex* coord, int numCompare )
 {
 	/*
 	num - select vertex
@@ -126,6 +126,7 @@ int Graph::ifClickVertex(Vertex* coord)
 	int tempDistance = 0;
 	for (int i = 0; i < cntVertex; i++)
 	{
+		if (numCompare == i) continue;
 		tempDistance = distance(point[i], coord);
 		if (tempDistance < 2 * style.radius)
 			return i;
@@ -135,7 +136,6 @@ int Graph::ifClickVertex(Vertex* coord)
 
 	return -2;
 }
-
 bool ifClickEdge(Vertex* start, Vertex* end, int radiusEdge, Vertex* curr)
 {
 	int kofA = (end->y - start->y);
@@ -181,7 +181,7 @@ Edge Graph::ifselectedEdge(Vertex* coord)
 }
 System::String^ Graph::typeClick(Vertex* coord)
 {
-	int numVertex = ifClickVertex(coord);
+	int numVertex = ifClickVertex(coord, -1);
 	selectedEdge = nullptr;
 	if(numVertex == -1) return L"Не можна малювати вершини надто близько!";
 	if (numVertex == -2)
@@ -190,7 +190,6 @@ System::String^ Graph::typeClick(Vertex* coord)
 		if (currSelectedEdge.end == -1 && currSelectedEdge.start == -1)
 		{
 			addVertex(coord);
-			
 		}
 		else
 		{
@@ -213,6 +212,29 @@ System::String^ Graph::typeClick(Vertex* coord)
 	}
 	return " ";	
 }
+void Graph::findAllEdges()
+{
+	cntEdges = 0;
+	for (int i = 0; i < cntVertex; i++)
+	{
+		for (int j = i + 1; j < cntVertex; j++)
+		{
+			if (matrix[i][j] != 0 || matrix[j][i] != 0)
+			{
+				int start = i;
+				int finish = j;
+				if (matrix[i][j] == 0) swap(start, finish);
+				allEdges[cntEdges] = new Edge(start, finish);
+				cntEdges++;
+			}
+		}
+	}
+}
+void Graph::changeEdgeWeight(int st, int fn, int value)
+{
+	matrix[st][fn] = value;
+	if(matrix[fn][st] != 0) matrix[fn][st] = value;
+}
 void Graph::dfsRec(int startNode, bool* visited)
 {
 	visited[startNode] = true;
@@ -223,7 +245,6 @@ void Graph::dfsRec(int startNode, bool* visited)
 			dfsRec(i, visited);
 	}
 }
-
 void Graph::dfs(int startNode)
 {
 	orderAlgo.Clear();

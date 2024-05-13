@@ -50,19 +50,26 @@ namespace Lab7GraphBuilderwithAlgo {
 	private: System::Windows::Forms::Button^ saveChanges;
 	private: System::Windows::Forms::MenuStrip^ GraphMenu;
 	private: System::Windows::Forms::ToolStripMenuItem^ settingsTool;
+	private: System::Windows::Forms::RadioButton^ directedGraphMarker;
 
 
-	private: System::Windows::Forms::RadioButton^ orientedGraphMarker;
+
 	private: System::Windows::Forms::RadioButton^ weightedGraphMarker;
 	private: System::Windows::Forms::RadioButton^ algoModeMarker;
 	private: System::Windows::Forms::ToolStripMenuItem^ òèïÃðàôóToolStripMenuItem;
-	private: System::Windows::Forms::ToolStripMenuItem^ çâàæåíèéToolStripMenuItem;
-	private: System::Windows::Forms::ToolStripMenuItem^ îð³ºíòîâàíèéToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^ weightedMode;
+	private: System::Windows::Forms::ToolStripMenuItem^ directedMode;
+
+
+
+
 	private: System::Windows::Forms::ToolStripMenuItem^ algoMode;
 	private: System::Windows::Forms::Button^ exitAlgoModeButton;
 	private: System::Windows::Forms::PictureBox^ MainCanvas;
 	private: System::Windows::Forms::ToolStripMenuItem^ dfsAlgoMode;
 	private: System::Windows::Forms::Timer^ timer;
+	private: System::Windows::Forms::TextBox^ inputWeightBox;
+
 
 
 
@@ -103,15 +110,16 @@ namespace Lab7GraphBuilderwithAlgo {
 			this->GraphMenu = (gcnew System::Windows::Forms::MenuStrip());
 			this->settingsTool = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->òèïÃðàôóToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->çâàæåíèéToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->îð³ºíòîâàíèéToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->weightedMode = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->directedMode = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->algoMode = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->dfsAlgoMode = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->orientedGraphMarker = (gcnew System::Windows::Forms::RadioButton());
+			this->directedGraphMarker = (gcnew System::Windows::Forms::RadioButton());
 			this->weightedGraphMarker = (gcnew System::Windows::Forms::RadioButton());
 			this->algoModeMarker = (gcnew System::Windows::Forms::RadioButton());
 			this->exitAlgoModeButton = (gcnew System::Windows::Forms::Button());
 			this->timer = (gcnew System::Windows::Forms::Timer(this->components));
+			this->inputWeightBox = (gcnew System::Windows::Forms::TextBox());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->MainCanvas))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackRadius))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBoldness))->BeginInit();
@@ -139,7 +147,7 @@ namespace Lab7GraphBuilderwithAlgo {
 			this->warningLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->warningLabel->ForeColor = System::Drawing::Color::Red;
-			this->warningLabel->Location = System::Drawing::Point(15, 658);
+			this->warningLabel->Location = System::Drawing::Point(12, 651);
 			this->warningLabel->Name = L"warningLabel";
 			this->warningLabel->Size = System::Drawing::Size(0, 25);
 			this->warningLabel->TabIndex = 8;
@@ -152,6 +160,7 @@ namespace Lab7GraphBuilderwithAlgo {
 				static_cast<System::Byte>(0)));
 			this->buttonVertexColor->ForeColor = System::Drawing::Color::Teal;
 			this->buttonVertexColor->Location = System::Drawing::Point(1225, 137);
+			this->buttonVertexColor->Margin = System::Windows::Forms::Padding(3, 2, 3, 2);
 			this->buttonVertexColor->Name = L"buttonVertexColor";
 			this->buttonVertexColor->Size = System::Drawing::Size(257, 52);
 			this->buttonVertexColor->TabIndex = 9;
@@ -180,6 +189,7 @@ namespace Lab7GraphBuilderwithAlgo {
 				static_cast<System::Byte>(0)));
 			this->buttonEdgeColor->ForeColor = System::Drawing::Color::Teal;
 			this->buttonEdgeColor->Location = System::Drawing::Point(1225, 299);
+			this->buttonEdgeColor->Margin = System::Windows::Forms::Padding(3, 2, 3, 2);
 			this->buttonEdgeColor->Name = L"buttonEdgeColor";
 			this->buttonEdgeColor->Size = System::Drawing::Size(257, 52);
 			this->buttonEdgeColor->TabIndex = 12;
@@ -189,7 +199,8 @@ namespace Lab7GraphBuilderwithAlgo {
 			// 
 			// trackRadius
 			// 
-			this->trackRadius->Location = System::Drawing::Point(1225, 221);
+			this->trackRadius->Location = System::Drawing::Point(1225, 222);
+			this->trackRadius->Margin = System::Windows::Forms::Padding(3, 2, 3, 2);
 			this->trackRadius->Maximum = 50;
 			this->trackRadius->Minimum = 10;
 			this->trackRadius->Name = L"trackRadius";
@@ -217,7 +228,7 @@ namespace Lab7GraphBuilderwithAlgo {
 			this->BoldnessLabel->Font = (gcnew System::Drawing::Font(L"Miriam Libre", 10.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->BoldnessLabel->ForeColor = System::Drawing::Color::Teal;
-			this->BoldnessLabel->Location = System::Drawing::Point(1291, 365);
+			this->BoldnessLabel->Location = System::Drawing::Point(1291, 366);
 			this->BoldnessLabel->Name = L"BoldnessLabel";
 			this->BoldnessLabel->Size = System::Drawing::Size(142, 24);
 			this->BoldnessLabel->TabIndex = 16;
@@ -226,7 +237,8 @@ namespace Lab7GraphBuilderwithAlgo {
 			// 
 			// trackBoldness
 			// 
-			this->trackBoldness->Location = System::Drawing::Point(1225, 387);
+			this->trackBoldness->Location = System::Drawing::Point(1225, 386);
+			this->trackBoldness->Margin = System::Windows::Forms::Padding(3, 2, 3, 2);
 			this->trackBoldness->Maximum = 50;
 			this->trackBoldness->Minimum = 10;
 			this->trackBoldness->Name = L"trackBoldness";
@@ -243,6 +255,7 @@ namespace Lab7GraphBuilderwithAlgo {
 				static_cast<System::Byte>(0)));
 			this->discardChanges->ForeColor = System::Drawing::Color::Maroon;
 			this->discardChanges->Location = System::Drawing::Point(1225, 533);
+			this->discardChanges->Margin = System::Windows::Forms::Padding(3, 2, 3, 2);
 			this->discardChanges->Name = L"discardChanges";
 			this->discardChanges->Size = System::Drawing::Size(257, 52);
 			this->discardChanges->TabIndex = 17;
@@ -258,6 +271,7 @@ namespace Lab7GraphBuilderwithAlgo {
 				static_cast<System::Byte>(0)));
 			this->saveChanges->ForeColor = System::Drawing::Color::Teal;
 			this->saveChanges->Location = System::Drawing::Point(1225, 591);
+			this->saveChanges->Margin = System::Windows::Forms::Padding(3, 2, 3, 2);
 			this->saveChanges->Name = L"saveChanges";
 			this->saveChanges->Size = System::Drawing::Size(257, 52);
 			this->saveChanges->TabIndex = 18;
@@ -275,6 +289,7 @@ namespace Lab7GraphBuilderwithAlgo {
 			});
 			this->GraphMenu->Location = System::Drawing::Point(0, 0);
 			this->GraphMenu->Name = L"GraphMenu";
+			this->GraphMenu->Padding = System::Windows::Forms::Padding(5, 2, 0, 2);
 			this->GraphMenu->Size = System::Drawing::Size(1499, 28);
 			this->GraphMenu->TabIndex = 19;
 			this->GraphMenu->Text = L"GraphMenu";
@@ -289,24 +304,26 @@ namespace Lab7GraphBuilderwithAlgo {
 			// òèïÃðàôóToolStripMenuItem
 			// 
 			this->òèïÃðàôóToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {
-				this->çâàæåíèéToolStripMenuItem,
-					this->îð³ºíòîâàíèéToolStripMenuItem
+				this->weightedMode,
+					this->directedMode
 			});
 			this->òèïÃðàôóToolStripMenuItem->Name = L"òèïÃðàôóToolStripMenuItem";
 			this->òèïÃðàôóToolStripMenuItem->Size = System::Drawing::Size(93, 24);
 			this->òèïÃðàôóToolStripMenuItem->Text = L"Òèï ãðàôó";
 			// 
-			// çâàæåíèéToolStripMenuItem
+			// weightedMode
 			// 
-			this->çâàæåíèéToolStripMenuItem->Name = L"çâàæåíèéToolStripMenuItem";
-			this->çâàæåíèéToolStripMenuItem->Size = System::Drawing::Size(190, 26);
-			this->çâàæåíèéToolStripMenuItem->Text = L"Çâàæåíèé";
+			this->weightedMode->Name = L"weightedMode";
+			this->weightedMode->Size = System::Drawing::Size(190, 26);
+			this->weightedMode->Text = L"Çâàæåíèé";
+			this->weightedMode->Click += gcnew System::EventHandler(this, &GraphBuilderMainMenu::weightedMode_Click);
 			// 
-			// îð³ºíòîâàíèéToolStripMenuItem
+			// directedMode
 			// 
-			this->îð³ºíòîâàíèéToolStripMenuItem->Name = L"îð³ºíòîâàíèéToolStripMenuItem";
-			this->îð³ºíòîâàíèéToolStripMenuItem->Size = System::Drawing::Size(190, 26);
-			this->îð³ºíòîâàíèéToolStripMenuItem->Text = L"Îð³ºíòîâàíèé";
+			this->directedMode->Name = L"directedMode";
+			this->directedMode->Size = System::Drawing::Size(190, 26);
+			this->directedMode->Text = L"Îð³ºíòîâàíèé";
+			this->directedMode->Click += gcnew System::EventHandler(this, &GraphBuilderMainMenu::directedMode_Click);
 			// 
 			// algoMode
 			// 
@@ -323,21 +340,22 @@ namespace Lab7GraphBuilderwithAlgo {
 			this->dfsAlgoMode->Text = L"Ïîøóê â ãëèáèíó";
 			this->dfsAlgoMode->Click += gcnew System::EventHandler(this, &GraphBuilderMainMenu::dfsAlgoMode_Click);
 			// 
-			// orientedGraphMarker
+			// directedGraphMarker
 			// 
-			this->orientedGraphMarker->AutoCheck = false;
-			this->orientedGraphMarker->AutoSize = true;
-			this->orientedGraphMarker->BackColor = System::Drawing::Color::Transparent;
-			this->orientedGraphMarker->Font = (gcnew System::Drawing::Font(L"Miriam Libre", 7.799999F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->directedGraphMarker->AutoCheck = false;
+			this->directedGraphMarker->AutoSize = true;
+			this->directedGraphMarker->BackColor = System::Drawing::Color::Transparent;
+			this->directedGraphMarker->Font = (gcnew System::Drawing::Font(L"Miriam Libre", 7.799999F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->orientedGraphMarker->ForeColor = System::Drawing::Color::Teal;
-			this->orientedGraphMarker->Location = System::Drawing::Point(13, 46);
-			this->orientedGraphMarker->Name = L"orientedGraphMarker";
-			this->orientedGraphMarker->Size = System::Drawing::Size(158, 21);
-			this->orientedGraphMarker->TabIndex = 20;
-			this->orientedGraphMarker->TabStop = true;
-			this->orientedGraphMarker->Text = L"Îð³ºíòîâàíèé ãðàô";
-			this->orientedGraphMarker->UseVisualStyleBackColor = false;
+			this->directedGraphMarker->ForeColor = System::Drawing::Color::Teal;
+			this->directedGraphMarker->Location = System::Drawing::Point(13, 46);
+			this->directedGraphMarker->Margin = System::Windows::Forms::Padding(3, 2, 3, 2);
+			this->directedGraphMarker->Name = L"directedGraphMarker";
+			this->directedGraphMarker->Size = System::Drawing::Size(158, 21);
+			this->directedGraphMarker->TabIndex = 20;
+			this->directedGraphMarker->TabStop = true;
+			this->directedGraphMarker->Text = L"Îð³ºíòîâàíèé ãðàô";
+			this->directedGraphMarker->UseVisualStyleBackColor = false;
 			// 
 			// weightedGraphMarker
 			// 
@@ -348,6 +366,7 @@ namespace Lab7GraphBuilderwithAlgo {
 				static_cast<System::Byte>(0)));
 			this->weightedGraphMarker->ForeColor = System::Drawing::Color::Teal;
 			this->weightedGraphMarker->Location = System::Drawing::Point(177, 46);
+			this->weightedGraphMarker->Margin = System::Windows::Forms::Padding(3, 2, 3, 2);
 			this->weightedGraphMarker->Name = L"weightedGraphMarker";
 			this->weightedGraphMarker->Size = System::Drawing::Size(132, 21);
 			this->weightedGraphMarker->TabIndex = 21;
@@ -364,6 +383,7 @@ namespace Lab7GraphBuilderwithAlgo {
 				static_cast<System::Byte>(0)));
 			this->algoModeMarker->ForeColor = System::Drawing::Color::Crimson;
 			this->algoModeMarker->Location = System::Drawing::Point(315, 46);
+			this->algoModeMarker->Margin = System::Windows::Forms::Padding(3, 2, 3, 2);
 			this->algoModeMarker->Name = L"algoModeMarker";
 			this->algoModeMarker->Size = System::Drawing::Size(146, 21);
 			this->algoModeMarker->TabIndex = 22;
@@ -377,6 +397,7 @@ namespace Lab7GraphBuilderwithAlgo {
 			this->exitAlgoModeButton->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
 			this->exitAlgoModeButton->ForeColor = System::Drawing::Color::Maroon;
 			this->exitAlgoModeButton->Location = System::Drawing::Point(957, 43);
+			this->exitAlgoModeButton->Margin = System::Windows::Forms::Padding(3, 2, 3, 2);
 			this->exitAlgoModeButton->Name = L"exitAlgoModeButton";
 			this->exitAlgoModeButton->Size = System::Drawing::Size(249, 27);
 			this->exitAlgoModeButton->TabIndex = 23;
@@ -390,17 +411,30 @@ namespace Lab7GraphBuilderwithAlgo {
 			this->timer->Interval = 1000;
 			this->timer->Tick += gcnew System::EventHandler(this, &GraphBuilderMainMenu::timer_Tick);
 			// 
+			// inputWeightBox
+			// 
+			this->inputWeightBox->Location = System::Drawing::Point(375, 650);
+			this->inputWeightBox->Margin = System::Windows::Forms::Padding(3, 2, 3, 2);
+			this->inputWeightBox->Multiline = true;
+			this->inputWeightBox->Name = L"inputWeightBox";
+			this->inputWeightBox->Size = System::Drawing::Size(140, 25);
+			this->inputWeightBox->TabIndex = 24;
+			this->inputWeightBox->Visible = false;
+			this->inputWeightBox->WordWrap = false;
+			this->inputWeightBox->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &GraphBuilderMainMenu::inputWeightBox_KeyPress);
+			// 
 			// GraphBuilderMainMenu
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->AutoValidate = System::Windows::Forms::AutoValidate::EnableAllowFocusChange;
 			this->BackColor = System::Drawing::Color::Azure;
-			this->ClientSize = System::Drawing::Size(1499, 685);
+			this->ClientSize = System::Drawing::Size(1499, 686);
+			this->Controls->Add(this->inputWeightBox);
 			this->Controls->Add(this->exitAlgoModeButton);
 			this->Controls->Add(this->algoModeMarker);
 			this->Controls->Add(this->weightedGraphMarker);
-			this->Controls->Add(this->orientedGraphMarker);
+			this->Controls->Add(this->directedGraphMarker);
 			this->Controls->Add(this->saveChanges);
 			this->Controls->Add(this->discardChanges);
 			this->Controls->Add(this->BoldnessLabel);
@@ -439,7 +473,7 @@ namespace Lab7GraphBuilderwithAlgo {
 		viewGraph prewStyle;
 		Graphics^ graf;
 		bool isMouseDown = false, changePosition = false;
-		int numTickAlgo = 0;
+		int numTick = 0;
 		Vertex* startPosition;
 		Vertex* currPosition;
 		System::Void MainCanvas_MouseUp(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e);
@@ -458,5 +492,8 @@ namespace Lab7GraphBuilderwithAlgo {
 		System::Void exitAlgoModeButton_Click(System::Object^ sender, System::EventArgs^ e);
 		System::Void dfsAlgoMode_Click(System::Object^ sender, System::EventArgs^ e);
 		System::Void timer_Tick(System::Object^ sender, System::EventArgs^ e);
+		System::Void directedMode_Click(System::Object^ sender, System::EventArgs^ e);
+		System::Void weightedMode_Click(System::Object^ sender, System::EventArgs^ e);
+		System::Void inputWeightBox_KeyPress(System::Object^ sender, System::Windows::Forms::KeyPressEventArgs^ e);
 };
 }

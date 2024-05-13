@@ -8,7 +8,7 @@ void Graph::drawVertex(Graphics^ graf, Vertex* a, int numVertex, int type)
 	-1 - previous algo
 	0 - ordinary
 	1 - selected
-	num - weight of edge
+	2 - weight of edge
 	*/
 	switch (type)
 	{
@@ -24,7 +24,7 @@ void Graph::drawVertex(Graphics^ graf, Vertex* a, int numVertex, int type)
 		graf->FillEllipse(Brushes::Red, a->x - style.radius, a->y - style.radius, 2 * style.radius, 2 * style.radius);
 		graf->DrawEllipse(Pens::Black, a->x - style.radius, a->y - style.radius, 2 * style.radius, 2 * style.radius);
 		break;
-	case 3:
+	case 2:
 		graf->FillEllipse(Brushes::White, a->x - style.radius, a->y - style.radius, 2 * style.radius, 2 * style.radius);
 		break;
 	}
@@ -70,8 +70,7 @@ void moveEndForCap(Vertex &start, Vertex &end, int radius)
 		end.y -= cof_y;
 	}
 }
-
-void Graph::drawEdge(Graphics^ graf,Vertex* a, Vertex* b, int type, bool directed)
+void Graph::drawEdge(Graphics^ graf,Vertex* a, Vertex* b, int type, bool directed, int value)
 {
 	Pen^ pen;
 	switch (type)
@@ -91,10 +90,13 @@ void Graph::drawEdge(Graphics^ graf,Vertex* a, Vertex* b, int type, bool directe
 		pen->EndCap = System::Drawing::Drawing2D::LineCap::ArrowAnchor;
 		moveEndForCap(st, fn, style.radius);
 	}
-	
 	graf->DrawLine(pen, st.x, st.y, fn.x, fn.y);
+	if (value != 0)
+	{
+		Vertex* valuePoint = new Vertex((st.x + fn.x) / 2, (st.y + fn.y) / 2);
+		drawVertex(graf, valuePoint, value - 1, 2);
+	}
 }
-
 void Graph::redrawGraph(Graphics^ graf)
 {
 	graf->Clear(Color::White);
@@ -102,30 +104,30 @@ void Graph::redrawGraph(Graphics^ graf)
 	{
 		for (int j = i + 1; j < cntVertex; j++)
 		{
-			if (matrix[i][j] == 1 || matrix[j][i] == 1)
+			if (matrix[i][j] != 0|| matrix[j][i] != 0)
 			{
-				Vertex* st = point[i];
-				Vertex* fn = point[j];
+				int st = i;
+				int fn = j;
 				bool directed = true;
-				if (matrix[i][j] == 1 && matrix[j][i] == 1) directed = false;
-				if (directed && matrix[i][j] == 0) swap(st, fn);
-				drawEdge(graf, st, fn, 1, directed);
+				if (matrix[st][fn] != 0 && matrix[fn][st] != 0) directed = false;
+				if (directed && matrix[st][fn] == 0) swap(st, fn);
+				int value = 0;
+				if (matrix[st][fn] != 1)  value = matrix[st][fn];
+				drawEdge(graf, point[st], point[fn], 1, directed, value);
 			}
 
 		}
 	}
 	if (selectedEdge != nullptr)
 	{
-		int i = selectedEdge->start;
-		int j = selectedEdge->end;
-		Vertex* st = point[i];
-		Vertex* fn = point[j];
-		
+		int st = selectedEdge->start;
+		int fn = selectedEdge->end;
 		bool directed = true;
-		if (matrix[i][j] == 1 && matrix[j][i] == 1) directed = false;
-		if (directed && matrix[i][j] == 0) swap(st, fn);
-
-		drawEdge(graf, st, fn, 2, directed);
+		if (matrix[st][fn] != 0 && matrix[fn][st] != 0) directed = false;
+		if (directed && matrix[st][fn] == 0) swap(st, fn);
+		int value = 0;
+		if (matrix[st][fn] != 1)  value = matrix[st][fn];
+		drawEdge(graf, point[st], point[fn], 2, directed, value);
 	}
 	int type = 1;
 	for (int i = 0; i < cntVertex; i++)

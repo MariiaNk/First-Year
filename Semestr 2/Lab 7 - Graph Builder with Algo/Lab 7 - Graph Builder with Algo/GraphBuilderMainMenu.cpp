@@ -65,7 +65,7 @@ System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::MainCanvas_MouseDow
 {
 	Vertex* temp = new Vertex(e->X, e->Y);
 
-	if (myGraph.ifClickVertex(temp) < 0 && myGraph.cntSelectedVertex > 0)
+	if (myGraph.ifClickVertex(temp, -1) < 0 && myGraph.cntSelectedVertex > 0)
 	{
 		isMouseDown = true;
 		startPosition = temp;
@@ -105,7 +105,7 @@ System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::MainCanvas_MouseUp(
 			//current selected
 			Vertex* temp = myGraph.point[myGraph.idSelectedPoints[i]];
 			//пор≥внюЇмо вид≥лену з ус≥ма ≥ншими 
-			statusPoint = myGraph.ifClickVertex(temp);
+			statusPoint = myGraph.ifClickVertex(temp, myGraph.idSelectedPoints[i]);
 			if (statusPoint > -2 && statusPoint != myGraph.idSelectedPoints[i])
 			{
 				System::Media::SystemSounds::Beep->Play();
@@ -129,16 +129,28 @@ System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::MainCanvas_MouseUp(
 		currPosition = new Vertex(0, 0, 0);
 		startPosition = new Vertex(0, 0, 0);
 		myGraph.unSelectVertex();
+		myGraph.redrawGraph(graf);
 	}
 	else
 	{
 		Vertex* temp = new Vertex(e->X, e->Y);
 		String^ error = myGraph.typeClick(temp);
 		warningLabel->Text = error;
+		if (weightedGraphMarker->Checked && myGraph.cntEdges != 0)
+		{
+			MainCanvas->Enabled = false;
+			myGraph.selectedEdge = nullptr;
+			myGraph.unSelectVertex();
+			myGraph.redrawGraph(graf);
+			inputWeightBox->Visible = true;
+			warningLabel->Text = "¬вед≥ть вагу ребра " + (myGraph.allEdges[numTick]->start + 1) + " - " + (myGraph.allEdges[numTick]->end + 1) + " : ";
+		}
+		else myGraph.cntEdges = 0;
+		myGraph.redrawGraph(graf);
 	}
 	changePosition = false;
 	isMouseDown = false;
-	myGraph.redrawGraph(graf);
+	
 }
 
 System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::GraphBuilderMainMenu_KeyPress(System::Object^ sender, System::Windows::Forms::KeyPressEventArgs^ e)
@@ -155,21 +167,35 @@ System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::GraphBuilderMainMen
 		}
 
 	}
-	if (e->KeyChar == 'w')
+	if (e->KeyChar == 'w' && directedGraphMarker->Checked)
 	{
 		if (myGraph.selectedEdge != nullptr)
 		{
-			myGraph.matrix[myGraph.selectedEdge->start][myGraph.selectedEdge->end] = 1;
-			myGraph.matrix[myGraph.selectedEdge->end][myGraph.selectedEdge->start] = 0;
+			if (myGraph.matrix[myGraph.selectedEdge->start][myGraph.selectedEdge->end] != 0)
+			{
+				myGraph.matrix[myGraph.selectedEdge->end][myGraph.selectedEdge->start] = 0;
+			}
+			else
+			{
+				myGraph.matrix[myGraph.selectedEdge->start][myGraph.selectedEdge->end] = myGraph.matrix[myGraph.selectedEdge->end][myGraph.selectedEdge->start];
+				myGraph.matrix[myGraph.selectedEdge->end][myGraph.selectedEdge->start] = 0;
+			}
 			myGraph.selectedEdge = nullptr;
 		}
 	}
-	if (e->KeyChar == 's')
+	if (e->KeyChar == 's' && directedGraphMarker->Checked)
 	{
 		if (myGraph.selectedEdge != nullptr)
 		{
-			myGraph.matrix[myGraph.selectedEdge->start][myGraph.selectedEdge->end] = 0;
-			myGraph.matrix[myGraph.selectedEdge->end][myGraph.selectedEdge->start] = 1;
+			if (myGraph.matrix[myGraph.selectedEdge->end][myGraph.selectedEdge->start] != 0)
+			{
+				myGraph.matrix[myGraph.selectedEdge->start][myGraph.selectedEdge->end] = 0;
+			}
+			else
+			{
+				myGraph.matrix[myGraph.selectedEdge->end][myGraph.selectedEdge->start] = myGraph.matrix[myGraph.selectedEdge->start][myGraph.selectedEdge->end];
+				myGraph.matrix[myGraph.selectedEdge->start][myGraph.selectedEdge->end] = 0;
+			}
 			myGraph.selectedEdge = nullptr;
 		}
 	}
@@ -193,28 +219,77 @@ System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::exitAlgoModeButton_
 	myGraph.redrawGraph(graf);
 }
 
+System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::directedMode_Click(System::Object^ sender, System::EventArgs^ e)
+{
+	directedGraphMarker->Checked = true;
+	myGraph.selectedEdge = nullptr;
+	myGraph.unSelectVertex();
+	myGraph.redrawGraph(graf);
+}
+System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::inputWeightBox_KeyPress(System::Object^ sender, System::Windows::Forms::KeyPressEventArgs^ e)
+{
+	if (e->KeyChar == (char)Keys::Enter)
+	{
+		Edge* current = myGraph.allEdges[numTick];
+		numTick++;
+		String^ valueText = inputWeightBox->Text;
+		inputWeightBox->Text = "";
+		int value;
+		bool converted = Int32::TryParse(valueText, value);
+		if (converted)
+		{
+			myGraph.changeEdgeWeight(current->start, current->end, value);
+			if(numTick < myGraph.cntEdges)
+				warningLabel->Text = "¬вед≥ть вагу ребра " + (myGraph.allEdges[numTick]->start + 1) + " - " + (myGraph.allEdges[numTick]->end + 1) + " : ";
+			else
+			{
+				warningLabel->Text = "";
+				inputWeightBox->Visible = false;
+				MainCanvas->Enabled = true;
+				numTick = 0;
+				myGraph.cntEdges = 0;
+			}
+			myGraph.redrawGraph(graf);
+		}
+		
+	}
+}
+
+
+System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::weightedMode_Click(System::Object^ sender, System::EventArgs^ e)
+{
+	weightedGraphMarker->Checked = true;
+	MainCanvas->Enabled = false;
+	myGraph.selectedEdge = nullptr;
+	myGraph.unSelectVertex();
+	myGraph.redrawGraph(graf);
+	inputWeightBox->Visible = true;
+	myGraph.findAllEdges();
+	warningLabel->Text = "¬вед≥ть вагу ребра " + (myGraph.allEdges[numTick]->start + 1) + " - " + (myGraph.allEdges[numTick]->end + 1) + " : ";
+}
+
 System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::timer_Tick(System::Object^ sender, System::EventArgs^ e)
 {
-	if (numTickAlgo == myGraph.orderAlgo.Count)
+	if (numTick == myGraph.orderAlgo.Count)
 	{
-		if (numTickAlgo != 0) myGraph.point[myGraph.orderAlgo[numTickAlgo - 1]]->marker = 0;
-		if (numTickAlgo > 1)  myGraph.point[myGraph.orderAlgo[numTickAlgo - 2]]->marker = 0;
+		if (numTick != 0) myGraph.point[myGraph.orderAlgo[numTick - 1]]->marker = 0;
+		if (numTick > 1)  myGraph.point[myGraph.orderAlgo[numTick - 2]]->marker = 0;
 		myGraph.redrawGraph(graf);
 		timer->Stop();
 	}
 	else
 	{
-		if(numTickAlgo > 1)  myGraph.point[myGraph.orderAlgo[numTickAlgo - 2]]->marker = 0;
-		if (numTickAlgo != 0) myGraph.point[myGraph.orderAlgo[numTickAlgo - 1]]->marker = -1;
-		myGraph.point[myGraph.orderAlgo[numTickAlgo]]->marker = 1;
+		if(numTick > 1)  myGraph.point[myGraph.orderAlgo[numTick - 2]]->marker = 0;
+		if (numTick != 0) myGraph.point[myGraph.orderAlgo[numTick - 1]]->marker = -1;
+		myGraph.point[myGraph.orderAlgo[numTick]]->marker = 1;
 		myGraph.redrawGraph(graf);
-		numTickAlgo++;
+		numTick++;
 	}
 }
 
 System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::dfsAlgoMode_Click(System::Object^ sender, System::EventArgs^ e)
 {
-	numTickAlgo = 0;
+	numTick = 0;
 	myGraph.dfs(0);
 	myGraph.unSelectVertex();
 	timer->Start();
