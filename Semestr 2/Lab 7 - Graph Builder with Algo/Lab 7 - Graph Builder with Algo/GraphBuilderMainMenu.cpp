@@ -203,23 +203,6 @@ System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::GraphBuilderMainMen
 	myGraph.redrawGraph(graf);
 }
 
-System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::algoMode_Click(System::Object^ sender, System::EventArgs^ e)
-{
-	algoModeMarker->Checked = true;
-	exitAlgoModeButton->Visible = true;
-	MainCanvas->Enabled = false;
-	myGraph.redrawGraph(graf);
-}
-
-System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::exitAlgoModeButton_Click(System::Object^ sender, System::EventArgs^ e)
-{
-	algoModeMarker->Checked = false;
-	exitAlgoModeButton->Visible = false;
-	MainCanvas->Enabled = true;
-	myGraph.unSelectVertex();
-	myGraph.redrawGraph(graf);
-}
-
 System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::directedMode_Click(System::Object^ sender, System::EventArgs^ e)
 {
 	directedGraphMarker->Checked = true;
@@ -290,13 +273,6 @@ System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::timer_Tick(System::
 	}
 }
 
-System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::dfsAlgoMode_Click(System::Object^ sender, System::EventArgs^ e)
-{
-	numTick = 0;
-	myGraph.dfs(0);
-	myGraph.unSelectVertex();
-	timer->Start();
-}
 
 System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::clearCanvas_Click(System::Object^ sender, System::EventArgs^ e)
 {
@@ -351,4 +327,46 @@ System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::GraphBuilderMainMen
 			MessageBox::Show(L"Граф збережено!");
 		}
 	}
+}
+System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::algoMode_Click(System::Object^ sender, System::EventArgs^ e)
+{
+	algoModeMarker->Checked = true;
+	exitAlgoModeButton->Visible = true;
+	MainCanvas->Enabled = false;
+	myGraph.redrawGraph(graf);
+}
+
+System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::exitAlgoModeButton_Click(System::Object^ sender, System::EventArgs^ e)
+{
+	algoModeMarker->Checked = false;
+	exitAlgoModeButton->Visible = false;
+	MainCanvas->Enabled = true;
+	myGraph.unSelectVertex();
+	myGraph.redrawGraph(graf);
+}
+System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::dfsAlgoMode_Click(System::Object^ sender, System::EventArgs^ e)
+{
+	numTick = 0;
+	int start = 0;
+	if (myGraph.cntSelectedVertex != 0) start = myGraph.idSelectedPoints[0];
+	myGraph.dfs(start);
+	myGraph.unSelectVertex();
+	timer->Start();
+}
+
+System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::topologicalSortAlgoMode_Click(System::Object^ sender, System::EventArgs^ e)
+{
+	numTick = 0;
+	bool checkDAG = myGraph.IsDirectedAntiCycle();
+	if (!checkDAG)
+	{
+		MessageBox::Show(L"На жаль, у цьому графі не можна виконати топологічне сортування :(");
+	}
+	else
+	{
+		myGraph.topologicalSort();
+		myGraph.unSelectVertex();
+		timer->Start();
+	}
+	
 }

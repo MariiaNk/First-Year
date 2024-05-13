@@ -71,6 +71,7 @@ public:
 	int cntEdges;
 	cli::array <Edge*>^ allEdges;
 	bool directedGraph, weightedGraph;
+	Brush^ colorAlgoVertex;
 
 	void cleanGraph();
 	Graph();
@@ -85,7 +86,11 @@ public:
 	System::String^ typeClick(Vertex* coord);
 	void changeEdgeWeight(int st, int fn, int value);
 	void findAllEdges();
+
 	void dfs(int startPoint);
+	bool IsDirectedAntiCycle();
+	bool HasCycle(int vertex, bool* visited, bool* inStack);
+	void topologicalSort();
 
 	void Graph::drawEdge(Graphics^ graf,Vertex* a, Vertex* b, int type, bool directed, int value);
 	void redrawGraph(Graphics^ graf);

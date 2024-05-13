@@ -1,5 +1,6 @@
 #include "Graph.h"
 #include <cmath>
+#include <queue>
 
 void Graph::unSelectVertex()
 {
@@ -27,6 +28,7 @@ void Graph::cleanGraph()
 	cntVertex = 0;
 	directedGraph = false;
 	weightedGraph = false;
+	colorAlgoVertex = Brushes::GreenYellow;
 }
 Graph::Graph()
 {
@@ -258,4 +260,85 @@ void Graph::dfs(int startNode)
 	for (int i = 0; i < cntVertex; i++)
 		visited[i] = false;
 	dfsRec(startNode, visited);
+}
+
+bool Graph::IsDirectedAntiCycle()
+{
+	bool visited[1000] = { false };
+	bool inStack[1000] = { false }; 
+
+	for (int i = 0; i < cntVertex; i++)
+	{
+		if (!visited[i] && HasCycle(i, visited, inStack))
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+bool Graph::HasCycle(int vertex, bool* visited, bool* inStack)
+{
+	if (inStack[vertex])
+		return true; // Cycle detected
+
+	visited[vertex] = true;
+	inStack[vertex] = true;
+
+	for (int i = 0; i < cntVertex; i++)
+	{
+		if (matrix[vertex][i] != 0) // Check only outgoing edges for directedness
+		{
+			if (!visited[i] && HasCycle(i, visited, inStack))
+				return true; // Cycle detected in child
+		}
+	}
+
+	inStack[vertex] = false; // Backtrack
+	return false;
+}
+
+
+void Graph::topologicalSort()
+{
+	int* indegree = new int[cntVertex];
+	for (int i = 0; i < cntVertex; i++)
+	{
+		indegree[i] = 0;
+	}
+
+	for (int i = 0; i < cntVertex; i++)
+	{
+		for (int j = 0; j < cntVertex; j++)
+		{
+			if (matrix[j][i] != 0 || matrix[j][i] != 0)
+			{
+				indegree[i]++;
+			}
+		}
+	}
+	queue <int> q;
+	for (int i = 0; i < cntVertex; i++)
+	{
+		if (indegree[i] == 0)
+			q.push(i);
+	}
+
+	while (!q.empty())
+	{
+		int currentNode = q.front();
+		q.pop();
+		orderAlgo.Add(currentNode);
+		cntElemInOrder++;
+		for (int i = 0; i < cntVertex; i++)
+		{
+			if (matrix[currentNode][i] != 0 || matrix[i][currentNode] != 0)
+			{
+				indegree[i]--;
+				if (indegree[i] == 0)
+					q.push(i);
+			}
+		}
+	}
 }

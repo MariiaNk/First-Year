@@ -75,6 +75,11 @@ namespace Lab7GraphBuilderwithAlgo {
 	private: System::Windows::Forms::ToolStripMenuItem^ clearCanvas;
 	private: System::Windows::Forms::SaveFileDialog^ saveFileDialog;
 	private: System::Windows::Forms::OpenFileDialog^ openFileDialog;
+	private: System::Windows::Forms::ToolStripMenuItem^ ïîøóêÂØèðèíóToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^ topologicalSortAlgoMode;
+
+
+
 
 
 
@@ -121,6 +126,8 @@ namespace Lab7GraphBuilderwithAlgo {
 			this->directedMode = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->algoMode = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->dfsAlgoMode = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->ïîøóêÂØèðèíóToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->topologicalSortAlgoMode = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->ôàéëToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->save = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->open = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -269,7 +276,10 @@ namespace Lab7GraphBuilderwithAlgo {
 			// 
 			// algoMode
 			// 
-			this->algoMode->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->dfsAlgoMode });
+			this->algoMode->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {
+				this->dfsAlgoMode,
+					this->ïîøóêÂØèðèíóToolStripMenuItem, this->topologicalSortAlgoMode
+			});
 			this->algoMode->Name = L"algoMode";
 			resources->ApplyResources(this->algoMode, L"algoMode");
 			this->algoMode->Click += gcnew System::EventHandler(this, &GraphBuilderMainMenu::algoMode_Click);
@@ -279,6 +289,17 @@ namespace Lab7GraphBuilderwithAlgo {
 			this->dfsAlgoMode->Name = L"dfsAlgoMode";
 			resources->ApplyResources(this->dfsAlgoMode, L"dfsAlgoMode");
 			this->dfsAlgoMode->Click += gcnew System::EventHandler(this, &GraphBuilderMainMenu::dfsAlgoMode_Click);
+			// 
+			// ïîøóêÂØèðèíóToolStripMenuItem
+			// 
+			this->ïîøóêÂØèðèíóToolStripMenuItem->Name = L"ïîøóêÂØèðèíóToolStripMenuItem";
+			resources->ApplyResources(this->ïîøóêÂØèðèíóToolStripMenuItem, L"ïîøóêÂØèðèíóToolStripMenuItem");
+			// 
+			// topologicalSortAlgoMode
+			// 
+			this->topologicalSortAlgoMode->Name = L"topologicalSortAlgoMode";
+			resources->ApplyResources(this->topologicalSortAlgoMode, L"topologicalSortAlgoMode");
+			this->topologicalSortAlgoMode->Click += gcnew System::EventHandler(this, &GraphBuilderMainMenu::topologicalSortAlgoMode_Click);
 			// 
 			// ôàéëToolStripMenuItem
 			// 
@@ -348,7 +369,7 @@ namespace Lab7GraphBuilderwithAlgo {
 			// 
 			// timer
 			// 
-			this->timer->Interval = 1000;
+			this->timer->Interval = 5000;
 			this->timer->Tick += gcnew System::EventHandler(this, &GraphBuilderMainMenu::timer_Tick);
 			// 
 			// inputWeightBox
@@ -427,6 +448,7 @@ namespace Lab7GraphBuilderwithAlgo {
 		System::Void algoMode_Click(System::Object^ sender, System::EventArgs^ e);
 		System::Void exitAlgoModeButton_Click(System::Object^ sender, System::EventArgs^ e);
 		System::Void dfsAlgoMode_Click(System::Object^ sender, System::EventArgs^ e);
+		System::Void topologicalSortAlgoMode_Click(System::Object^ sender, System::EventArgs^ e);
 		System::Void timer_Tick(System::Object^ sender, System::EventArgs^ e);
 		System::Void directedMode_Click(System::Object^ sender, System::EventArgs^ e);
 		System::Void weightedMode_Click(System::Object^ sender, System::EventArgs^ e);
