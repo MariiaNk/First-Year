@@ -69,6 +69,10 @@ namespace Lab7GraphBuilderwithAlgo {
 	private: System::Windows::Forms::ToolStripMenuItem^ dfsAlgoMode;
 	private: System::Windows::Forms::Timer^ timer;
 	private: System::Windows::Forms::TextBox^ inputWeightBox;
+	private: System::Windows::Forms::ToolStripMenuItem^ ôàéëToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^ save;
+	private: System::Windows::Forms::ToolStripMenuItem^ open;
+	private: System::Windows::Forms::ToolStripMenuItem^ clearCanvas;
 
 
 
@@ -120,6 +124,10 @@ namespace Lab7GraphBuilderwithAlgo {
 			this->exitAlgoModeButton = (gcnew System::Windows::Forms::Button());
 			this->timer = (gcnew System::Windows::Forms::Timer(this->components));
 			this->inputWeightBox = (gcnew System::Windows::Forms::TextBox());
+			this->ôàéëToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->save = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->open = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->clearCanvas = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->MainCanvas))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackRadius))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBoldness))->BeginInit();
@@ -283,9 +291,9 @@ namespace Lab7GraphBuilderwithAlgo {
 			// 
 			this->GraphMenu->BackColor = System::Drawing::Color::PowderBlue;
 			this->GraphMenu->ImageScalingSize = System::Drawing::Size(20, 20);
-			this->GraphMenu->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {
+			this->GraphMenu->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(4) {
 				this->settingsTool, this->òèïÃðàôóToolStripMenuItem,
-					this->algoMode
+					this->algoMode, this->ôàéëToolStripMenuItem
 			});
 			this->GraphMenu->Location = System::Drawing::Point(0, 0);
 			this->GraphMenu->Name = L"GraphMenu";
@@ -336,7 +344,7 @@ namespace Lab7GraphBuilderwithAlgo {
 			// dfsAlgoMode
 			// 
 			this->dfsAlgoMode->Name = L"dfsAlgoMode";
-			this->dfsAlgoMode->Size = System::Drawing::Size(211, 26);
+			this->dfsAlgoMode->Size = System::Drawing::Size(224, 26);
 			this->dfsAlgoMode->Text = L"Ïîøóê â ãëèáèíó";
 			this->dfsAlgoMode->Click += gcnew System::EventHandler(this, &GraphBuilderMainMenu::dfsAlgoMode_Click);
 			// 
@@ -423,6 +431,35 @@ namespace Lab7GraphBuilderwithAlgo {
 			this->inputWeightBox->WordWrap = false;
 			this->inputWeightBox->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &GraphBuilderMainMenu::inputWeightBox_KeyPress);
 			// 
+			// ôàéëToolStripMenuItem
+			// 
+			this->ôàéëToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {
+				this->save,
+					this->open, this->clearCanvas
+			});
+			this->ôàéëToolStripMenuItem->Name = L"ôàéëToolStripMenuItem";
+			this->ôàéëToolStripMenuItem->Size = System::Drawing::Size(59, 24);
+			this->ôàéëToolStripMenuItem->Text = L"Ôàéë";
+			// 
+			// save
+			// 
+			this->save->Name = L"save";
+			this->save->Size = System::Drawing::Size(224, 26);
+			this->save->Text = L"Çáåðåãòè";
+			// 
+			// open
+			// 
+			this->open->Name = L"open";
+			this->open->Size = System::Drawing::Size(224, 26);
+			this->open->Text = L"Â³äêðèòè";
+			// 
+			// clearCanvas
+			// 
+			this->clearCanvas->Name = L"clearCanvas";
+			this->clearCanvas->Size = System::Drawing::Size(224, 26);
+			this->clearCanvas->Text = L"Î÷èñòèòè ïîëîòíî";
+			this->clearCanvas->Click += gcnew System::EventHandler(this, &GraphBuilderMainMenu::clearCanvas_Click);
+			// 
 			// GraphBuilderMainMenu
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
@@ -495,5 +532,6 @@ namespace Lab7GraphBuilderwithAlgo {
 		System::Void directedMode_Click(System::Object^ sender, System::EventArgs^ e);
 		System::Void weightedMode_Click(System::Object^ sender, System::EventArgs^ e);
 		System::Void inputWeightBox_KeyPress(System::Object^ sender, System::Windows::Forms::KeyPressEventArgs^ e);
+		System::Void clearCanvas_Click(System::Object^ sender, System::EventArgs^ e);
 };
 }

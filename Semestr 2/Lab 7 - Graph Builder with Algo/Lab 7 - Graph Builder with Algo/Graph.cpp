@@ -10,27 +10,33 @@ void Graph::unSelectVertex()
 	}
 	cntSelectedVertex = 0;
 }
+void Graph::cleanGraph()
+{
+	for (int i = 0; i < 1000; i++)
+	{
+		point[i] = nullptr;
+		idSelectedPoints[i] = -1;
+		allEdges[i] = nullptr;
+		for (int j = 0; j < 1000; j++)
+		{
+			matrix[i][j] = 0;
+		}
+	}
+	Edge* selectedEdge = nullptr;
+	cntEdges = 0;
+	cntVertex = 0;
+	directedGraph = false;
+	weightedGraph = false;
+}
 Graph::Graph()
 {
 	point = gcnew cli::array<Vertex*>(1000);
 	idSelectedPoints = gcnew cli::array<int>(1000);
-	Edge* selectedEdge = nullptr;
 	matrix = gcnew cli::array<cli::array<int>^>(1000);
 	for (int i = 0; i < 1000; i++)
 		matrix[i] = gcnew cli::array<int>(1000);
 	allEdges = gcnew cli::array<Edge*>(10000);
-	cntEdges = 0;
-	for (int i = 0; i < 1000; i++)
-	{
-		idSelectedPoints[i] = -1;
-		for (int j = 0; j < 1000; j++)
-			matrix[i][j] = 0;
-	}
-		
-	cntVertex = 0;
-	directedGraph = false;
-	weightedGraph = false;
-
+	cleanGraph();
 }
 void Graph::deleteSelectedVertex()
 {

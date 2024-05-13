@@ -72,6 +72,8 @@ public:
 	int cntEdges;
 	cli::array <Edge*>^ allEdges;
 	bool needAddWeight;
+
+	void cleanGraph();
 	Graph();
 	void addVertex(Vertex* coord);
 	void unSelectVertex();

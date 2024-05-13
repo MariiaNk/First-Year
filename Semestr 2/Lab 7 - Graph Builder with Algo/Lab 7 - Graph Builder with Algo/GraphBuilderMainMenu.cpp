@@ -294,3 +294,16 @@ System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::dfsAlgoMode_Click(S
 	myGraph.unSelectVertex();
 	timer->Start();
 }
+
+System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::clearCanvas_Click(System::Object^ sender, System::EventArgs^ e)
+{
+	String^ message = L"Ви впевнені, що хочете очистити полотно?\nПоточний граф не буде збережено";
+	String^ caption = "Form Closing";
+	System::Windows::Forms::DialogResult result = MessageBox::Show(message, caption, MessageBoxButtons::YesNo, MessageBoxIcon::Question);
+	if (result == System::Windows::Forms::DialogResult::Yes)
+	{
+		myGraph.cleanGraph();
+		myGraph.redrawGraph(graf);
+	}
+}
+	
