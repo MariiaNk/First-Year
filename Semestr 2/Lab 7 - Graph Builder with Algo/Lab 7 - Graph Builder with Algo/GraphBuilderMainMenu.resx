@@ -486,10 +486,10 @@
   <data name="dfsAlgoMode.Text" xml:space="preserve">
     <value>Пошук в глибину</value>
   </data>
-  <data name="пошукВШиринуToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="bfsAlgoMode.Size" type="System.Drawing.Size, System.Drawing">
     <value>263, 26</value>
   </data>
-  <data name="пошукВШиринуToolStripMenuItem.Text" xml:space="preserve">
+  <data name="bfsAlgoMode.Text" xml:space="preserve">
     <value>Пошук в ширину</value>
   </data>
   <data name="topologicalSortAlgoMode.Size" type="System.Drawing.Size, System.Drawing">
@@ -792,10 +792,10 @@
   <data name="&gt;&gt;dfsAlgoMode.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;пошукВШиринуToolStripMenuItem.Name" xml:space="preserve">
-    <value>пошукВШиринуToolStripMenuItem</value>
+  <data name="&gt;&gt;bfsAlgoMode.Name" xml:space="preserve">
+    <value>bfsAlgoMode</value>
   </data>
-  <data name="&gt;&gt;пошукВШиринуToolStripMenuItem.Type" xml:space="preserve">
+  <data name="&gt;&gt;bfsAlgoMode.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;topologicalSortAlgoMode.Name" xml:space="preserve">

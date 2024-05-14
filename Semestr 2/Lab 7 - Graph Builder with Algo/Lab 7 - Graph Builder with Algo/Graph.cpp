@@ -262,6 +262,34 @@ void Graph::dfs(int startNode)
 	dfsRec(startNode, visited);
 }
 
+void Graph::bfs(int startPoint)
+{
+	bool visited[1000] = { false };
+	queue<int> q;
+	visited[startPoint] = true;
+	q.push(startPoint);
+	orderAlgo.Add(startPoint);
+
+	while (!q.empty()) 
+	{
+		int startPoint = q.front();
+		q.pop();
+		for (int i = 0; i < cntVertex; i++)  
+		{
+			if (matrix[startPoint][i] != 0)
+			{
+				if (!visited[i]) 
+				{
+					visited[i] = true;
+					q.push(i);
+					orderAlgo.Add(i);
+				}
+			}
+		}
+	}
+	
+}
+
 bool Graph::IsDirectedAntiCycle()
 {
 	bool visited[1000] = { false };
@@ -269,9 +297,10 @@ bool Graph::IsDirectedAntiCycle()
 
 	for (int i = 0; i < cntVertex; i++)
 	{
-		if (!visited[i] && HasCycle(i, visited, inStack))
+		if (!visited[i])
 		{
-			return false;
+			if(HasCycle(i, visited, inStack))
+				return false;
 		}
 	}
 
@@ -280,18 +309,22 @@ bool Graph::IsDirectedAntiCycle()
 
 bool Graph::HasCycle(int vertex, bool* visited, bool* inStack)
 {
-	if (inStack[vertex])
-		return true; // Cycle detected
 
 	visited[vertex] = true;
 	inStack[vertex] = true;
 
 	for (int i = 0; i < cntVertex; i++)
 	{
-		if (matrix[vertex][i] != 0) // Check only outgoing edges for directedness
+		if (matrix[vertex][i] != 0)
 		{
-			if (!visited[i] && HasCycle(i, visited, inStack))
-				return true; // Cycle detected in child
+			if (!visited[i])
+			{
+				if (HasCycle(i, visited, inStack))
+					return true; // Cycle detected in child
+			}
+			else if (inStack[i])
+				return false;
+				
 		}
 	}
 
@@ -302,43 +335,42 @@ bool Graph::HasCycle(int vertex, bool* visited, bool* inStack)
 
 void Graph::topologicalSort()
 {
-	int* indegree = new int[cntVertex];
-	for (int i = 0; i < cntVertex; i++)
-	{
-		indegree[i] = 0;
-	}
+	int indegree[1000];
 
-	for (int i = 0; i < cntVertex; i++)
+	for (int i = 0; i < cntVertex; i++) 
 	{
 		for (int j = 0; j < cntVertex; j++)
 		{
-			if (matrix[j][i] != 0 || matrix[j][i] != 0)
-			{
-				indegree[i]++;
-			}
+			if (matrix[i][j] != 0) indegree[j]++;
 		}
 	}
-	queue <int> q;
-	for (int i = 0; i < cntVertex; i++)
+
+	queue<int> q;
+	for (int i = 0; i < cntVertex; i++) 
 	{
 		if (indegree[i] == 0)
 			q.push(i);
 	}
 
-	while (!q.empty())
+	while (!q.empty()) 
 	{
-		int currentNode = q.front();
+		int node = q.front();
 		q.pop();
-		orderAlgo.Add(currentNode);
-		cntElemInOrder++;
-		for (int i = 0; i < cntVertex; i++)
+		orderAlgo.Add(node);
+
+		for (int j = 0; j < cntVertex; j++)
 		{
-			if (matrix[currentNode][i] != 0 || matrix[i][currentNode] != 0)
+			if (matrix[node][j] != 0)
 			{
-				indegree[i]--;
-				if (indegree[i] == 0)
-					q.push(i);
+				indegree[j]--;
+				if (indegree[j] == 0)
+					q.push(j);
 			}
 		}
+	}
+
+	if(orderAlgo.Count != cntVertex)
+	{
+		orderAlgo.Clear();
 	}
 }

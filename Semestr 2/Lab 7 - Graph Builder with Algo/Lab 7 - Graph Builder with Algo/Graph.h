@@ -88,6 +88,7 @@ public:
 	void findAllEdges();
 
 	void dfs(int startPoint);
+	void bfs(int startPoint);
 	bool IsDirectedAntiCycle();
 	bool HasCycle(int vertex, bool* visited, bool* inStack);
 	void topologicalSort();

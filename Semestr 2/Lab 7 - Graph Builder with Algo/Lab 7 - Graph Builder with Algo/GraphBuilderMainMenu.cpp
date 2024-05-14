@@ -262,6 +262,7 @@ System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::timer_Tick(System::
 		if (numTick > 1)  myGraph.point[myGraph.orderAlgo[numTick - 2]]->marker = 0;
 		myGraph.redrawGraph(graf);
 		timer->Stop();
+		myGraph.orderAlgo.Clear();
 	}
 	else
 	{
@@ -307,6 +308,8 @@ System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::open_Click(System::
 		{
 			string ss = msclr::interop::marshal_as<std::string>(openFileDialog->FileName);
 			myGraph.readGraph(ss);
+			if (myGraph.directedGraph) directedGraphMarker->Checked = true;
+			if (myGraph.weightedGraph) weightedGraphMarker->Checked = true;
 			myGraph.redrawGraph(graf);
 		}
 	}
@@ -353,20 +356,33 @@ System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::dfsAlgoMode_Click(S
 	myGraph.unSelectVertex();
 	timer->Start();
 }
+System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::bfsAlgoMode_Click(System::Object^ sender, System::EventArgs^ e)
+{
+	numTick = 0;
+	int start = 0;
+	if (myGraph.cntSelectedVertex != 0) start = myGraph.idSelectedPoints[0];
+	myGraph.bfs(start);
+	myGraph.unSelectVertex();
+	timer->Start();
+}
 
 System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::topologicalSortAlgoMode_Click(System::Object^ sender, System::EventArgs^ e)
 {
 	numTick = 0;
 	bool checkDAG = myGraph.IsDirectedAntiCycle();
-	if (!checkDAG)
-	{
+	if (directedGraphMarker->Checked)
 		MessageBox::Show(L"На жаль, у цьому графі не можна виконати топологічне сортування :(");
-	}
 	else
 	{
 		myGraph.topologicalSort();
-		myGraph.unSelectVertex();
-		timer->Start();
+		if(myGraph.orderAlgo.Count == 0)
+			MessageBox::Show(L"На жаль, у цьому графі не можна виконати топологічне сортування :(");
+		else
+		{
+			myGraph.unSelectVertex();
+			timer->Start();
+		}
+		
 	}
 	
 }
