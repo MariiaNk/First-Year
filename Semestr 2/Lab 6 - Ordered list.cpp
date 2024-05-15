@@ -5,12 +5,17 @@
 #include <numeric>
 #include <random>
 #include <cassert>
+#include "windows.h"
+#include "psapi.h"
+#include "benchmark.h"
+#include <iomanip>
 
 #define UNDERLINE "\033[4m"
 #define CLOSEUNDERLINE "\033[0m"
 #define BOLD "\e[1m"
 #define CLOSEBOLD  "\e[0m"
 using namespace std;
+using namespace std::chrono;
 
 struct complex
 {
@@ -1166,7 +1171,7 @@ public:
     }
 };
 
-int main()
+void DemonstrationMode()
 {
     orderedStore* array = nullptr;
     cout << "Save type:\n1 - Linked List\n2 - Ordered Array\n3 - Binary search tree\n4 - AVL tree\n5 - 2,3 Tree\n";
@@ -1218,5 +1223,161 @@ int main()
     for(int i = 0; i < searchResult.size(); i++)
     {
         cout << searchResult[i] << "; ";
+    }
+}
+
+void outputMenu()
+{
+    cout << "==== Ordered Store Menu ====\n";
+    cout << "1 - Add value to store\n";
+    cout << "2 - Delete value from store\n";
+    cout << "3 - Search value in store\n";
+    cout << "4 - Search value in range in store\n";
+    cout << "5 - Print store\n";
+    cout << "0 - End program\n";
+    cout << "===============================================\n";
+}
+
+void InteractiveMode()
+{
+    orderedStore* array = nullptr;
+    cout << "Save type:\n1 - Linked List\n2 - Ordered Array\n3 - Binary search tree\n4 - AVL tree\n5 - 2,3 Tree\n";
+    int type;
+    cin >> type;
+    switch (type)
+    {
+    case 1:
+        array = new orderedLinkedList();
+        break;
+    case 2:
+        array = new orderedArray();
+        break;
+    case 3:
+        array = new binarySearchTree();
+        break;
+    case 4:
+        array = new AVLtree();
+        break;
+    case 5:
+        array = new B23Tree();
+        break;
+    default:
+        cout << "----- Error! Wrong request! ----";
+        break;
+    }
+    outputMenu();
+    complex value;
+    int request;
+    do {
+        cout << "Please, write the number of your request:  ";
+        cin >> request;
+        switch (request)
+        {
+            case 1:
+            {
+                cout << "Enter value [real imaginary]: ";
+                cin >> value.real >> value.imaginary;
+                array->add(value);
+                cout << " ==== Complete =====";
+                break;
+            }
+            case 2:
+            {
+                cout << "Enter value [real imaginary]: ";
+                cin >> value.real >> value.imaginary;
+                array->del(value);
+                cout << " ==== Complete =====";
+                break;
+            }
+            case 3:
+            {
+                cout << "Enter value [real imaginary]: ";
+                cin >> value.real >> value.imaginary;
+                if(array->search(value))
+                    cout << "Yes\n";
+                else cout << "No\n";
+                break;
+            }
+            case 4:
+            {
+                complex minValue, maxValue;
+                cout << "Enter min value [real imaginary]: ";
+                cin >> minValue.real >> minValue.imaginary;
+                cout << "Enter max value [real imaginary]: ";
+                cin >> maxValue.real >> maxValue.imaginary;
+                vector <complex> searchResult = array->searchByRange(minValue, maxValue);
+                cout << "Result of searching in range: " << minValue << " to " << maxValue << endl; 
+                for(int i = 0; i < searchResult.size(); i++)
+                {
+                    cout << searchResult[i] << "; ";
+                }
+                break;
+            }
+            case 5:
+                array->print();
+                break;
+            default:
+                cout << "----- Error! Wrong request! Try again!!! -----";
+                break;
+        }
+        cout << endl;
+    } while (request !=0);
+}
+void BenchmarkMode()
+{
+    int cntElem;
+    
+    cout << "Enter count of elements: ";
+    cin >> cntElem;
+    auto start = high_resolution_clock::now();
+    BenchmarkMax* bmVec = new BenchmarkMax("Create GraphVector");
+    orderedStore* array = nullptr;
+    delete bmVec;
+    auto stop = high_resolution_clock::now();
+    auto duration = duration_cast<microseconds>(stop - start);
+    cout << "Time taken by create array:  " << duration.count() << " microseconds" << endl;
+
+    cout << "Save type:\n1 - Linked List\n2 - Ordered Array\n3 - Binary search tree\n4 - AVL tree\n5 - 2,3 Tree\n";
+    int type;
+    cin >> type;
+    switch (type)
+    {
+    case 1:
+        array = new orderedLinkedList();
+        break;
+    case 2:
+        array = new orderedArray();
+        break;
+    case 3:
+        array = new binarySearchTree();
+        break;
+    case 4:
+        array = new AVLtree();
+        break;
+    case 5:
+        array = new B23Tree();
+        break;
+    default:
+        cout << "----- Error! Wrong request! ----";
+        break;
+    }
+}
+int main()
+{
+    srand((unsigned)time(0));
+    cout << "Input mode of work\ni - interactive\nd - demonstration\nb - benchmark\n";
+    char mode;
+    cin >> mode;
+    if (mode == 'i')
+        InteractiveMode();
+    else
+    if(mode == 'd')
+        DemonstrationMode();
+    else if(mode == 'b')
+        BenchmarkMode();
+    else
+    {
+        cout << "Error. Program isn't started\n";
+        return 1;
     }
 }
