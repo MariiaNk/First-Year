@@ -82,9 +82,18 @@ struct complex
     }
 };
 
+class orderedStore
+{    
+public:
+    virtual void add(complex item) = 0;
+    virtual bool search(complex item) = 0;
+    virtual void del(complex item) = 0;
+    virtual vector<complex> searchByRange(complex minValue, complex maxValue) = 0;
+    virtual void print() = 0;
 
+};
 
-class orderedLinkedList
+class orderedLinkedList: public orderedStore
 {
 private:
     struct Node
@@ -187,6 +196,7 @@ public:
     }
     void print()
     {
+        cout << UNDERLINE << "Linked list:" << CLOSEUNDERLINE << endl;
         Node *current = head;
         while (current != nullptr)
         {
@@ -195,7 +205,7 @@ public:
         }
     }
 };
-class orderedArray
+class orderedArray: public orderedStore
 {
 public:
     vector<complex> data;
@@ -265,12 +275,13 @@ public:
     }
     void print() 
     {
+        cout << UNDERLINE << "Array list:" << CLOSEUNDERLINE << endl;
+        
         for (auto& item : data)
-            cout << item << " ";
-        cout << endl;
+            cout << item << endl;
     }
 };
-class binarySearchTree
+class binarySearchTree: public orderedStore
 {
 private:
     struct treeNode
@@ -407,29 +418,273 @@ public:
     }
 
 };
+class AVLtree: public orderedStore
+{
+private:
+    struct avlNode
+    {
+        complex value;
+        avlNode* left;
+        avlNode* right;
+        int height;
+        avlNode(complex valueItem = 0)
+        {
+            value = valueItem;
+            left = nullptr;
+            right = nullptr;
+            height = 0;
+        }
+    };
+    int height(avlNode *N)  
+    {  
+        if (N == NULL)  
+            return 0;  
+        return N->height;  
+    }  
+    avlNode *rightRotate(avlNode *y)  
+    {  
+        avlNode *x = y->left;  
+        avlNode *T2 = x->right;  
+
+        x->right = y;  
+        y->left = T2;  
+    
+        y->height = max(height(y->left), height(y->right)) + 1;  
+        x->height = max(height(x->left), height(x->right)) + 1;  
+    
+        return x;  
+    }  
+    avlNode *leftRotate(avlNode *x)  
+    {  
+        avlNode *y = x->right;  
+        avlNode *T2 = y->left;  
+
+        y->left = x;  
+        x->right = T2;  
+    
+        x->height = max(height(x->left), height(x->right)) + 1;  
+        y->height = max(height(y->left), height(y->right)) + 1;  
+
+        return y;  
+    }  
+    int getBalance(avlNode *N)  
+    {  
+        if (N == NULL)  
+            return 0;  
+        return height(N->left) - height(N->right);  
+    }  
+    avlNode* insert(avlNode* node, complex key)  
+    {  
+        if (node == NULL)  
+            return new avlNode(key);
+    
+        if (key < node->value)  
+            node->left = insert(node->left, key);  
+        else if (key > node->value)  
+            node->right = insert(node->right, key);  
+        else 
+            return node;  
+    
+        node->height = 1 + max(height(node->left),  
+                            height(node->right));  
+    
+        int balance = getBalance(node);  
+
+        if (balance > 1 && key < node->left->value)  
+            return rightRotate(node);  
+    
+        if (balance < -1 && key > node->right->value)  
+            return leftRotate(node);  
+
+        if (balance > 1 && key > node->left->value)  
+        {  
+            node->left = leftRotate(node->left);  
+            return rightRotate(node);  
+        }  
+    
+        if (balance < -1 && key < node->right->value)  
+        {  
+            node->right = rightRotate(node->right);  
+            return leftRotate(node);  
+        }  
+    
+        return node;  
+    } 
+    void inOrder(avlNode *root)  
+    {  
+        if(root != NULL)  
+        {  
+            inOrder(root->left);  
+            cout << root->value << endl;     
+            inOrder(root->right);  
+        }  
+    }  
+    avlNode * minValueNode(avlNode* node) 
+    { 
+        avlNode* current = node; 
+        while (current->left != NULL) 
+            current = current->left; 
+        return current; 
+    } 
+    avlNode* deleteNode(avlNode* node, complex key) 
+    { 
+        if (node == NULL) 
+            return node; 
+
+        if ( key < node->value ) 
+            node->left = deleteNode(node->left, key); 
+        else if( key > node->value ) 
+            node->right = deleteNode(node->right, key); 
+        else
+        { 
+            if( (node->left == NULL) || (node->right == NULL) ) 
+            { 
+                avlNode *temp = node->left ? node->left : node->right; 
+                if (temp == NULL) 
+                { 
+                    temp = node; 
+                    node = NULL; 
+                } 
+                else
+                    *node = *temp; 
+                free(temp); 
+            } 
+            else
+            { 
+                avlNode* temp = minValueNode(node->right); 
+                node->value = temp->value; 
+                node->right = deleteNode(node->right, temp->value); 
+            } 
+        } 
+    
+        if (node == NULL) 
+            return node; 
+        node->height = 1 + max(height(node->left), height(node->right)); 
+    
+        int balance = getBalance(node); 
+    
+     
+        if (balance > 1 && getBalance(node->left) >= 0) 
+            return rightRotate(node); 
+    
+        if (balance > 1 && getBalance(node->left) < 0) 
+        { 
+            node->left = leftRotate(node->left); 
+            return rightRotate(node); 
+        } 
+    
+        if (balance < -1 && getBalance(node->right) <= 0) 
+            return leftRotate(node); 
+    
+        if (balance < -1 && getBalance(node->right) > 0) 
+        { 
+            node->right = rightRotate(node->right); 
+            return leftRotate(node); 
+        } 
+    
+        return node; 
+    } 
+    bool AVLsearch( avlNode* root, complex key)
+    {
+        if (root == NULL)
+            return false;
+        else if (root->value == key)
+            return true;
+        else if (root->value > key) 
+        {
+            bool val = AVLsearch(root->left, key);
+            return val;
+        }
+        else 
+        {
+            bool val = AVLsearch(root->right, key);
+            return val;
+        }
+    }
+    void searchRangeRecur(avlNode* node, complex low, complex high, vector<complex>& results) 
+    {
+        if (!node) return;
+
+        if (low < node->value)
+            searchRangeRecur(node->left, low, high, results);
+
+        if (low <= node->value && node->value <= high)
+            results.push_back(node->value);
+
+        if (node->value < high)
+            searchRangeRecur(node->right, low, high, results);
+    }
+public:
+    avlNode* root;
+    void add(complex item) 
+    {
+        root = insert(root, item);
+    } 
+    void print() //inOrder
+    {
+        cout << UNDERLINE << "AVL tree - [inorder]" << CLOSEUNDERLINE << endl;
+        inOrder(root);
+    }
+    void del(complex item)
+    {
+        root = deleteNode(root, item);
+    }
+    bool search(complex item)
+    {
+        return AVLsearch(root, item);
+    }
+    vector<complex> searchByRange(complex minValue, complex maxValue) 
+    {
+        vector<complex> result;
+        searchRangeRecur(root, minValue, maxValue, result);
+        return result;
+    }
+};
 int main()
 {
-    binarySearchTree myList;
-    myList.add({15, 4});
-    myList.add({45, 1});
-    myList.add({34, 0});
-    myList.add(56);
-    myList.add(1);
-    myList.print();
+    orderedStore* array = nullptr;
+    cout << "Save type:\n1 - Linked List\n2 - Ordered Array\n3 - Binary search tree\n4 - AVL tree\n";
+    int type;
+    cin >> type;
+    switch (type)
+    {
+    case 1:
+        array = new orderedLinkedList();
+        break;
+    case 2:
+        array = new orderedArray();
+        break;
+    case 3:
+        array = new binarySearchTree();
+        break;
+    case 4:
+        array = new AVLtree();
+        break;
+    default:
+        cout << "----- Error! Wrong request! ----";
+        break;
+    }
+    array->add({15, 4});
+    array->add({45, 1});
+    array->add({34, 0});
+    array->add(56);
+    array->add(1);
+    array->print();
     complex searchItem(15, 4);
     cout << "Is " << BOLD << searchItem << CLOSEBOLD << " in ordered list? - ";
-    if(myList.search(searchItem))
+    if(array->search(searchItem))
         cout << "Yes\n";
     else cout << "No\n";
     searchItem = {19, -8};
     cout << "Is " << BOLD << searchItem << CLOSEBOLD << " in ordered list? - ";
-    if(myList.search(searchItem))
+    if(array->search(searchItem))
         cout << "Yes\n";
     else cout << "No\n";
-    myList.del({34, 0});
-    myList.print();
+    array->del({34, 0});
+    cout << "Delete 34+0i in store " << endl;
+    array->print();
     complex minValue(13, 4), maxValue(56, 8);
-    vector <complex> searchResult = myList.searchByRange(minValue, maxValue);
+    vector <complex> searchResult = array->searchByRange(minValue, maxValue);
     cout << "Result of searching in range: " << minValue << " to " << maxValue << endl; 
     for(int i = 0; i < searchResult.size(); i++)
     {
