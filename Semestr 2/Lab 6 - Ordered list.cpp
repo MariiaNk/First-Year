@@ -1085,6 +1085,34 @@ private:
             }
         }
     };
+    void searchRangeRecursive(TreeNode* node, const complex& minValue, const complex& maxValue, vector<complex>& result) const 
+    {
+        if (!node) {
+        return;
+    }
+
+    // Traverse left child
+    if (node->children[0] && node->data[0] >= minValue) {
+        searchRangeRecursive(node->children[0], minValue, maxValue, result);
+    }
+
+    // Add node data within range
+    for (int i = 0; i < node->size; ++i) {
+        if (minValue <= node->data[i] && node->data[i] <= maxValue) {
+            result.push_back(node->data[i]);
+        }
+    }
+
+    // Traverse middle child
+    if (node->children[1] && node->size == 2 && node->data[1] >= minValue) {
+        searchRangeRecursive(node->children[1], minValue, maxValue, result);
+    }
+
+    // Traverse right child
+    if (node->children[2] && node->size == 2 && node->data[1] <= maxValue) {
+        searchRangeRecursive(node->children[2], minValue, maxValue, result);
+    }
+    }
 public:
 	TreeNode* root;
 	B23Tree() 
@@ -1128,13 +1156,14 @@ public:
         
         return root->search(item);
     }
-    /*vector<complex> searchByRange(complex minValue, complex maxValue)
+    vector<complex> searchByRange(complex minValue, complex maxValue)
     {
-         vector<complex> result;
+        vector<complex> result;
         if (!root) 
             return result; 
-        return root->search_range(minValue, maxValue);
-    }*/
+        searchRangeRecursive(root, minValue, maxValue, result);
+        return result;
+    }
 };
 
 int main()
