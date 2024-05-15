@@ -1,6 +1,11 @@
 #include <iostream>
 #include <cmath>
 #include <vector>
+#include <algorithm>
+#include <numeric>
+#include <random>
+#include <cassert>
+
 #define UNDERLINE "\033[4m"
 #define CLOSEUNDERLINE "\033[0m"
 #define BOLD "\e[1m"
@@ -640,10 +645,502 @@ public:
         return result;
     }
 };
+
+
+class B23Tree: public orderedStore
+{
+private:
+    struct TreeNode 
+    {
+        complex data[2];
+        int size; // number of data items
+        TreeNode* children[3];
+        TreeNode* parent; 
+
+        TreeNode(complex data1, TreeNode* parent = nullptr) 
+        {
+            this->data[0] = data1;
+            this->size = 1;
+            children[0] = children[1] = children[2] = nullptr;
+            this->parent = parent;
+        }
+
+        TreeNode(complex data1, complex data2, TreeNode* parent = nullptr) 
+        {
+            assert(data1<=data2);
+            this->data[0] = data1;
+            this->data[1] = data2;
+            this->size = 2;
+            children[0] = children[1] = children[2] = nullptr;
+            this->parent = parent;
+        }
+
+        TreeNode(complex data1, complex data2, complex data3, TreeNode* parent = nullptr) 
+        {
+            assert(data1<=data2);
+            assert(data2<=data3);
+
+            this->data[0] = data2;
+            this->size = 1;
+            this->children[0] = new TreeNode(data1, this);
+            this->children[1] = new TreeNode(data3, this);
+            this->children[2] = nullptr;
+
+            this->parent = parent;
+
+        }
+
+        void add_single_data(complex data) 
+        {
+            assert(size == 1);
+            if (data > this->data[0]) {
+                this->data[1] = data;
+                size = 2;
+            } else {
+                this->data[1] = this->data[0];
+                this->data[0] = data;
+                size = 2;
+            }
+        }
+
+	//return nullptr if added, else "4-node" (2-node with both children as 2-nodes)
+        TreeNode* add_and_split(complex new_data) 
+        {
+            if (children[0] == nullptr) 
+            {
+                if (size == 1) 
+                {
+                    add_single_data(new_data);
+                    return nullptr;
+                } 
+                else 
+                {
+                    if (new_data < data[0]) 
+                        return new TreeNode(new_data, data[0], data[1]);
+                    else if (new_data < data[1]) 
+                        return new TreeNode(data[0], new_data, data[1]);
+                    else 
+                        return new TreeNode(data[0], data[1], new_data);
+                }
+            }
+            TreeNode* extra = nullptr;
+            if (size == 1) {
+                if (new_data < data[0]) {
+                    extra = children[0]->add_and_split(new_data);
+                    if (!extra) { return nullptr;}
+                    data[1] = data[0];
+                    data[0] = extra->data[0];
+                    children[2] = children[1];
+                    children[0] = extra->children[0];
+                    children[1] = extra->children[1];
+                    size = 2;
+                    return nullptr;
+                } else {
+                    extra = children[1]->add_and_split(new_data);
+                    if (!extra) { return nullptr;}
+                    data[1] = extra->data[0];
+                    children[1] = extra->children[0];
+                    children[2] = extra->children[1];
+                    size = 2;
+                    return nullptr;
+                }
+            } else {
+                if (new_data < data[0]) {
+                    extra = children[0]->add_and_split(new_data);
+                    if (!extra) { return nullptr;}
+                    TreeNode* result = new TreeNode(extra->data[0], data[0], data[1]);
+                    result->children[0]->children[0] = extra->children[0];
+                    result->children[0]->children[1] = extra->children[1];
+                    result->children[1]->children[0] = children[1];
+                    result->children[1]->children[1] = children[2];
+                    return result;
+                } else if (new_data < data[1]) {
+                    extra = children[1]->add_and_split(new_data);
+                    if (!extra) { return nullptr;}
+                    TreeNode* result = new TreeNode(data[0], extra->data[0], data[1]);
+                    result->children[0]->children[0] = children[0];
+                    result->children[0]->children[1] = extra->children[0];
+                    result->children[1]->children[0] = extra->children[1];
+                    result->children[1]->children[1] = children[2];
+                    return result;
+                } else {
+                    extra = children[2]->add_and_split(new_data);
+                    if (!extra) { return nullptr;}
+                    TreeNode* result = new TreeNode(data[0], data[1], extra->data[0]);
+                    result->children[0]->children[0] = children[0];
+                    result->children[0]->children[1] = children[1];
+                    result->children[1]->children[0] = extra->children[0];
+                    result->children[1]->children[1] = extra->children[1];
+                    return result;
+                }
+            }
+        }
+
+
+        TreeNode* find_max_subtree() {
+            if (children[2]) {
+                assert(size == 2);
+                return children[2]->find_max_subtree();
+            }
+            if (children[1]) {
+                assert(size == 1);
+                return children[1]->find_max_subtree();
+            }
+            assert(children[0] == nullptr);
+            return this; // no children
+        }
+
+        complex get_max_data() 
+        {
+            if (size == 2) {
+                return data[1];
+            } else {
+                return data[0];
+            }
+        }
+	    enum RemoveResult {Removed, NotFound, NeedParentRemove};
+
+        //void rebalance(TreeNode* current_child, TreeNode* left_child, TreeNode* right_child) {
+        // returns true if rebalance complete - no need to rebalance parent
+        bool rebalance(int index_current_child) {
+            assert(index_current_child < size + 1);
+            TreeNode* current_child = children[index_current_child];
+            assert(current_child);
+            assert(current_child->size == 0);
+            TreeNode* left_child = nullptr;
+            if (index_current_child > 0) { left_child = children[index_current_child-1]; }
+            TreeNode *right_child = (index_current_child < size) ?
+                                        children[index_current_child + 1] :
+                                        nullptr;
+            assert(left_child != nullptr || right_child != nullptr);
+
+            if (left_child && left_child->size == 2) {
+            assert(index_current_child - 1 >= 0); // can access data in next lines
+                current_child->data[0] = this->data[index_current_child - 1];
+                this->data[index_current_child - 1] = left_child->data[1];
+
+                current_child->children[1] = current_child->children[0];
+                current_child->children[0] = left_child->children[2];
+                left_child->children[2] = nullptr;
+
+                current_child->size = 1;
+                left_child->size = 1;
+                return true;
+            }
+
+            if (right_child && right_child->size == 2) {
+            assert(index_current_child < this->size);
+                current_child->data[0] = this->data[index_current_child]; // not index + 1
+                this->data[index_current_child] = right_child->data[0];
+                right_child->data[0] = right_child->data[1];
+
+                current_child->children[1] = right_child->children[0];
+                right_child->children[0] = right_child->children[1];
+                right_child->children[1] = right_child->children[2];
+                right_child->children[2] = nullptr;
+
+                current_child->size = 1;
+                right_child->size = 1;
+                return true;
+            }
+
+            if (left_child) {
+                assert(left_child->size == 1);
+                assert(index_current_child - 1 >=0);
+
+                left_child->data[1] = this->data[index_current_child - 1];
+
+                left_child->children[2] = current_child->children[0];
+
+                left_child->size = 2;
+                this->size--;
+
+                if (this->size == 0) {
+                assert(this->children[0] == left_child);
+                assert(this->children[1] == current_child);
+                assert(this->children[2] == nullptr);
+                delete current_child;
+                this->children[1] = nullptr; // maybe not needed - this will be fixed in parent rebalance?
+                return false;
+                }
+                assert(this->size == 1);
+                if (index_current_child == 1) {
+                    this->data[0] = this->data[1];
+                    assert(this->children[0] == left_child);
+                    assert(this->children[1] == current_child);
+                    delete current_child;
+                    this->children[1] = this->children[2];
+                    this->children[2] = nullptr;
+                    return true;
+                }
+                assert(index_current_child == 2); { // to make this case similar to previous (same indent level)
+            assert(this->children[1] == left_child);
+            assert(this->children[2] == current_child);
+            delete current_child;
+            this->children[2] = nullptr;
+            return true;
+                }
+
+
+            }
+            assert(right_child!=nullptr);
+            assert(right_child->size == 1);
+
+            right_child->data[1] = right_child->data[0];
+            right_child->data[0] = this->data[index_current_child]; // not index + 1!!
+            assert(right_child->data[0] < right_child->data[1]);
+
+            if (current_child->children[0] != nullptr) {
+            assert(right_child->children[0] != nullptr);
+            assert(right_child->children[1] != nullptr);
+            // previous tree was balanced, if current_child had children - then right_child must have children too
+            right_child->children[2] = right_child->children[1];
+            right_child->children[1] = right_child->children[0];
+            right_child->children[0] = current_child->children[0];
+
+            } else {
+            assert(current_child->children[0] == nullptr);
+        assert(right_child->children[0] == nullptr);
+        assert(right_child->children[1] == nullptr);
+        // in this case, no need to copy nullptrs - previous code would work, but it is extra work
+            }
+            right_child->size = 2;
+            this->size--;
+
+            if (this->size == 0) {
+        assert(this->children[0] == current_child);
+        assert(this->children[1] == right_child);
+        assert(this->children[2] == nullptr);
+        delete current_child;
+        this->children[0] = this->children[1];
+        this->children[1] = nullptr; // maybe not needed - this will be fixed in parent rebalance?
+        return false;
+        }
+            assert(this->size == 1);
+            if (index_current_child == 0) {
+        assert(this->children[0] == current_child);
+        assert(this->children[1] == right_child);
+                this->data[0] = this->data[1];
+                delete current_child;
+                this->children[0] = this->children[1];
+                this->children[1] = this->children[2];
+                this->children[2] = nullptr;
+                return true;
+            }
+            assert(index_current_child == 1); {
+        assert(this->children[1] == current_child);
+        assert(this->children[2] == right_child);
+        delete current_child;
+        this->children[1] = this->children[2];
+        this->children[2] = nullptr;
+        return true;
+            }
+
+        }
+
+        // can set size to 0, this means parent needs to fix it
+        RemoveResult remove(complex data_to_remove){
+            if (children[0] == nullptr) {
+                if (size == 1) {
+                    if (data[0] == data_to_remove) {
+                        size = 0;
+                        return NeedParentRemove;
+                    } else {
+                        return NotFound;
+                    }
+                } else { // size == 2
+                    if (data[0] == data_to_remove) {
+                        data[0] = data[1];
+                        size = 1;
+                        return Removed;
+                    } else if (data[1] == data_to_remove) {
+                        size = 1;
+                        return Removed;
+                    } else {
+                        return NotFound;
+                    }
+                }
+            }
+            if (size == 1) {
+                if (data_to_remove < data[0]) {
+                    RemoveResult result = children[0]->remove(data_to_remove);
+                    if (result == NeedParentRemove) {
+                        rebalance(0);
+                        if (this->size == 0) {return NeedParentRemove;}
+                        else { return Removed;}
+                    } else {
+                        return result;
+                    }
+                } else if (data_to_remove > data[0]) {
+                    RemoveResult result = children[1]->remove(data_to_remove);
+                    if (result == NeedParentRemove) {
+                        rebalance(1);
+                        if (this->size == 0) {return NeedParentRemove;}
+                        else { return Removed;}
+                    } else {
+                        return result;
+                    }
+                } else { // removing our only data
+                    TreeNode* prev = children[0]->find_max_subtree();
+                    assert(prev->children[0] == nullptr);
+                    complex prev_data = prev->get_max_data();
+                    data[0] = prev_data;
+                    //prev->remove(prev_data, parent???)
+                    RemoveResult result = this->children[0]->remove(prev_data); // because we know prev, but don't know full sequence of parents
+                    assert(result != NotFound);
+                    if (result == Removed) { return Removed;}
+                    rebalance(0);
+                    if (this->size == 0) {return NeedParentRemove;}
+                    else { return Removed;}
+                }
+            }
+            if (size == 2) {
+                if (data_to_remove < data[0]) {
+                    RemoveResult result = children[0]->remove(data_to_remove);
+                    if (result == NeedParentRemove) {
+                        rebalance(0);
+                        assert(this->size > 0);
+                        return Removed;
+                    } else {
+                        return result;
+                    }
+                } else if (data_to_remove == data[0]) {
+                    TreeNode* prev = children[0]->find_max_subtree();
+                    assert(prev->children[0] == nullptr);
+                    complex prev_data = prev->get_max_data();
+                    data[0] = prev_data;
+                    RemoveResult result = this->children[0]->remove(prev_data); // because we know prev, but don't know full sequence of parents
+                    assert(result != NotFound);
+                    if (result == Removed) { return Removed;}
+                    rebalance(0);
+                    assert(this->size > 0);
+                    return Removed;
+                }
+                else if (data_to_remove < data[1]) {
+                    RemoveResult result = children[1]->remove(data_to_remove);
+                    if (result == NeedParentRemove) {
+                        rebalance(1);
+                        assert(this->size > 0);
+                        return Removed;
+                    } else {
+                        return result;
+                    }
+                } else if (data_to_remove == data[1]) {
+                    TreeNode* prev = children[1]->find_max_subtree();
+                    assert(prev->children[0] == nullptr);
+                    complex prev_data = prev->get_max_data();
+                    data[1] = prev_data;
+                    RemoveResult result = this->children[1]->remove(prev_data); // because we know prev, but don't know full sequence of parents
+                    assert(result != NotFound);
+                    if (result == Removed) { return Removed;}
+                    rebalance(1);
+                    assert(this->size > 0);
+                    return Removed;
+                } else { // data_to_remove > data[1]
+                    RemoveResult result = children[2]->remove(data_to_remove);
+                    if (result == NeedParentRemove) {
+                        rebalance(2);
+                        assert(this->size > 0);
+                        return Removed;
+                    } else {
+                        return result;
+                    }
+                }
+            }
+
+        }
+
+        void print_in_order() 
+        {
+            if (children[0]) 
+            {
+                children[0]->print_in_order();
+            }
+            cout<<data[0]<<endl;
+            if (children[1]) 
+            {
+                children[1]->print_in_order();
+            }
+            if (size == 2) {
+                cout<<data[1]<<endl;
+                if (children[2]) {
+                    children[2]->print_in_order();
+                }
+            }
+        }
+        bool search(complex target)  const
+        {
+            if (target == data[0] || (size == 2 && target == data[1])) {
+                return true;
+            }
+            if (children[0] == nullptr) {
+                return false;  // Leaf node, and target not found
+            }
+            if (target < data[0]) {
+                return children[0]->search(target);
+            } else if (size == 1 || target < data[1]) {
+                return children[1]->search(target);
+            } else {
+                return children[2]->search(target);
+            }
+        }
+    };
+public:
+	TreeNode* root;
+	B23Tree() 
+    {
+		root = nullptr;
+	}
+	void add(complex data) 
+    {
+		if (!root)
+			root = new TreeNode(data);
+		else 
+        {
+			TreeNode* extra = root->add_and_split(data);
+			if (extra) {
+				root = extra;
+			}
+		}
+
+	}
+	void del(complex data) 
+    {
+		TreeNode::RemoveResult result = root->remove(data);
+		if (result == TreeNode::NotFound) {return;}
+		if (result == TreeNode::Removed) {return;}
+		if (result == TreeNode::NeedParentRemove) {
+			root = root->children[0];
+		}
+	}
+	void print() 
+    {
+         cout << UNDERLINE << "2,3 Tree - [inorder]" << CLOSEUNDERLINE << endl;
+		if(root) 
+            root->print_in_order();
+		else 
+            cout<<"empty tree";
+	}
+    bool search(complex item)  
+    {
+        if (!root) 
+            return false; 
+        
+        return root->search(item);
+    }
+    /*vector<complex> searchByRange(complex minValue, complex maxValue)
+    {
+         vector<complex> result;
+        if (!root) 
+            return result; 
+        return root->search_range(minValue, maxValue);
+    }*/
+};
+
 int main()
 {
     orderedStore* array = nullptr;
-    cout << "Save type:\n1 - Linked List\n2 - Ordered Array\n3 - Binary search tree\n4 - AVL tree\n";
+    cout << "Save type:\n1 - Linked List\n2 - Ordered Array\n3 - Binary search tree\n4 - AVL tree\n5 - 2,3 Tree\n";
     int type;
     cin >> type;
     switch (type)
@@ -659,6 +1156,9 @@ int main()
         break;
     case 4:
         array = new AVLtree();
+        break;
+    case 5:
+        array = new B23Tree();
         break;
     default:
         cout << "----- Error! Wrong request! ----";
