@@ -1,19 +1,23 @@
 #include <iostream>
-#include <cmath>
 #include <vector>
+#include <queue>
+#include <iomanip>
 #include <algorithm>
+#include <cmath>
 #include <numeric>
-#include <random>
 #include <cassert>
+#include <random>
+
 #include "windows.h"
 #include "psapi.h"
+
 #include "benchmark.h"
-#include <iomanip>
 
 #define UNDERLINE "\033[4m"
 #define CLOSEUNDERLINE "\033[0m"
 #define BOLD "\e[1m"
 #define CLOSEBOLD  "\e[0m"
+
 using namespace std;
 using namespace std::chrono;
 
@@ -944,7 +948,9 @@ private:
         }
 
         // can set size to 0, this means parent needs to fix it
-        RemoveResult remove(complex data_to_remove){
+        RemoveResult remove(complex data_to_remove)
+        {
+            RemoveResult result;
             if (children[0] == nullptr) {
                 if (size == 1) {
                     if (data[0] == data_to_remove) {
@@ -991,7 +997,7 @@ private:
                     complex prev_data = prev->get_max_data();
                     data[0] = prev_data;
                     //prev->remove(prev_data, parent???)
-                    RemoveResult result = this->children[0]->remove(prev_data); // because we know prev, but don't know full sequence of parents
+                    result = this->children[0]->remove(prev_data); // because we know prev, but don't know full sequence of parents
                     assert(result != NotFound);
                     if (result == Removed) { return Removed;}
                     rebalance(0);
@@ -1014,7 +1020,7 @@ private:
                     assert(prev->children[0] == nullptr);
                     complex prev_data = prev->get_max_data();
                     data[0] = prev_data;
-                    RemoveResult result = this->children[0]->remove(prev_data); // because we know prev, but don't know full sequence of parents
+                    result = this->children[0]->remove(prev_data); // because we know prev, but don't know full sequence of parents
                     assert(result != NotFound);
                     if (result == Removed) { return Removed;}
                     rebalance(0);
@@ -1035,7 +1041,7 @@ private:
                     assert(prev->children[0] == nullptr);
                     complex prev_data = prev->get_max_data();
                     data[1] = prev_data;
-                    RemoveResult result = this->children[1]->remove(prev_data); // because we know prev, but don't know full sequence of parents
+                    result = this->children[1]->remove(prev_data); // because we know prev, but don't know full sequence of parents
                     assert(result != NotFound);
                     if (result == Removed) { return Removed;}
                     rebalance(1);
@@ -1052,7 +1058,7 @@ private:
                     }
                 }
             }
-
+            return result;
         }
 
         void print_in_order() 
@@ -1323,6 +1329,22 @@ void InteractiveMode()
         cout << endl;
     } while (request !=0);
 }
+size_t get_current_virtual_memory() 
+{
+    PROCESS_MEMORY_COUNTERS_EX pmc;
+    GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
+    SIZE_T virtualMemUsedByMe = pmc.PrivateUsage;
+    return virtualMemUsedByMe;
+}
+
+size_t get_current_physical_memory() 
+{
+    PROCESS_MEMORY_COUNTERS_EX pmc;
+    GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
+    SIZE_T physMemUsedByMe = pmc.WorkingSetSize;
+    return physMemUsedByMe;
+}
+
 void BenchmarkMode()
 {
     int cntElem;
@@ -1330,9 +1352,9 @@ void BenchmarkMode()
     cout << "Enter count of elements: ";
     cin >> cntElem;
     auto start = high_resolution_clock::now();
-    BenchmarkMax* bmVec = new BenchmarkMax("Create GraphVector");
+    BenchmarkMax* bmArray = new BenchmarkMax("Create Array");
     orderedStore* array = nullptr;
-    delete bmVec;
+    delete bmArray;
     auto stop = high_resolution_clock::now();
     auto duration = duration_cast<microseconds>(stop - start);
     cout << "Time taken by create array:  " << duration.count() << " microseconds" << endl;
@@ -1361,6 +1383,57 @@ void BenchmarkMode()
         cout << "----- Error! Wrong request! ----";
         break;
     }
+
+    complex Item;
+    start = high_resolution_clock::now();
+    bmArray = new BenchmarkMax("Add element");
+    for(int i = 0; i < cntElem; i++)
+    {
+        Item = {rand()%100, rand()%100};
+        array->add(Item);
+    }
+    delete bmArray;
+    stop = high_resolution_clock::now();
+    duration = duration_cast<microseconds>(stop - start);
+    cout << "Time taken by add item * " << cntElem << ": " << duration.count() << " microseconds" << endl;
+
+    Item = {rand()%100, rand()%100};
+    start = high_resolution_clock::now();
+    bmArray = new BenchmarkMax("Delete element");
+    array->print();
+    delete bmArray;
+    stop = high_resolution_clock::now();
+    duration = duration_cast<microseconds>(stop - start);
+    cout << "Time taken by print:  " << duration.count() << " microseconds" << endl;
+
+    Item = {rand()%100, rand()%100};
+    start = high_resolution_clock::now();
+    bmArray = new BenchmarkMax("Delete element");
+    array->del(Item);
+    delete bmArray;
+    stop = high_resolution_clock::now();
+    duration = duration_cast<microseconds>(stop - start);
+    cout << "Time taken by delete item:  " << duration.count() << " microseconds" << endl;
+
+    Item = {rand()%100, rand()%100};
+    start = high_resolution_clock::now();
+    bmArray = new BenchmarkMax("Add element");
+    array->search(Item);
+    delete bmArray;
+    stop = high_resolution_clock::now();
+    duration = duration_cast<microseconds>(stop - start);
+    cout << "Time taken by search item:  " << duration.count() << " microseconds" << endl;
+
+    Item = {rand()%100, rand()%100};
+    complex endItem =  {rand()%100, rand()%100};
+    start = high_resolution_clock::now();
+    bmArray = new BenchmarkMax("Add element");
+    array->searchByRange(Item, endItem);
+    delete bmArray;
+    stop = high_resolution_clock::now();
+    duration = duration_cast<microseconds>(stop - start);
+    cout << "Time taken by search in range item:  " << duration.count() << " microseconds" << endl;
+
 }
 int main()
 {
