@@ -211,35 +211,16 @@ System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::directedMode_Click(
 	myGraph.unSelectVertex();
 	myGraph.redrawGraph(graf);
 }
-System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::inputWeightBox_KeyPress(System::Object^ sender, System::Windows::Forms::KeyPressEventArgs^ e)
-{
-	if (e->KeyChar == (char)Keys::Enter)
-	{
-		Edge* current = myGraph.allEdges[numTick];
-		numTick++;
-		String^ valueText = inputWeightBox->Text;
-		inputWeightBox->Text = "";
-		int value;
-		bool converted = Int32::TryParse(valueText, value);
-		if (converted)
-		{
-			myGraph.changeEdgeWeight(current->start, current->end, value);
-			if(numTick < myGraph.cntEdges)
-				warningLabel->Text = "Введіть вагу ребра " + (myGraph.allEdges[numTick]->start + 1) + " - " + (myGraph.allEdges[numTick]->end + 1) + " : ";
-			else
-			{
-				warningLabel->Text = "";
-				inputWeightBox->Visible = false;
-				MainCanvas->Enabled = true;
-				numTick = 0;
-				myGraph.cntEdges = 0;
-			}
-			myGraph.redrawGraph(graf);
-		}
-		
-	}
-}
 
+System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::notDirectedMode_Click(System::Object^ sender, System::EventArgs^ e)
+{
+	directedGraphMarker->Checked = false;
+	myGraph.selectedEdge = nullptr;
+	myGraph.directedGraph = true;
+	myGraph.unWeightedEdge();
+	myGraph.unSelectVertex();
+	myGraph.redrawGraph(graf);
+}
 
 System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::weightedMode_Click(System::Object^ sender, System::EventArgs^ e)
 {
@@ -254,18 +235,101 @@ System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::weightedMode_Click(
 	warningLabel->Text = "Введіть вагу ребра " + (myGraph.allEdges[numTick]->start + 1) + " - " + (myGraph.allEdges[numTick]->end + 1) + " : ";
 }
 
+System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::notWeightedMode_Click(System::Object^ sender, System::EventArgs^ e)
+{
+	weightedGraphMarker->Checked = false;
+	myGraph.weightedGraph = false;
+	myGraph.selectedEdge = nullptr;
+	myGraph.unSelectVertex();
+	myGraph.unWeightedEdge();
+	myGraph.redrawGraph(graf);
+}
+System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::inputWeightBox_KeyPress(System::Object^ sender, System::Windows::Forms::KeyPressEventArgs^ e)
+{
+	if (e->KeyChar == (char)Keys::Enter)
+	{
+		if (!inputFinishPathBox->Visible)
+		{
+			Edge* current = myGraph.allEdges[numTick];
+			numTick++;
+			String^ valueText = inputWeightBox->Text;
+			inputWeightBox->Text = "";
+			int value;
+			bool converted = Int32::TryParse(valueText, value);
+			if (converted)
+			{
+				myGraph.changeEdgeWeight(current->start, current->end, value);
+				if (numTick < myGraph.cntEdges)
+					warningLabel->Text = "Введіть вагу ребра " + (myGraph.allEdges[numTick]->start + 1) + " - " + (myGraph.allEdges[numTick]->end + 1) + " : ";
+				else
+				{
+					warningLabel->Text = "";
+					inputWeightBox->Visible = false;
+					MainCanvas->Enabled = true;
+					numTick = 0;
+					myGraph.cntEdges = 0;
+				}
+				myGraph.redrawGraph(graf);
+			}
+		}
+		
+	}
+}
+System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::buttonStartPath_Click(System::Object^ sender, System::EventArgs^ e)
+{
+	String^ valueText = inputWeightBox->Text;
+	int start, finish;
+	bool convertedStart = Int32::TryParse(valueText, start);
+	valueText = inputFinishPathBox->Text;
+	bool convertedFinish = Int32::TryParse(valueText, finish);
+	inputFinishPathBox->Text = "";
+	inputWeightBox->Text = "";
+
+	if ((convertedStart && convertedFinish) && (start > 0 && start <= myGraph.cntVertex) && (finish > 0 && finish <= myGraph.cntVertex))
+	{
+		startVertex = start - 1;
+		finishVertex = finish - 1;
+		myGraph.idSelectedPoints[myGraph.cntSelectedVertex] = startVertex;
+		myGraph.cntSelectedVertex++;
+		myGraph.idSelectedPoints[myGraph.cntSelectedVertex] = finishVertex;
+		myGraph.cntSelectedVertex++;
+		myGraph.redrawGraph(graf);
+		int* distance = new int[1000];
+		distance = myGraph.Dijkstras(startVertex);
+		MessageBox::Show(L"Найменша відстань між " + (startVertex + 1) + " та " + (finishVertex + 1) + " = " + distance[finishVertex]);
+		myGraph.unSelectVertex();
+		inputWeightBox->Visible = false;
+		inputFinishPathBox->Visible = false;
+		buttonStartPath->Visible = false;
+		warningLabel->Text = "";
+		startVertex = -1;
+		finishVertex = -1;
+	}
+	else MessageBox::Show(L"Не коректні вхідні дані");
+}
+
+
+
 System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::timer_Tick(System::Object^ sender, System::EventArgs^ e)
 {
 	if (numTick == myGraph.orderAlgo.Count)
 	{
 		if (numTick != 0) myGraph.point[myGraph.orderAlgo[numTick - 1]]->marker = 0;
 		if (numTick > 1)  myGraph.point[myGraph.orderAlgo[numTick - 2]]->marker = 0;
+		myGraph.selectedEdge = nullptr;
 		myGraph.redrawGraph(graf);
 		timer->Stop();
 		myGraph.orderAlgo.Clear();
 	}
 	else
 	{
+		if (myGraph.needEdgeInAlgo && numTick != 0)
+		{
+			myGraph.selectedEdge = new Edge;
+			myGraph.selectedEdge->start = myGraph.orderAlgo[numTick - 1];
+			myGraph.selectedEdge->end = myGraph.orderAlgo[numTick];
+		}
+
 		if(numTick > 1)  myGraph.point[myGraph.orderAlgo[numTick - 2]]->marker = 0;
 		if (numTick != 0) myGraph.point[myGraph.orderAlgo[numTick - 1]]->marker = -1;
 		myGraph.point[myGraph.orderAlgo[numTick]]->marker = 1;
@@ -344,6 +408,11 @@ System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::exitAlgoModeButton_
 	algoModeMarker->Checked = false;
 	exitAlgoModeButton->Visible = false;
 	MainCanvas->Enabled = true;
+
+	myGraph.orderAlgo.Clear();
+	numTick = 0;
+	timer->Stop();
+
 	myGraph.unSelectVertex();
 	myGraph.redrawGraph(graf);
 }
@@ -369,8 +438,8 @@ System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::bfsAlgoMode_Click(S
 System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::topologicalSortAlgoMode_Click(System::Object^ sender, System::EventArgs^ e)
 {
 	numTick = 0;
-	bool checkDAG = myGraph.IsDirectedAntiCycle();
-	if (directedGraphMarker->Checked)
+	bool checkDAG = !myGraph.HasCycle() && myGraph.isFullDirected();
+	if (!directedGraphMarker->Checked || !checkDAG)
 		MessageBox::Show(L"На жаль, у цьому графі не можна виконати топологічне сортування :(");
 	else
 	{
@@ -385,4 +454,29 @@ System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::topologicalSortAlgo
 		
 	}
 	
+}
+
+System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::EulerWayMode_Click(System::Object^ sender, System::EventArgs^ e)
+{
+	numTick = 0;
+	int checkEulerWay = myGraph.StartVertexEulerCheck();
+	if (checkEulerWay != -1 && !(directedGraphMarker->Checked))
+	{
+		myGraph.needEdgeInAlgo = true;
+		myGraph.EulerWayDFS(checkEulerWay);
+		myGraph.unSelectVertex();
+		timer->Start();
+	}
+	else
+		MessageBox::Show(L"На жаль, у цьому графі не має Ейлерового шляху :(");
+}
+
+System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::shortestPathAlgorithmMode_Click(System::Object^ sender, System::EventArgs^ e)
+{
+	numTick = 0;
+	myGraph.unSelectVertex();
+	inputWeightBox->Visible = true;
+	inputFinishPathBox->Visible = true;
+	buttonStartPath->Visible = true;
+	warningLabel->Text = L"Початковa і фанальна вершини:";
 }

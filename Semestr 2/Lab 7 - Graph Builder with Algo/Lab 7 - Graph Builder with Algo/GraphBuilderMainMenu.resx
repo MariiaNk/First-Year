@@ -119,14 +119,14 @@
   </resheader>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="MainCanvas.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 81</value>
+    <value>9, 66</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="MainCanvas.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 2, 3, 2</value>
+    <value>2, 2, 2, 2</value>
   </data>
   <data name="MainCanvas.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1194, 562</value>
+    <value>896, 457</value>
   </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="MainCanvas.TabIndex" type="System.Int32, mscorlib">
@@ -142,7 +142,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;MainCanvas.ZOrder" xml:space="preserve">
-    <value>15</value>
+    <value>17</value>
   </data>
   <data name="warningLabel.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -151,10 +151,13 @@
     <value>Microsoft Sans Serif, 12pt</value>
   </data>
   <data name="warningLabel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 651</value>
+    <value>9, 529</value>
+  </data>
+  <data name="warningLabel.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 0, 2, 0</value>
   </data>
   <data name="warningLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>0, 25</value>
+    <value>0, 20</value>
   </data>
   <data name="warningLabel.TabIndex" type="System.Int32, mscorlib">
     <value>8</value>
@@ -169,7 +172,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;warningLabel.ZOrder" xml:space="preserve">
-    <value>14</value>
+    <value>16</value>
   </data>
   <metadata name="pickColor.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
@@ -181,13 +184,13 @@
     <value>Miriam Libre, 10.8pt</value>
   </data>
   <data name="buttonVertexColor.Location" type="System.Drawing.Point, System.Drawing">
-    <value>1225, 137</value>
+    <value>919, 111</value>
   </data>
   <data name="buttonVertexColor.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 2, 3, 2</value>
+    <value>2, 2, 2, 2</value>
   </data>
   <data name="buttonVertexColor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>257, 52</value>
+    <value>193, 42</value>
   </data>
   <data name="buttonVertexColor.TabIndex" type="System.Int32, mscorlib">
     <value>9</value>
@@ -205,7 +208,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;buttonVertexColor.ZOrder" xml:space="preserve">
-    <value>13</value>
+    <value>15</value>
   </data>
   <data name="SettingsLabel.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -214,10 +217,13 @@
     <value>Miriam Libre, 13.8pt, style=Bold, Underline</value>
   </data>
   <data name="SettingsLabel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>1235, 92</value>
+    <value>926, 75</value>
+  </data>
+  <data name="SettingsLabel.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 0, 2, 0</value>
   </data>
   <data name="SettingsLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>235, 30</value>
+    <value>184, 25</value>
   </data>
   <data name="SettingsLabel.TabIndex" type="System.Int32, mscorlib">
     <value>11</value>
@@ -238,7 +244,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;SettingsLabel.ZOrder" xml:space="preserve">
-    <value>12</value>
+    <value>14</value>
   </data>
   <data name="buttonEdgeColor.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Popup</value>
@@ -247,13 +253,13 @@
     <value>Miriam Libre, 10.8pt</value>
   </data>
   <data name="buttonEdgeColor.Location" type="System.Drawing.Point, System.Drawing">
-    <value>1225, 299</value>
+    <value>919, 243</value>
   </data>
   <data name="buttonEdgeColor.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 2, 3, 2</value>
+    <value>2, 2, 2, 2</value>
   </data>
   <data name="buttonEdgeColor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>257, 52</value>
+    <value>193, 42</value>
   </data>
   <data name="buttonEdgeColor.TabIndex" type="System.Int32, mscorlib">
     <value>12</value>
@@ -271,16 +277,16 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;buttonEdgeColor.ZOrder" xml:space="preserve">
-    <value>11</value>
+    <value>13</value>
   </data>
   <data name="trackRadius.Location" type="System.Drawing.Point, System.Drawing">
-    <value>1225, 222</value>
+    <value>919, 180</value>
   </data>
   <data name="trackRadius.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 2, 3, 2</value>
+    <value>2, 2, 2, 2</value>
   </data>
   <data name="trackRadius.Size" type="System.Drawing.Size, System.Drawing">
-    <value>257, 56</value>
+    <value>193, 45</value>
   </data>
   <data name="trackRadius.TabIndex" type="System.Int32, mscorlib">
     <value>13</value>
@@ -295,7 +301,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;trackRadius.ZOrder" xml:space="preserve">
-    <value>10</value>
+    <value>12</value>
   </data>
   <data name="RadiusLabel.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -304,10 +310,13 @@
     <value>Miriam Libre, 10.8pt</value>
   </data>
   <data name="RadiusLabel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>1291, 199</value>
+    <value>968, 162</value>
+  </data>
+  <data name="RadiusLabel.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 0, 2, 0</value>
   </data>
   <data name="RadiusLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>134, 24</value>
+    <value>109, 20</value>
   </data>
   <data name="RadiusLabel.TabIndex" type="System.Int32, mscorlib">
     <value>14</value>
@@ -328,7 +337,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;RadiusLabel.ZOrder" xml:space="preserve">
-    <value>9</value>
+    <value>11</value>
   </data>
   <data name="BoldnessLabel.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -337,10 +346,13 @@
     <value>Miriam Libre, 10.8pt</value>
   </data>
   <data name="BoldnessLabel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>1291, 366</value>
+    <value>968, 297</value>
+  </data>
+  <data name="BoldnessLabel.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 0, 2, 0</value>
   </data>
   <data name="BoldnessLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>142, 24</value>
+    <value>115, 20</value>
   </data>
   <data name="BoldnessLabel.TabIndex" type="System.Int32, mscorlib">
     <value>16</value>
@@ -361,16 +373,16 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;BoldnessLabel.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>9</value>
   </data>
   <data name="trackBoldness.Location" type="System.Drawing.Point, System.Drawing">
-    <value>1225, 386</value>
+    <value>919, 314</value>
   </data>
   <data name="trackBoldness.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 2, 3, 2</value>
+    <value>2, 2, 2, 2</value>
   </data>
   <data name="trackBoldness.Size" type="System.Drawing.Size, System.Drawing">
-    <value>257, 56</value>
+    <value>193, 45</value>
   </data>
   <data name="trackBoldness.TabIndex" type="System.Int32, mscorlib">
     <value>15</value>
@@ -385,7 +397,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;trackBoldness.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>10</value>
   </data>
   <data name="discardChanges.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Popup</value>
@@ -394,13 +406,13 @@
     <value>Miriam Libre, 10.8pt</value>
   </data>
   <data name="discardChanges.Location" type="System.Drawing.Point, System.Drawing">
-    <value>1225, 533</value>
+    <value>919, 433</value>
   </data>
   <data name="discardChanges.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 2, 3, 2</value>
+    <value>2, 2, 2, 2</value>
   </data>
   <data name="discardChanges.Size" type="System.Drawing.Size, System.Drawing">
-    <value>257, 52</value>
+    <value>193, 42</value>
   </data>
   <data name="discardChanges.TabIndex" type="System.Int32, mscorlib">
     <value>17</value>
@@ -418,7 +430,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;discardChanges.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>8</value>
   </data>
   <data name="saveChanges.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Popup</value>
@@ -427,13 +439,13 @@
     <value>Miriam Libre, 10.8pt</value>
   </data>
   <data name="saveChanges.Location" type="System.Drawing.Point, System.Drawing">
-    <value>1225, 591</value>
+    <value>919, 480</value>
   </data>
   <data name="saveChanges.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 2, 3, 2</value>
+    <value>2, 2, 2, 2</value>
   </data>
   <data name="saveChanges.Size" type="System.Drawing.Size, System.Drawing">
-    <value>257, 52</value>
+    <value>193, 42</value>
   </data>
   <data name="saveChanges.TabIndex" type="System.Int32, mscorlib">
     <value>18</value>
@@ -451,79 +463,103 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;saveChanges.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>7</value>
   </data>
   <metadata name="GraphMenu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>140, 17</value>
   </metadata>
   <data name="settingsTool.Size" type="System.Drawing.Size, System.Drawing">
-    <value>102, 24</value>
+    <value>81, 20</value>
   </data>
   <data name="settingsTool.Text" xml:space="preserve">
     <value>Параметри</value>
   </data>
   <data name="weightedMode.Size" type="System.Drawing.Size, System.Drawing">
-    <value>190, 26</value>
+    <value>180, 22</value>
   </data>
   <data name="weightedMode.Text" xml:space="preserve">
     <value>Зважений</value>
   </data>
   <data name="directedMode.Size" type="System.Drawing.Size, System.Drawing">
-    <value>190, 26</value>
+    <value>180, 22</value>
   </data>
   <data name="directedMode.Text" xml:space="preserve">
     <value>Орієнтований</value>
   </data>
+  <data name="notWeightedMode.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="notWeightedMode.Text" xml:space="preserve">
+    <value>Не зважений</value>
+  </data>
+  <data name="notDirectedMode.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="notDirectedMode.Text" xml:space="preserve">
+    <value>Не орієнтований</value>
+  </data>
   <data name="типГрафуToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>93, 24</value>
+    <value>75, 20</value>
   </data>
   <data name="типГрафуToolStripMenuItem.Text" xml:space="preserve">
     <value>Тип графу</value>
   </data>
   <data name="dfsAlgoMode.Size" type="System.Drawing.Size, System.Drawing">
-    <value>263, 26</value>
+    <value>231, 22</value>
   </data>
   <data name="dfsAlgoMode.Text" xml:space="preserve">
     <value>Пошук в глибину</value>
   </data>
   <data name="bfsAlgoMode.Size" type="System.Drawing.Size, System.Drawing">
-    <value>263, 26</value>
+    <value>231, 22</value>
   </data>
   <data name="bfsAlgoMode.Text" xml:space="preserve">
     <value>Пошук в ширину</value>
   </data>
   <data name="topologicalSortAlgoMode.Size" type="System.Drawing.Size, System.Drawing">
-    <value>263, 26</value>
+    <value>231, 22</value>
   </data>
   <data name="topologicalSortAlgoMode.Text" xml:space="preserve">
     <value>Топологічне сортування</value>
   </data>
+  <data name="EulerWayMode.Size" type="System.Drawing.Size, System.Drawing">
+    <value>231, 22</value>
+  </data>
+  <data name="EulerWayMode.Text" xml:space="preserve">
+    <value>Пошук Ейлерового шляху</value>
+  </data>
+  <data name="shortestPathAlgorithmMode.Size" type="System.Drawing.Size, System.Drawing">
+    <value>231, 22</value>
+  </data>
+  <data name="shortestPathAlgorithmMode.Text" xml:space="preserve">
+    <value>Пошук мінімального шляху</value>
+  </data>
   <data name="algoMode.Size" type="System.Drawing.Size, System.Drawing">
-    <value>147, 24</value>
+    <value>119, 20</value>
   </data>
   <data name="algoMode.Text" xml:space="preserve">
     <value>Режим алгоритму</value>
   </data>
   <data name="save.Size" type="System.Drawing.Size, System.Drawing">
-    <value>220, 26</value>
+    <value>177, 22</value>
   </data>
   <data name="save.Text" xml:space="preserve">
     <value>Зберегти</value>
   </data>
   <data name="open.Size" type="System.Drawing.Size, System.Drawing">
-    <value>220, 26</value>
+    <value>177, 22</value>
   </data>
   <data name="open.Text" xml:space="preserve">
     <value>Відкрити</value>
   </data>
   <data name="clearCanvas.Size" type="System.Drawing.Size, System.Drawing">
-    <value>220, 26</value>
+    <value>177, 22</value>
   </data>
   <data name="clearCanvas.Text" xml:space="preserve">
     <value>Очистити полотно</value>
   </data>
   <data name="файлToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>59, 24</value>
+    <value>48, 20</value>
   </data>
   <data name="файлToolStripMenuItem.Text" xml:space="preserve">
     <value>Файл</value>
@@ -532,10 +568,10 @@
     <value>0, 0</value>
   </data>
   <data name="GraphMenu.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>5, 2, 0, 2</value>
+    <value>4, 2, 0, 2</value>
   </data>
   <data name="GraphMenu.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1499, 28</value>
+    <value>1124, 24</value>
   </data>
   <data name="GraphMenu.TabIndex" type="System.Int32, mscorlib">
     <value>19</value>
@@ -553,7 +589,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;GraphMenu.ZOrder" xml:space="preserve">
-    <value>16</value>
+    <value>18</value>
   </data>
   <data name="directedGraphMarker.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -562,13 +598,13 @@
     <value>Miriam Libre, 7.799999pt</value>
   </data>
   <data name="directedGraphMarker.Location" type="System.Drawing.Point, System.Drawing">
-    <value>13, 46</value>
+    <value>10, 37</value>
   </data>
   <data name="directedGraphMarker.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 2, 3, 2</value>
+    <value>2, 2, 2, 2</value>
   </data>
   <data name="directedGraphMarker.Size" type="System.Drawing.Size, System.Drawing">
-    <value>158, 21</value>
+    <value>122, 18</value>
   </data>
   <data name="directedGraphMarker.TabIndex" type="System.Int32, mscorlib">
     <value>20</value>
@@ -586,7 +622,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;directedGraphMarker.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>6</value>
   </data>
   <data name="weightedGraphMarker.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -595,13 +631,13 @@
     <value>Miriam Libre, 7.799999pt</value>
   </data>
   <data name="weightedGraphMarker.Location" type="System.Drawing.Point, System.Drawing">
-    <value>177, 46</value>
+    <value>133, 37</value>
   </data>
   <data name="weightedGraphMarker.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 2, 3, 2</value>
+    <value>2, 2, 2, 2</value>
   </data>
   <data name="weightedGraphMarker.Size" type="System.Drawing.Size, System.Drawing">
-    <value>132, 21</value>
+    <value>104, 18</value>
   </data>
   <data name="weightedGraphMarker.TabIndex" type="System.Int32, mscorlib">
     <value>21</value>
@@ -619,7 +655,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;weightedGraphMarker.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>5</value>
   </data>
   <data name="algoModeMarker.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -628,13 +664,13 @@
     <value>Miriam Libre, 7.799999pt</value>
   </data>
   <data name="algoModeMarker.Location" type="System.Drawing.Point, System.Drawing">
-    <value>315, 46</value>
+    <value>236, 37</value>
   </data>
   <data name="algoModeMarker.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 2, 3, 2</value>
+    <value>2, 2, 2, 2</value>
   </data>
   <data name="algoModeMarker.Size" type="System.Drawing.Size, System.Drawing">
-    <value>146, 21</value>
+    <value>116, 18</value>
   </data>
   <data name="algoModeMarker.TabIndex" type="System.Int32, mscorlib">
     <value>22</value>
@@ -652,19 +688,19 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;algoModeMarker.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>4</value>
   </data>
   <data name="exitAlgoModeButton.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Popup</value>
   </data>
   <data name="exitAlgoModeButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>957, 43</value>
+    <value>718, 35</value>
   </data>
   <data name="exitAlgoModeButton.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 2, 3, 2</value>
+    <value>2, 2, 2, 2</value>
   </data>
   <data name="exitAlgoModeButton.Size" type="System.Drawing.Size, System.Drawing">
-    <value>249, 27</value>
+    <value>187, 22</value>
   </data>
   <data name="exitAlgoModeButton.TabIndex" type="System.Int32, mscorlib">
     <value>23</value>
@@ -685,22 +721,22 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;exitAlgoModeButton.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>3</value>
   </data>
   <metadata name="timer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>277, 17</value>
   </metadata>
   <data name="inputWeightBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>375, 650</value>
+    <value>281, 528</value>
   </data>
   <data name="inputWeightBox.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 2, 3, 2</value>
+    <value>2, 2, 2, 2</value>
   </data>
   <data name="inputWeightBox.Multiline" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="inputWeightBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>140, 25</value>
+    <value>106, 21</value>
   </data>
   <data name="inputWeightBox.TabIndex" type="System.Int32, mscorlib">
     <value>24</value>
@@ -721,7 +757,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;inputWeightBox.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>2</value>
   </data>
   <metadata name="saveFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>372, 17</value>
@@ -729,6 +765,72 @@
   <metadata name="openFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>529, 17</value>
   </metadata>
+  <data name="inputFinishPathBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>397, 528</value>
+  </data>
+  <data name="inputFinishPathBox.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="inputFinishPathBox.Multiline" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="inputFinishPathBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>106, 21</value>
+  </data>
+  <data name="inputFinishPathBox.TabIndex" type="System.Int32, mscorlib">
+    <value>25</value>
+  </data>
+  <data name="inputFinishPathBox.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="inputFinishPathBox.WordWrap" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="&gt;&gt;inputFinishPathBox.Name" xml:space="preserve">
+    <value>inputFinishPathBox</value>
+  </data>
+  <data name="&gt;&gt;inputFinishPathBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;inputFinishPathBox.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;inputFinishPathBox.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="buttonStartPath.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Popup</value>
+  </data>
+  <data name="buttonStartPath.Location" type="System.Drawing.Point, System.Drawing">
+    <value>511, 528</value>
+  </data>
+  <data name="buttonStartPath.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="buttonStartPath.Size" type="System.Drawing.Size, System.Drawing">
+    <value>106, 21</value>
+  </data>
+  <data name="buttonStartPath.TabIndex" type="System.Int32, mscorlib">
+    <value>26</value>
+  </data>
+  <data name="buttonStartPath.Text" xml:space="preserve">
+    <value>Почати</value>
+  </data>
+  <data name="buttonStartPath.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="&gt;&gt;buttonStartPath.Name" xml:space="preserve">
+    <value>buttonStartPath</value>
+  </data>
+  <data name="&gt;&gt;buttonStartPath.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;buttonStartPath.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;buttonStartPath.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
@@ -736,13 +838,13 @@
     <value>113</value>
   </metadata>
   <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>8, 16</value>
+    <value>6, 13</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>1499, 686</value>
+    <value>1124, 557</value>
   </data>
   <data name="$this.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 2, 3, 2</value>
+    <value>2, 2, 2, 2</value>
   </data>
   <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
     <value>CenterScreen</value>
@@ -780,6 +882,18 @@
   <data name="&gt;&gt;directedMode.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="&gt;&gt;notWeightedMode.Name" xml:space="preserve">
+    <value>notWeightedMode</value>
+  </data>
+  <data name="&gt;&gt;notWeightedMode.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;notDirectedMode.Name" xml:space="preserve">
+    <value>notDirectedMode</value>
+  </data>
+  <data name="&gt;&gt;notDirectedMode.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;algoMode.Name" xml:space="preserve">
     <value>algoMode</value>
   </data>
@@ -802,6 +916,18 @@
     <value>topologicalSortAlgoMode</value>
   </data>
   <data name="&gt;&gt;topologicalSortAlgoMode.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;EulerWayMode.Name" xml:space="preserve">
+    <value>EulerWayMode</value>
+  </data>
+  <data name="&gt;&gt;EulerWayMode.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;shortestPathAlgorithmMode.Name" xml:space="preserve">
+    <value>shortestPathAlgorithmMode</value>
+  </data>
+  <data name="&gt;&gt;shortestPathAlgorithmMode.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;файлToolStripMenuItem.Name" xml:space="preserve">

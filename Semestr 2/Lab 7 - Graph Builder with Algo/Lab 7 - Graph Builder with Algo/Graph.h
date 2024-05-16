@@ -1,6 +1,7 @@
 #pragma once
 #include <fstream>
 #include <iostream>
+#include <stack>
 
 using namespace std;
 using namespace System::Drawing;
@@ -57,7 +58,6 @@ ref struct viewGraph
 ref class Graph
 {
 private:
-	int cntVertex;
 	void dfsRec(int startNode, bool* visited);
 public:
 	viewGraph style;
@@ -67,11 +67,12 @@ public:
 	int cntSelectedVertex;
 	cli::array<cli::array<int>^>^ matrix;
 	int cntElemInOrder;
-	List <int> orderAlgo;
-	int cntEdges;
+	int cntEdges, cntVertex;
 	cli::array <Edge*>^ allEdges;
 	bool directedGraph, weightedGraph;
 	Brush^ colorAlgoVertex;
+	List <int> orderAlgo;
+	bool needEdgeInAlgo;
 
 	void cleanGraph();
 	Graph();
@@ -86,12 +87,19 @@ public:
 	System::String^ typeClick(Vertex* coord);
 	void changeEdgeWeight(int st, int fn, int value);
 	void findAllEdges();
+	void unWeightedEdge();
+	void unDirectedGraph();
 
 	void dfs(int startPoint);
 	void bfs(int startPoint);
-	bool IsDirectedAntiCycle();
-	bool HasCycle(int vertex, bool* visited, bool* inStack);
+	bool isFullDirected();
+	bool isCyclicUtil(int v, bool visited[], bool* recStack);
+	bool HasCycle();
+	void topologicalSortUtil(int v, bool visited[], stack<int>& Stack);
 	void topologicalSort();
+	int StartVertexEulerCheck();
+	void EulerWayDFS(int startNode);
+	int* Dijkstras(int start);
 
 	void Graph::drawEdge(Graphics^ graf,Vertex* a, Vertex* b, int type, bool directed, int value);
 	void redrawGraph(Graphics^ graf);

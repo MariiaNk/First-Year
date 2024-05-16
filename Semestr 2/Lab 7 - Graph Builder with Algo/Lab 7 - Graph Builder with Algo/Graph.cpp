@@ -1,15 +1,41 @@
 #include "Graph.h"
 #include <cmath>
 #include <queue>
+#include <stack>
 
 void Graph::unSelectVertex()
 {
 	for (int i = 0; i < cntSelectedVertex; i++)
 	{
-		point[idSelectedPoints[i]]->marker = 0;
 		idSelectedPoints[i] = -1;
 	}
+	for (int i = 0; i < cntVertex; i++)
+	{
+		point[i]->marker = 0;
+	}
 	cntSelectedVertex = 0;
+}
+
+void Graph::unWeightedEdge()
+{
+	for (int i = 0; i < cntVertex; i++)
+	{
+		for (int j = 0; j < cntVertex; j++)
+		{
+			if (matrix[i][j] != 0 && matrix[j][i] == 0) matrix[j][i] = matrix[i][j];
+		}
+	}
+}
+
+void Graph::unDirectedGraph()
+{
+	for (int i = 0; i < cntVertex; i++)
+	{
+		for (int j = 0; j < cntVertex; j++)
+		{
+			if (matrix[i][j] != 0) matrix[j][i] = 1;
+		}
+	}
 }
 void Graph::cleanGraph()
 {
@@ -28,6 +54,7 @@ void Graph::cleanGraph()
 	cntVertex = 0;
 	directedGraph = false;
 	weightedGraph = false;
+	needEdgeInAlgo = false;
 	colorAlgoVertex = Brushes::GreenYellow;
 }
 Graph::Graph()
@@ -290,16 +317,13 @@ void Graph::bfs(int startPoint)
 	
 }
 
-bool Graph::IsDirectedAntiCycle()
+bool Graph::isFullDirected()
 {
-	bool visited[1000] = { false };
-	bool inStack[1000] = { false }; 
-
 	for (int i = 0; i < cntVertex; i++)
 	{
-		if (!visited[i])
+		for (int j = 0; j < cntVertex; j++)
 		{
-			if(HasCycle(i, visited, inStack))
+			if (matrix[i][j] == matrix[j][i] && matrix[i][j] != 0)
 				return false;
 		}
 	}
@@ -307,70 +331,167 @@ bool Graph::IsDirectedAntiCycle()
 	return true;
 }
 
-bool Graph::HasCycle(int vertex, bool* visited, bool* inStack)
+bool Graph::isCyclicUtil(int v, bool visited[], bool* recStack)
 {
-
-	visited[vertex] = true;
-	inStack[vertex] = true;
-
-	for (int i = 0; i < cntVertex; i++)
+	if (visited[v] == false) 
 	{
-		if (matrix[vertex][i] != 0)
+		visited[v] = true;
+		recStack[v] = true;
+
+		for (int i = 0; i < cntVertex; ++i) 
 		{
-			if (!visited[i])
+			if (matrix[v][i] != 0)
 			{
-				if (HasCycle(i, visited, inStack))
-					return true; // Cycle detected in child
+				int adjVertex = i;
+				if (!visited[adjVertex] && isCyclicUtil(adjVertex, visited, recStack))
+					return true;
+				else if (recStack[adjVertex])
+					return true;
 			}
-			else if (inStack[i])
-				return false;
-				
+			
 		}
 	}
 
-	inStack[vertex] = false; // Backtrack
+	recStack[v] = false;
 	return false;
 }
 
 
+
+bool Graph::HasCycle()
+{
+	bool* visited = new bool[1000];
+	bool* recStack = new bool[1000];
+	for (int i = 0; i < cntVertex; i++)
+	{
+		visited[i] = false;
+		recStack[i] = false;
+	}
+
+	for (int i = 0; i < cntVertex; i++)
+		if (!visited[i] && isCyclicUtil(i, visited, recStack))
+			return true;
+
+	return false;
+}
+
+void Graph::topologicalSortUtil(int v, bool visited[], stack<int>& Stack)
+{
+	visited[v] = true;
+
+	
+	for (int i = 0; i < cntVertex; ++i) 
+	{
+		if (matrix[v][i] != 0)
+		{
+			int adjVertex = i;
+			if (!visited[adjVertex])
+				topologicalSortUtil(adjVertex, visited, Stack);
+		}
+		
+	}
+
+	Stack.push(v);
+}
 void Graph::topologicalSort()
 {
-	int indegree[1000];
+	stack<int> Stack;
 
-	for (int i = 0; i < cntVertex; i++) 
+	bool* visited = new bool[1000];
+	for (int i = 0; i < cntVertex; i++)
+		visited[i] = false;
+
+	for (int i = 0; i < cntVertex; i++)
+		if (visited[i] == false)
+			topologicalSortUtil(i, visited, Stack);
+
+	while (Stack.empty() == false) 
 	{
+		orderAlgo.Add(Stack.top());
+		Stack.pop();
+	}
+}
+int Graph::StartVertexEulerCheck()
+{
+	int even = 0, start = 0;
+	for (int i = 0; i < cntVertex; i++)
+	{
+		int pov_vertex = 0;
 		for (int j = 0; j < cntVertex; j++)
 		{
-			if (matrix[i][j] != 0) indegree[j]++;
+			if (matrix[i][j] != 0) pov_vertex++;
+		}
+		if (pov_vertex % 2 != 0)
+		{
+			even++;
+			start = i;
 		}
 	}
+	if (even == 2) return start;
+	else return -1;
+}
 
-	queue<int> q;
-	for (int i = 0; i < cntVertex; i++) 
-	{
-		if (indegree[i] == 0)
-			q.push(i);
-	}
+void Graph::EulerWayDFS(int startNode)
+{
+	int copy_matrix[100][100];
 
-	while (!q.empty()) 
-	{
-		int node = q.front();
-		q.pop();
-		orderAlgo.Add(node);
-
+	for (int i = 0; i < cntVertex; i++)
 		for (int j = 0; j < cntVertex; j++)
+			copy_matrix[i][j] = matrix[i][j];
+
+	int id_temp = 0, i = 0;
+	
+	stack <int> mystack;
+	mystack.push(startNode);
+	while (!mystack.empty())
+	{
+		id_temp = mystack.top();
+		i = 0;
+		while (i < cntVertex && copy_matrix[id_temp][i] == 0) 
+			i++;
+		if (i == cntVertex)
 		{
-			if (matrix[node][j] != 0)
+			orderAlgo.Add(mystack.top());
+			mystack.pop();
+		}
+		else
+		{
+			mystack.push(i);
+			copy_matrix[i][id_temp] = 0;
+			copy_matrix[id_temp][i] = 0;
+		}
+
+	}
+}
+
+
+int* Graph::Dijkstras(int start)
+{
+	int distance[1000];
+	int parent[1000];
+	priority_queue <pair<int, int>> que;
+	for (int i = 0; i < cntVertex; i++)
+	{
+		distance[i] = INT_MAX;
+		parent[i] = -1;
+	}
+	distance[start] = 0;
+	que.push(make_pair(0, start));
+
+	while (!que.empty())
+	{
+		int top = que.top().second;
+		int dist = que.top().first;
+		que.pop();
+		for (int i = 0; i < cntVertex; i++)
+		{
+			if (matrix[top][i] != 0 && dist + matrix[top][i] < distance[i])
 			{
-				indegree[j]--;
-				if (indegree[j] == 0)
-					q.push(j);
+				distance[i] = dist + matrix[top][i];
+				parent[i] = top;
+				que.push(make_pair(distance[i], i));
 			}
 		}
 	}
-
-	if(orderAlgo.Count != cntVertex)
-	{
-		orderAlgo.Clear();
-	}
+	return distance;
 }

@@ -105,7 +105,7 @@ void Graph::redrawGraph(Graphics^ graf)
 	{
 		for (int j = i + 1; j < cntVertex; j++)
 		{
-			if (matrix[i][j] != 0|| matrix[j][i] != 0)
+			if (matrix[i][j] != 0 || matrix[j][i] != 0)
 			{
 				int st = i;
 				int fn = j;
@@ -113,7 +113,7 @@ void Graph::redrawGraph(Graphics^ graf)
 				if (matrix[st][fn] != 0 && matrix[fn][st] != 0) directed = false;
 				if (directed && matrix[st][fn] == 0) swap(st, fn);
 				int value = 0;
-				if (matrix[st][fn] != 1)  value = matrix[st][fn];
+				if (weightedGraph)  value = matrix[st][fn];
 				drawEdge(graf, point[st], point[fn], 1, directed, value);
 			}
 
@@ -179,7 +179,7 @@ void Graph::readGraph(string path)
 			int tempValue;
 			readGraph >> tempValue;
 			matrix[i][j] = tempValue;
-			if (matrix[i][j] != -1 && matrix[i][j] != 0)
+			if (matrix[i][j] != 1 && matrix[i][j] != 0)
 			{
 				weightedGraph = true;
 			}

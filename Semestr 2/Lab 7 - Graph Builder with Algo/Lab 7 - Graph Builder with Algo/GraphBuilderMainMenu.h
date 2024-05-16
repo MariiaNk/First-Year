@@ -78,6 +78,17 @@ namespace Lab7GraphBuilderwithAlgo {
 	private: System::Windows::Forms::ToolStripMenuItem^ bfsAlgoMode;
 
 	private: System::Windows::Forms::ToolStripMenuItem^ topologicalSortAlgoMode;
+	private: System::Windows::Forms::ToolStripMenuItem^ EulerWayMode;
+	private: System::Windows::Forms::ToolStripMenuItem^ shortestPathAlgorithmMode;
+	private: System::Windows::Forms::TextBox^ inputFinishPathBox;
+	private: System::Windows::Forms::Button^ buttonStartPath;
+	private: System::Windows::Forms::ToolStripMenuItem^ notWeightedMode;
+	private: System::Windows::Forms::ToolStripMenuItem^ notDirectedMode;
+
+
+
+
+
 
 
 
@@ -125,10 +136,14 @@ namespace Lab7GraphBuilderwithAlgo {
 			this->òèïÃðàôóToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->weightedMode = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->directedMode = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->notWeightedMode = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->notDirectedMode = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->algoMode = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->dfsAlgoMode = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->bfsAlgoMode = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->topologicalSortAlgoMode = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->EulerWayMode = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->shortestPathAlgorithmMode = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->ôàéëToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->save = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->open = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -141,6 +156,8 @@ namespace Lab7GraphBuilderwithAlgo {
 			this->inputWeightBox = (gcnew System::Windows::Forms::TextBox());
 			this->saveFileDialog = (gcnew System::Windows::Forms::SaveFileDialog());
 			this->openFileDialog = (gcnew System::Windows::Forms::OpenFileDialog());
+			this->inputFinishPathBox = (gcnew System::Windows::Forms::TextBox());
+			this->buttonStartPath = (gcnew System::Windows::Forms::Button());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->MainCanvas))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackRadius))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBoldness))->BeginInit();
@@ -256,9 +273,9 @@ namespace Lab7GraphBuilderwithAlgo {
 			// 
 			// òèïÃðàôóToolStripMenuItem
 			// 
-			this->òèïÃðàôóToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {
+			this->òèïÃðàôóToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(4) {
 				this->weightedMode,
-					this->directedMode
+					this->directedMode, this->notWeightedMode, this->notDirectedMode
 			});
 			this->òèïÃðàôóToolStripMenuItem->Name = L"òèïÃðàôóToolStripMenuItem";
 			resources->ApplyResources(this->òèïÃðàôóToolStripMenuItem, L"òèïÃðàôóToolStripMenuItem");
@@ -275,11 +292,23 @@ namespace Lab7GraphBuilderwithAlgo {
 			resources->ApplyResources(this->directedMode, L"directedMode");
 			this->directedMode->Click += gcnew System::EventHandler(this, &GraphBuilderMainMenu::directedMode_Click);
 			// 
+			// notWeightedMode
+			// 
+			this->notWeightedMode->Name = L"notWeightedMode";
+			resources->ApplyResources(this->notWeightedMode, L"notWeightedMode");
+			this->notWeightedMode->Click += gcnew System::EventHandler(this, &GraphBuilderMainMenu::notWeightedMode_Click);
+			// 
+			// notDirectedMode
+			// 
+			this->notDirectedMode->Name = L"notDirectedMode";
+			resources->ApplyResources(this->notDirectedMode, L"notDirectedMode");
+			this->notDirectedMode->Click += gcnew System::EventHandler(this, &GraphBuilderMainMenu::notDirectedMode_Click);
+			// 
 			// algoMode
 			// 
-			this->algoMode->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {
+			this->algoMode->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(5) {
 				this->dfsAlgoMode,
-					this->bfsAlgoMode, this->topologicalSortAlgoMode
+					this->bfsAlgoMode, this->topologicalSortAlgoMode, this->EulerWayMode, this->shortestPathAlgorithmMode
 			});
 			this->algoMode->Name = L"algoMode";
 			resources->ApplyResources(this->algoMode, L"algoMode");
@@ -302,6 +331,18 @@ namespace Lab7GraphBuilderwithAlgo {
 			this->topologicalSortAlgoMode->Name = L"topologicalSortAlgoMode";
 			resources->ApplyResources(this->topologicalSortAlgoMode, L"topologicalSortAlgoMode");
 			this->topologicalSortAlgoMode->Click += gcnew System::EventHandler(this, &GraphBuilderMainMenu::topologicalSortAlgoMode_Click);
+			// 
+			// EulerWayMode
+			// 
+			this->EulerWayMode->Name = L"EulerWayMode";
+			resources->ApplyResources(this->EulerWayMode, L"EulerWayMode");
+			this->EulerWayMode->Click += gcnew System::EventHandler(this, &GraphBuilderMainMenu::EulerWayMode_Click);
+			// 
+			// shortestPathAlgorithmMode
+			// 
+			this->shortestPathAlgorithmMode->Name = L"shortestPathAlgorithmMode";
+			resources->ApplyResources(this->shortestPathAlgorithmMode, L"shortestPathAlgorithmMode");
+			this->shortestPathAlgorithmMode->Click += gcnew System::EventHandler(this, &GraphBuilderMainMenu::shortestPathAlgorithmMode_Click);
 			// 
 			// ôàéëToolStripMenuItem
 			// 
@@ -384,12 +425,28 @@ namespace Lab7GraphBuilderwithAlgo {
 			// 
 			this->openFileDialog->FileName = L"openFileDialog1";
 			// 
+			// inputFinishPathBox
+			// 
+			resources->ApplyResources(this->inputFinishPathBox, L"inputFinishPathBox");
+			this->inputFinishPathBox->Name = L"inputFinishPathBox";
+			// 
+			// buttonStartPath
+			// 
+			this->buttonStartPath->BackColor = System::Drawing::Color::LightCyan;
+			resources->ApplyResources(this->buttonStartPath, L"buttonStartPath");
+			this->buttonStartPath->ForeColor = System::Drawing::Color::Teal;
+			this->buttonStartPath->Name = L"buttonStartPath";
+			this->buttonStartPath->UseVisualStyleBackColor = false;
+			this->buttonStartPath->Click += gcnew System::EventHandler(this, &GraphBuilderMainMenu::buttonStartPath_Click);
+			// 
 			// GraphBuilderMainMenu
 			// 
 			resources->ApplyResources(this, L"$this");
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->AutoValidate = System::Windows::Forms::AutoValidate::EnableAllowFocusChange;
 			this->BackColor = System::Drawing::Color::Azure;
+			this->Controls->Add(this->buttonStartPath);
+			this->Controls->Add(this->inputFinishPathBox);
 			this->Controls->Add(this->inputWeightBox);
 			this->Controls->Add(this->exitAlgoModeButton);
 			this->Controls->Add(this->algoModeMarker);
@@ -433,6 +490,7 @@ namespace Lab7GraphBuilderwithAlgo {
 		Graphics^ graf;
 		bool isMouseDown = false, changePosition = false;
 		int numTick = 0;
+		int startVertex = -1, finishVertex = -1;
 		Vertex* startPosition;
 		Vertex* currPosition;
 		System::Void MainCanvas_MouseUp(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e);
@@ -460,5 +518,10 @@ namespace Lab7GraphBuilderwithAlgo {
 		System::Void open_Click(System::Object^ sender, System::EventArgs^ e);
 		System::Void GraphBuilderMainMenu_FormClosing(System::Object^ sender, System::Windows::Forms::FormClosingEventArgs^ e);
 		System::Void bfsAlgoMode_Click(System::Object^ sender, System::EventArgs^ e);
+		System::Void EulerWayMode_Click(System::Object^ sender, System::EventArgs^ e);
+		System::Void shortestPathAlgorithmMode_Click(System::Object^ sender, System::EventArgs^ e);
+		System::Void buttonStartPath_Click(System::Object^ sender, System::EventArgs^ e);
+		System::Void notWeightedMode_Click(System::Object^ sender, System::EventArgs^ e);
+		System::Void notDirectedMode_Click(System::Object^ sender, System::EventArgs^ e);
 };
 }
