@@ -4,17 +4,15 @@
 
 using namespace std;
 
+struct Node
+{
+    int value;
+    Node* next;
+    Node(int value): value(value), next(nullptr) {}
+};
 
 struct LinkedList
 {
-private:
-    struct Node
-    {
-        int value;
-        Node* next;
-        Node(int value): value(value), next(nullptr) {}
-    };
-public:
     Node* head;
     LinkedList(): head(nullptr) {}
     
@@ -34,7 +32,6 @@ public:
                 current = current->next;
         }
     }
-
     void add(int value)
     {
         if(head == nullptr) 
