@@ -312,29 +312,59 @@ System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::buttonStartPath_Cli
 
 System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::timer_Tick(System::Object^ sender, System::EventArgs^ e)
 {
-	if (numTick == myGraph.orderAlgo.Count)
+	if (myGraph.cntBridges == 0)
 	{
-		if (numTick != 0) myGraph.point[myGraph.orderAlgo[numTick - 1]]->marker = 0;
-		if (numTick > 1)  myGraph.point[myGraph.orderAlgo[numTick - 2]]->marker = 0;
-		myGraph.selectedEdge = nullptr;
-		myGraph.redrawGraph(graf);
-		timer->Stop();
-		myGraph.orderAlgo.Clear();
+		if (numTick == myGraph.orderAlgo.Count)
+		{
+			if (numTick != 0) myGraph.point[myGraph.orderAlgo[numTick - 1]]->marker = 0;
+			if (numTick > 1)  myGraph.point[myGraph.orderAlgo[numTick - 2]]->marker = 0;
+			myGraph.selectedEdge = nullptr;
+			myGraph.redrawGraph(graf);
+			timer->Stop();
+			myGraph.orderAlgo.Clear();
+		}
+		else
+		{
+			if (myGraph.needEdgeInAlgo && numTick != 0)
+			{
+				myGraph.selectedEdge = new Edge;
+				myGraph.selectedEdge->start = myGraph.orderAlgo[numTick - 1];
+				myGraph.selectedEdge->end = myGraph.orderAlgo[numTick];
+			}
+
+			if (numTick > 1)  myGraph.point[myGraph.orderAlgo[numTick - 2]]->marker = 0;
+			if (numTick != 0) myGraph.point[myGraph.orderAlgo[numTick - 1]]->marker = -1;
+			myGraph.point[myGraph.orderAlgo[numTick]]->marker = 1;
+			myGraph.redrawGraph(graf);
+			numTick++;
+		}
 	}
 	else
 	{
-		if (myGraph.needEdgeInAlgo && numTick != 0)
+		if (numTick == myGraph.cntBridges)
 		{
-			myGraph.selectedEdge = new Edge;
-			myGraph.selectedEdge->start = myGraph.orderAlgo[numTick - 1];
-			myGraph.selectedEdge->end = myGraph.orderAlgo[numTick];
+			myGraph.point[myGraph.selectedEdge->start]->marker = 0;
+			myGraph.point[myGraph.selectedEdge->end]->marker = 0;
+			myGraph.selectedEdge = nullptr;
+			myGraph.redrawGraph(graf);
+			timer->Stop();
+			myGraph.cntBridges = 0;
 		}
+		else
+		{
+			if (myGraph.selectedEdge)
+			{
+				myGraph.point[myGraph.selectedEdge->start]->marker = 0;
+				myGraph.point[myGraph.selectedEdge->end]->marker = 0;
+			}			
 
-		if(numTick > 1)  myGraph.point[myGraph.orderAlgo[numTick - 2]]->marker = 0;
-		if (numTick != 0) myGraph.point[myGraph.orderAlgo[numTick - 1]]->marker = -1;
-		myGraph.point[myGraph.orderAlgo[numTick]]->marker = 1;
-		myGraph.redrawGraph(graf);
-		numTick++;
+			myGraph.selectedEdge = myGraph.orderBridges[numTick];
+			myGraph.point[myGraph.selectedEdge->start]->marker = 1;
+			myGraph.point[myGraph.selectedEdge->end]->marker = 1;
+
+			myGraph.redrawGraph(graf);
+			numTick++;
+		}
 	}
 }
 
@@ -411,6 +441,7 @@ System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::exitAlgoModeButton_
 
 	myGraph.orderAlgo.Clear();
 	numTick = 0;
+	myGraph.cntBridges = 0;
 	timer->Stop();
 
 	myGraph.unSelectVertex();
@@ -479,4 +510,12 @@ System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::shortestPathAlgorit
 	inputFinishPathBox->Visible = true;
 	buttonStartPath->Visible = true;
 	warningLabel->Text = L"Початковa і фанальна вершини:";
+}
+
+System::Void Lab7GraphBuilderwithAlgo::GraphBuilderMainMenu::bridgesAlgo_Click(System::Object^ sender, System::EventArgs^ e)
+{
+	numTick = 0;
+	myGraph.unSelectVertex();
+	myGraph.bridge();
+	timer->Start();
 }

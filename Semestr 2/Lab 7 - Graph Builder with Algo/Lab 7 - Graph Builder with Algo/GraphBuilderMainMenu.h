@@ -84,6 +84,8 @@ namespace Lab7GraphBuilderwithAlgo {
 	private: System::Windows::Forms::Button^ buttonStartPath;
 	private: System::Windows::Forms::ToolStripMenuItem^ notWeightedMode;
 	private: System::Windows::Forms::ToolStripMenuItem^ notDirectedMode;
+	private: System::Windows::Forms::ToolStripMenuItem^ bridgesAlgo;
+
 
 
 
@@ -158,6 +160,7 @@ namespace Lab7GraphBuilderwithAlgo {
 			this->openFileDialog = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->inputFinishPathBox = (gcnew System::Windows::Forms::TextBox());
 			this->buttonStartPath = (gcnew System::Windows::Forms::Button());
+			this->bridgesAlgo = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->MainCanvas))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackRadius))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBoldness))->BeginInit();
@@ -306,9 +309,9 @@ namespace Lab7GraphBuilderwithAlgo {
 			// 
 			// algoMode
 			// 
-			this->algoMode->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(5) {
+			this->algoMode->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(6) {
 				this->dfsAlgoMode,
-					this->bfsAlgoMode, this->topologicalSortAlgoMode, this->EulerWayMode, this->shortestPathAlgorithmMode
+					this->bfsAlgoMode, this->topologicalSortAlgoMode, this->EulerWayMode, this->shortestPathAlgorithmMode, this->bridgesAlgo
 			});
 			this->algoMode->Name = L"algoMode";
 			resources->ApplyResources(this->algoMode, L"algoMode");
@@ -439,6 +442,12 @@ namespace Lab7GraphBuilderwithAlgo {
 			this->buttonStartPath->UseVisualStyleBackColor = false;
 			this->buttonStartPath->Click += gcnew System::EventHandler(this, &GraphBuilderMainMenu::buttonStartPath_Click);
 			// 
+			// bridgesAlgo
+			// 
+			this->bridgesAlgo->Name = L"bridgesAlgo";
+			resources->ApplyResources(this->bridgesAlgo, L"bridgesAlgo");
+			this->bridgesAlgo->Click += gcnew System::EventHandler(this, &GraphBuilderMainMenu::bridgesAlgo_Click);
+			// 
 			// GraphBuilderMainMenu
 			// 
 			resources->ApplyResources(this, L"$this");
@@ -523,5 +532,6 @@ namespace Lab7GraphBuilderwithAlgo {
 		System::Void buttonStartPath_Click(System::Object^ sender, System::EventArgs^ e);
 		System::Void notWeightedMode_Click(System::Object^ sender, System::EventArgs^ e);
 		System::Void notDirectedMode_Click(System::Object^ sender, System::EventArgs^ e);
+		System::Void bridgesAlgo_Click(System::Object^ sender, System::EventArgs^ e);
 };
 }

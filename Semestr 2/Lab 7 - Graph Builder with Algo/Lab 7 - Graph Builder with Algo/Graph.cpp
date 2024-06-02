@@ -44,6 +44,7 @@ void Graph::cleanGraph()
 		point[i] = nullptr;
 		idSelectedPoints[i] = -1;
 		allEdges[i] = nullptr;
+		orderBridges[i] = new Edge;
 		for (int j = 0; j < 1000; j++)
 		{
 			matrix[i][j] = 0;
@@ -55,6 +56,7 @@ void Graph::cleanGraph()
 	directedGraph = false;
 	weightedGraph = false;
 	needEdgeInAlgo = false;
+	cntBridges = 0;
 	colorAlgoVertex = Brushes::GreenYellow;
 }
 Graph::Graph()
@@ -65,6 +67,7 @@ Graph::Graph()
 	for (int i = 0; i < 1000; i++)
 		matrix[i] = gcnew cli::array<int>(1000);
 	allEdges = gcnew cli::array<Edge*>(10000);
+	orderBridges = gcnew cli::array<Edge*>(10000);
 	cleanGraph();
 }
 void Graph::deleteSelectedVertex()
@@ -494,4 +497,52 @@ int* Graph::Dijkstras(int start)
 		}
 	}
 	return distance;
+}
+
+
+void Graph::bridgeUtil(int u, vector<bool>& visited, vector<int>& disc, vector<int>& low, int parent)
+{
+	static int time = 0;
+	visited[u] = true;
+	disc[u] = low[u] = ++time;
+
+	for(int i = 0; i < cntVertex; i++)
+	{
+		if (matrix[u][i] != 0)
+		{
+			int v = i;   
+			if (v == parent)
+				continue;
+			if (visited[v]) 
+			{
+				low[u] = min(low[u], disc[v]);
+			}
+			else 
+			{
+				parent = u;
+				bridgeUtil(v, visited, disc, low, parent);
+				low[u] = min(low[u], low[v]);
+				if (low[v] > disc[u])
+				{
+					orderBridges[cntBridges] = new Edge(v, u);
+					cntBridges++;
+				}
+
+			}
+		}
+		
+	}
+}
+
+void Graph::bridge()
+{
+	vector<bool> visited(cntVertex, false);
+	vector<int> disc(cntVertex, -1);
+	vector<int> low(cntVertex, -1);
+
+	int parent = -1;
+
+	for (int i = 0; i < cntVertex; i++)
+		if (visited[i] == false)
+			bridgeUtil(i, visited, disc, low, parent);
 }

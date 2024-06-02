@@ -2,6 +2,7 @@
 #include <fstream>
 #include <iostream>
 #include <stack>
+#include <vector>
 
 using namespace std;
 using namespace System::Drawing;
@@ -73,6 +74,8 @@ public:
 	Brush^ colorAlgoVertex;
 	List <int> orderAlgo;
 	bool needEdgeInAlgo;
+	cli::array <Edge*>^ orderBridges;
+	int cntBridges;
 
 	void cleanGraph();
 	Graph();
@@ -100,8 +103,10 @@ public:
 	int StartVertexEulerCheck();
 	void EulerWayDFS(int startNode);
 	int* Dijkstras(int start);
+	void bridgeUtil(int u, vector<bool>& visited, vector<int>& disc, vector<int>& low, int parent);
+	void bridge();
 
-	void Graph::drawEdge(Graphics^ graf,Vertex* a, Vertex* b, int type, bool directed, int value);
+	void drawEdge(Graphics^ graf,Vertex* a, Vertex* b, int type, bool directed, int value);
 	void redrawGraph(Graphics^ graf);
 	void drawVertex(Graphics^ graf, Vertex* a, int numVertex, int type);
 
