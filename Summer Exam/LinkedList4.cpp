@@ -109,6 +109,18 @@ int find_first_default(SparseList list)
     return prev_position + 1;
 }
 
+/*До лінійного списку F з m цілих чисел, більшість з яких дорівнюють 0, застосовано стисле зв’язне зберігання.
+Написати функцію для визначення i-го за порядком елемента списку F.*/
+int find_element_by_position(SparseList list, int position)
+{
+    SparseNode* current = list.start;
+    while(current && current->position < position)
+        current = current->next;
+    
+    if(current->position == position) return current->value;
+    else return list.default_value;
+}
+
 void print(SparseList list)
 {
     SparseNode *current = list.start;
@@ -197,6 +209,9 @@ int main()
 
     int count = count_default_in_range(list2, 13, 14);
     std::cout << "Count 0 in range 13 to 14: " << count << std::endl;
+
+    int pos = 12;
+    std::cout << "Element at position " << pos << " : " << find_element_by_position(list, pos);
     /*std::cout << "First default at position " << find_first_default(list2) << std::endl;
 
     int arr_in_middle[] = {1, 1, 0, 2, 0};
