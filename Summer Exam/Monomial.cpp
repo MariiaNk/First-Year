@@ -97,7 +97,7 @@ int degreePolynom(Node *polynom)
 /*Поліном від однієї змінної з цілими коефіцієнтами можна подати зв’язним списком,
 впорядкованим за зростанням степені змінної, без зберігання одночленів з нульовими коефіцієнтами.
 Написати функцію, яка знаходить суму двох поліномів */
-Node *additionPolynoms_ver1(Node *firstPolynom, Node *secondPolynom)
+Node *additionPolynoms(Node *firstPolynom, Node *secondPolynom)
 {
     Node *result = nullptr;
 
@@ -117,6 +117,7 @@ Node *additionPolynoms_ver1(Node *firstPolynom, Node *secondPolynom)
 
     return result;
 }
+
 int main()
 {
     Node *polynom = nullptr;
