@@ -1,7 +1,5 @@
-/* 2020 рік Білет 6
-№3 Написати функцію, яка обчислює кількість елементів більших за v у множині, що представлена
-невпорядкованим бінарним деревом у "стандартній формі"*/
 #include <iostream>
+#include <unordered_set>
 
 using namespace std;
 
@@ -24,7 +22,6 @@ int countInternalVertex(BinaryTreeNode *node)
     if (node->right != nullptr || node->left != nullptr)
         cnt = 1;
 
-    cout << node->value << " : " << cnt << "\n";
     cnt += countInternalVertex(node->left);
     cnt += countInternalVertex(node->right);
 
@@ -47,25 +44,81 @@ int countElementBigherThen(BinaryTreeNode *node, int item)
 
     return cnt;
 }
+/*Написати функцію для визначення кількості листів з відмітками, що належать інтервалу [u, v],
+у невпорядкованого бінарного дерева, що зберігається у стандартній формі.*/
+int countElementINRange(BinaryTreeNode *node, int start, int finish)
+{
+    if (node == nullptr)
+        return 0;
 
+    int cnt = 0;
+    if (node->value >= start && node->value <= finish)
+        cnt = 1;
 
+    cnt += countElementINRange(node->left, start, finish);
+    cnt += countElementINRange(node->right, start, finish);
 
-BinaryTreeNode *build(int countVertex)
+    return cnt;
+}
+
+/*Написати функцію для знаходження у невпорядкованому бінарному дереві, 
+що зберігається у ‘стандартній формі’ вершини зі значенням v та рівня, де розташована ця вершина*/
+struct AnswerNode{
+    BinaryTreeNode* node;
+    int level;
+    AnswerNode()
+    {
+        node = nullptr;
+        level = -1;
+    }
+    AnswerNode(BinaryTreeNode* node, int level): node(node), level(level) {}
+    bool empty()
+    {
+        return node == nullptr && level == -1;
+    }
+};
+
+AnswerNode findElementInTree(BinaryTreeNode *node, int value, int level)
+{
+    if(node == nullptr) return AnswerNode(); 
+    if(node->value == value) return AnswerNode(node, level);
+
+    AnswerNode leftAnswer = findElementInTree(node->left, value, level + 1);
+    AnswerNode rightAnswer = findElementInTree(node->right, value, level + 1);
+    
+    if(leftAnswer.empty()) return rightAnswer;
+    return leftAnswer;
+
+}
+
+BinaryTreeNode *build(int countVertex, std::unordered_set<int>& usedValues)
 {
     BinaryTreeNode *p;
     int nodeValue, nleft, nright;
     if (!countVertex)
-        return nullptr; // порожнє дерево
+        return nullptr; // empty tree
 
-    nleft = countVertex / 2;          // кількість вузлів у лівому піддереві
-    nright = countVertex - nleft - 1; // кількість вузлів у правому піддереві
+    nleft = countVertex / 2;          // number of nodes in the left subtree
+    nright = countVertex - nleft - 1; // number of nodes in the right subtree
 
-    nodeValue = rand() % 100;
+    // Generate a unique node value
+    do {
+        nodeValue = rand() % 100; // generate a random value
+    } while (usedValues.find(nodeValue) != usedValues.end()); // check if it's already used
 
-    p = new BinaryTreeNode(nodeValue); // створюємо корінь
-    p->left = build(nleft);            // будуємо ліве
-    p->right = build(nright);          // будуємо праве
+    usedValues.insert(nodeValue); // mark the value as used
+
+    p = new BinaryTreeNode(nodeValue); // create the root
+    p->left = build(nleft, usedValues); // build the left subtree
+    p->right = build(nright, usedValues); // build the right subtree
+
     return p;
+}
+
+BinaryTreeNode *buildUnique(int countVertex)
+{
+    std::unordered_set<int> usedValues;
+    return build(countVertex, usedValues);
 }
 
 // виведення дерева в симетричному порядку
@@ -93,10 +146,14 @@ void print2DUtil(BinaryTreeNode *root, int space)
 int main()
 {
     srand(84);
-    BinaryTreeNode *root = build(20);
+    BinaryTreeNode *root = buildUnique(20);
     symOrder(root);
     cout << "ROOT: " << root->value << "\n";
     print2DUtil(root, 0);
     cout << "Bigger than 57: " << countElementBigherThen(root, 57) << endl;
-    cout << "Count Internal vertex: " << countInternalVertex(root);
+    cout << "In range 15 and 57: " << countElementINRange(root, 15, 57) << endl;
+    cout << "Count Internal vertex: " << countInternalVertex(root) << endl;
+
+    AnswerNode ans = findElementInTree(root, 94, 1);
+    cout << "Result: " << ans.node->value << " " << ans.level << endl;
 }
