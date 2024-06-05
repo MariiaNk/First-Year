@@ -78,6 +78,53 @@ void find_vertex_fixed_distance(structAdj graph, int vertex, int distance)
             cout << i << " ";
     }
 }
+
+void dfs(structAdj graph, int vertex, bool* visited)
+{
+    visited[vertex] = true;
+    Node* current = graph.neighbours[vertex];
+    while(current)
+    {
+        if(!visited[current->value]) 
+            dfs(graph, current->value, visited);
+        current = current->next;
+    }
+}
+bool isEulerian(structAdj graph) 
+{
+    bool* visited = new bool[NMAX];
+    dfs(graph, 0, visited);
+
+    for(int i = 0; i < graph.n; i++)
+    {
+        if(!visited[i]) return false;
+
+        Node* current = graph.neighbours[i];
+        int indegree = 0;
+        while(current)
+        {
+            indegree++;
+            current = current->next;
+        }
+        if(indegree % 2 != 0) return false;
+    }
+
+    return true;
+}
+/*Знайти всі вершини графа, що поданий структурою суміжності, які досягні від заданої вершини*/
+void findAllAvailable(structAdj graph, int vertex)
+{
+    bool* visited = new bool[NMAX];
+    for(int i = 0; i < graph.n; i++)
+        visited[i] = false;
+    dfs(graph, vertex, visited);
+    cout << "All available from " << vertex << " : ";
+    for(int i = 0; i < graph.n; i++)
+    {
+        if(visited[i]) cout << i << " ";
+    }
+}
+
 void add(structAdj &graph, int st, int fn)
 {
     graph.n = max(graph.n, max(st + 1, fn + 1));
@@ -119,14 +166,19 @@ void print(structAdj graph)
 int main()
 {
     structAdj graph;
-    add(graph, 2, 5);
-    add(graph, 1, 3);
-    add(graph, 0, 4);
-    add(graph, 1, 4);
-    add(graph, 5, 4);
+    add(graph, 0, 1);
+    add(graph, 0, 2);
+    add(graph, 1, 2);
+    add(graph, 2, 3);
+    add(graph, 2, 4);
+    add(graph, 3, 4);
     print(graph);
     /*if(checkAdjacency(graph, 1, 2)) cout << "YES\n";
     else cout<<"NO\n";*/
 
     find_vertex_fixed_distance(graph, 3, 3);
+    findAllAvailable(graph, 4);
+
+    if(isEulerian(graph)) cout << "YES\n";
+    else cout << "NO\n";
 }
