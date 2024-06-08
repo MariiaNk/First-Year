@@ -143,6 +143,65 @@ void print2DUtil(BinaryTreeNode *root, int space)
     cout << root->value << "\n";
     print2DUtil(root->left, space);
 }
+
+/*Використовуючи відповідний механізм черг або стеків, написати функцію, 
+яка виводить елементи бінарного дерева, поданого в стандартній формі, 
+по рівнях (починаючи з кореня дерева, далі з синів кореня й далі)*/
+struct Node{
+    BinaryTreeNode* value;
+    Node* next;
+    Node (BinaryTreeNode* value) : value(value), next(nullptr) {}
+};
+void push(Node* &head, Node* &tail, BinaryTreeNode* value)
+{
+    if(head == nullptr)
+    {
+        head = tail = new Node(value);
+    }
+    else
+    {
+        Node* newNode = new Node(value);
+        tail->next = newNode;
+        tail = newNode;
+    }
+}
+
+void pop(Node* &head, Node* &tail)
+{
+    if(head == nullptr) return;
+    else if(head == tail) head = tail = nullptr;
+    else
+    {
+        Node* current = head;
+        head = head->next;
+        delete current;
+    }
+}
+
+void printLevelOrder(BinaryTreeNode* root)
+{
+    if(!root) return;
+
+    Node* queHead = nullptr;
+    Node* queTail = nullptr;
+    push(queHead, queTail, root);
+
+    while(queHead != nullptr && queTail != nullptr)
+    {
+        BinaryTreeNode* current = queHead->value;
+        pop(queHead, queTail);
+        cout << current->value << " ";
+
+        if(current->left != nullptr) 
+            push(queHead, queTail, current->left);
+
+        if(current->right != nullptr) 
+            push(queHead, queTail, current->right);
+    }
+
+    
+}
+
 int main()
 {
     srand(84);
@@ -156,4 +215,8 @@ int main()
 
     AnswerNode ans = findElementInTree(root, 94, 1);
     cout << "Result: " << ans.node->value << " " << ans.level << endl;
+
+    cout << "Levels: ";
+    printLevelOrder(root);
+    cout << endl;
 }
