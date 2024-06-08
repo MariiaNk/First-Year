@@ -1,6 +1,6 @@
 #include <iostream>
 #include <queue>
-#define NMAX 10000
+#define NMAX 100
 
 using namespace std;
 
@@ -163,6 +163,23 @@ void print(structAdj graph)
         cout << endl;
     }
 }
+/*Написати функцію, яка за матрицею суміжності графа будує його структуру суміжності*/
+structAdj buildStructAdj(bool matrix[NMAX][NMAX], int count)
+{
+    structAdj graph;
+    graph.n = count;
+    for(int i = 0; i < count; i++)
+    {
+        for(int j = 0; j < count; j++)
+        {
+            if(matrix[i][j])
+            {
+                add(graph, i, j);
+            }
+        }
+    }
+    return graph;
+}
 int main()
 {
     structAdj graph;
@@ -181,4 +198,12 @@ int main()
 
     if(isEulerian(graph)) cout << "YES\n";
     else cout << "NO\n";
+
+    bool matrix[NMAX][NMAX] = {
+        0, 1, 1,
+        1, 0, 0,
+        1, 0, 0
+    };
+    graph = buildStructAdj(matrix, 3);
+    print(graph);
 }
