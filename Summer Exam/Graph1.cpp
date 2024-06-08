@@ -170,7 +170,7 @@ structAdj buildStructAdj(bool matrix[NMAX][NMAX], int count)
     graph.n = count;
     for(int i = 0; i < count; i++)
     {
-        for(int j = 0; j < count; j++)
+        for(int j = i + 1; j < count; j++)
         {
             if(matrix[i][j])
             {
@@ -179,6 +179,39 @@ structAdj buildStructAdj(bool matrix[NMAX][NMAX], int count)
         }
     }
     return graph;
+}
+
+
+void dfsForSpanningTree(structAdj graph, int vertex, bool* visited, structAdj& spanningTree)
+{
+    visited[vertex] = true;
+    Node* current = graph.neighbours[vertex];
+    while(current)
+    {
+        if(!visited[current->value]) 
+        {
+            add(spanningTree, current->value, vertex);
+            dfsForSpanningTree(graph, current->value, visited, spanningTree);
+        }
+        current = current->next;
+    }
+}
+
+structAdj buildSpanningTree (structAdj graph)
+{
+    structAdj spanningTree;
+    bool* visited = new bool[NMAX];
+    for(int i = 0; i < graph.n; i++)
+        visited[i] = false;
+
+    for(int i = 0; i < graph.n; i++)
+    {
+        if(!visited[i])
+        {
+            dfsForSpanningTree(graph, i, visited, spanningTree);
+        }
+    }
+    return spanningTree;
 }
 int main()
 {
@@ -200,10 +233,18 @@ int main()
     else cout << "NO\n";
 
     bool matrix[NMAX][NMAX] = {
-        0, 1, 1,
-        1, 0, 0,
-        1, 0, 0
+        {0, 1, 1, 1, 0, 0},
+        {1, 0, 1, 0, 1, 0},
+        {1, 1, 0, 1, 1, 1},
+        {1, 0, 1, 0, 1, 1},
+        {0, 1, 1, 1, 0, 1},
+        {0, 0, 1, 1, 1, 0}
     };
-    graph = buildStructAdj(matrix, 3);
+    graph = buildStructAdj(matrix, 6);
     print(graph);
+
+    structAdj spanningTree = buildSpanningTree(graph);
+    cout << "Spanning Tree:\n";
+    print(spanningTree);
+    
 }
